@@ -9,7 +9,7 @@ class Result(TypedDict):
     is_correct: bool
 
 
-def riskAssessment(response: Any, answer: Any, params: Params) -> Result:
+def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
     Function used to evaluate a student response.
     ---
