@@ -29,7 +29,7 @@ class TestEvaluationFunction(unittest.TestCase):
         response, answer, params = None, None, Params()
         result = evaluation_function(response, answer, params)
 
-        self.assertEqual(result.get("is_correct"), True)
+        self.assertEqual(result.get("is_correct"), False)
 
 
 if __name__ == "__main__":
