@@ -33,4 +33,4 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    return Result(is_correct=True)
+    return Result(is_correct=False)
