@@ -36,10 +36,16 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     part_of_question = params['part_of_question']
 
     if part_of_question == 'a':
+        activity, hazard, who_is_harmed, way_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk = response[0]
+
+    if part_of_question == 'b':
+        prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
+    
+    if activity == 'Hello':
         return Result(is_correct=True)
     
     if part_of_question == 'b':
         return Result(is_correct=False)
     
     else:
-        return Result(is_correct=True)
+        return Result(is_correct=False)
