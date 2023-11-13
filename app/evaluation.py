@@ -33,4 +33,13 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    return Result(is_correct=False)
+    part_of_question = params['part_of_question']
+
+    if part_of_question == 'a':
+        return Result(is_correct=True)
+    
+    if part_of_question == 'b':
+        return Result(is_correct=False)
+    
+    else:
+        return Result(is_correct=True)
