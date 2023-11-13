@@ -2,7 +2,7 @@ from typing import Any, TypedDict
 
 
 class Params(TypedDict):
-    pass
+    part_of_question: str
 
 
 class Result(TypedDict):

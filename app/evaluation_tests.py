@@ -25,8 +25,10 @@ class TestEvaluationFunction(unittest.TestCase):
     as it should.
     """
 
+    # run pytest -v evaluation_tests.py
+
     def test_returns_is_correct_true(self):
-        response, answer, params = None, None, Params()
+        response, answer, params = None, None, Params(part_of_question='a')
         result = evaluation_function(response, answer, params)
 
         self.assertIn(result.get("is_correct"), [True, False])
