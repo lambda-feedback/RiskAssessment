@@ -1,11 +1,12 @@
 import os
 import openai
-import json
 from dotenv import load_dotenv
 
 load_dotenv()
 
 from typing import Any, TypedDict
+
+from LLM_functions import get_completion_with_DeBERTa
 
 class Params(TypedDict):
     part_of_question: str
@@ -13,15 +14,6 @@ class Params(TypedDict):
 
 class Result(TypedDict):
     is_correct: bool
-
-def get_completion(prompt, model="gpt-3.5-turbo"):
-
-    messages = [{"role": "user", "content": prompt}]
-
-    response = openai.ChatCompletion.create(model=model, messages=messages, temperature=0)
-
-    return response.choices[0].message["content"]
-
 
 def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
@@ -47,17 +39,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    openai.api_key = os.environ.get("OPENAI_API_KEY")
+    activity, hazard, who_is_harmed, way_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
 
-    part_of_question = params['part_of_question']
-
-    if part_of_question == 'a':
-        activity, hazard, who_is_harmed, way_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk = response[0]
-
-    if part_of_question == 'b':
-        prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
-
-    model_output = get_completion(prompt=f'Answer yes or no. Is the following an activity: {activity}')
+    model_output = get_completion_with_DeBERTa(prompt=f'Answer yes or no. Is the following an activity: {activity}')
 
     if model_output == 'Yes':
         return Result(is_correct=True)
