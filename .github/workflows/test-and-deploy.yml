@@ -23,7 +23,8 @@ jobs:
 
     env:
       SCHEMAS_URL: https://raw.githubusercontent.com/lambda-feedback/request-response-schemas/master/
-
+      HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v2
