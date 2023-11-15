@@ -1,16 +1,31 @@
 import os
-import openai
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
 from typing import Any, TypedDict
 
-from LLM_functions import get_completion_with_DeBERTa
+hugging_face_token = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
+
+def get_completion_with_DeBERTa(prompt):
+    API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
+    headers = {"Authorization": f"Bearer {hugging_face_token}"}
+    payload = {
+        "inputs": prompt,
+        "parameters": {"candidate_labels": ["Yes", "No"]},
+        "options": {"wait_for_model": False}}
+    output = requests.post(API_URL, headers=headers, json=payload).json()
+
+    # return output
+    
+    max_score_index = output['scores'].index(max(output['scores']))
+    predicted_label = output['labels'][max_score_index]
+
+    return predicted_label
 
 class Params(TypedDict):
     part_of_question: str
-
 
 class Result(TypedDict):
     is_correct: bool
@@ -43,6 +58,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
     model_output = get_completion_with_DeBERTa(prompt=f'Answer yes or no. Is the following an activity: {activity}')
 
+    # return model_output
     if model_output == 'Yes':
         return Result(is_correct=True)
     
