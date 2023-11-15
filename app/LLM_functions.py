@@ -6,7 +6,7 @@ env = Env()
 env.read_env()
 
 openai.api_key = env.str("OPEN_AI_API_KEY")
-hugging_face_token = env.str("HUGGINGFACEHUB_API_TOKEN")
+hugging_face_token = env.str("HUGGINGFACE_API_TOKEN")
 
 def get_completion_with_open_ai(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
