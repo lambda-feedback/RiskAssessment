@@ -6,7 +6,7 @@ load_dotenv()
 
 from typing import Any, TypedDict
 
-hugging_face_token = os.environ.get("HUGGINGFACE_API_TOKEN")
+hugging_face_token = os.environ.get("HUGGINGFACE_API_KEY")
 
 def get_completion_with_DeBERTa(prompt):
     API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
