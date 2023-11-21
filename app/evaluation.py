@@ -1,34 +1,18 @@
-import os
-from dotenv import load_dotenv
-import requests
-
-load_dotenv()
-
 from typing import Any, TypedDict
 
-hugging_face_token = os.environ.get("HUGGINGFACE_API_KEY")
-
-def get_completion_with_DeBERTa(prompt):
-    API_URL = "https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli"
-    headers = {"Authorization": f"Bearer {hugging_face_token}"}
-    payload = {
-        "inputs": prompt,
-        "parameters": {"candidate_labels": ["Yes", "No"]},
-        "options": {"wait_for_model": False}}
-    output = requests.post(API_URL, headers=headers, json=payload).json()
-
-    # return output
-    
-    max_score_index = output['scores'].index(max(output['scores']))
-    predicted_label = output['labels'][max_score_index]
-
-    return predicted_label
+try:
+    from .RiskAssessment import RiskAssessment
+    from .HuggingfaceLLMCaller import LLMWithCandidateLabels
+except ImportError:
+    from RiskAssessment import RiskAssessment
+    from HuggingfaceLLMCaller import LLMWithCandidateLabels
 
 class Params(TypedDict):
-    part_of_question: str
+    pass
 
 class Result(TypedDict):
     is_correct: bool
+    feedback: str
 
 def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
@@ -54,13 +38,28 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    activity, hazard, who_is_harmed, way_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
+    activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
 
-    model_output = get_completion_with_DeBERTa(prompt=f'Answer yes or no. Is the following an activity: {activity}')
+    RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
+                        uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
+                        uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
+                        controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
+    
+    deBERTa_LLM = LLMWithCandidateLabels(LLM_API_ENDPOINT="https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli")
+    prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(deBERTa_LLM)
+
+    feedback = ''
+    for i in range(len(prompts_and_prompt_outputs)):
+        prompt = prompts_and_prompt_outputs[i].prompt
+        prompt_output = prompts_and_prompt_outputs[i].prompt_output
+
+        feedback += f'Prompt: {prompt}, Prompt Output: {prompt_output}\n'
+    
+    output_from_activity_prompt = prompts_and_prompt_outputs[0].prompt_output
 
     # return model_output
-    if model_output == 'Yes':
-        return Result(is_correct=True)
-    
+    if output_from_activity_prompt == 'Yes':
+        feedback = output_from_activity_prompt
+        return Result(is_correct=True, feedback=feedback)
     else:
-        return Result(is_correct=False)
+        return Result(is_correct=False, feedback=feedback)

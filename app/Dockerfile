@@ -16,6 +16,12 @@ COPY evaluation_tests.py ./app/
 COPY preview.py ./app/
 COPY preview_tests.py ./app/
 
+# Copy additional files not included in the template repository
+COPY PromptInputs.py ./app/
+COPY RiskAssessment.py ./app/
+COPY HuggingfaceLLMCaller.py ./app/
+COPY risk_assessment_examples./py ./app/
+
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md
 COPY docs/user.md ./app/docs/user.md
