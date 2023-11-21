@@ -47,5 +47,10 @@ class TestEvaluationFunction(unittest.TestCase):
                           1, 2, 2]
         self.assertEqual(actual_value, expected_value)
 
+    # TODO: Test the function which creates an instance of a RiskAssessment object
+
+    # TODO: Test the function which calls the LLM
+    
+
 if __name__ == "__main__":
     unittest.main()
