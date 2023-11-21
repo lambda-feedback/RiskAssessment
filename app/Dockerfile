@@ -20,7 +20,7 @@ COPY preview_tests.py ./app/
 COPY PromptInputs.py ./app/
 COPY RiskAssessment.py ./app/
 COPY HuggingfaceLLMCaller.py ./app/
-COPY risk_assessment_examples./py ./app/
+COPY risk_assessment_examples.py ./app/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md
