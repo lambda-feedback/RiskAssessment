@@ -2,9 +2,10 @@ import unittest
 
 try:
     from .evaluation import Params, evaluation_function
+    from .risk_assessment_examples import RA_1
 except ImportError:
     from evaluation import Params, evaluation_function
-
+    from risk_assessment_examples import RA_1
 
 class TestEvaluationFunction(unittest.TestCase):
     """
@@ -32,6 +33,19 @@ class TestEvaluationFunction(unittest.TestCase):
         result = evaluation_function(response, answer, params)
 
         self.assertIn(result.get("is_correct"), [True, False])
+        # self.assertEqual(result.get("is_correct"), True)
+
+    def test_convert_RiskAssessment_object_into_lambda_response_list(self):
+        actual_value = RA_1.convert_RiskAssessment_object_into_lambda_response_list()
+        expected_value = ['Using a trombone as a demonstration for a TPS presentation',
+                          'Impact from instrument',
+                          'Audience',
+                          'Slide could hit audience member, causing impact injury.',
+                          4, 2, 8,
+                          'Keep safe distance between the player and audience; hold instrument securely',
+                          '',
+                          1, 2, 2]
+        self.assertEqual(actual_value, expected_value)
 
 if __name__ == "__main__":
     unittest.main()
