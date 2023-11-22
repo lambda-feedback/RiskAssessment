@@ -1,4 +1,5 @@
 from typing import Any, TypedDict
+import numpy as np
 
 try:
     from .RiskAssessment import RiskAssessment
@@ -38,7 +39,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
+    activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
     RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
@@ -50,7 +51,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
     feedback = ''
 
-    feedback = f'{activity} {hazard} {who_it_harms}'
     for i in range(len(prompts_and_prompt_outputs)):
         prompt = prompts_and_prompt_outputs[i].prompt
         prompt_output = prompts_and_prompt_outputs[i].prompt_output

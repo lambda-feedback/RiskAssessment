@@ -29,7 +29,15 @@ class TestEvaluationFunction(unittest.TestCase):
     # pytest -v evaluation_tests.py
 
     def test_returns_is_correct_true(self):
-        response, answer, params = ['Here is my very good Risk Assessment with 5 extra unnecessary words'.split(' ')], None, Params(part_of_question='a')
+        response = [['Using a trombone as a demonstration for a TPS presentation'],
+                          'Impact from instrument',
+                          'Audience',
+                          'Slide could hit audience member, causing impact injury.',
+                          4, 2, 8,
+                          'Keep safe distance between the player and audience; hold instrument securely',
+                          '',
+                          1, 2, 2]
+        answer, params = None, None
         result = evaluation_function(response, answer, params)
 
         self.assertIn(result.get("is_correct"), [True, False])
