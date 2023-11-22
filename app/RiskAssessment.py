@@ -65,6 +65,9 @@ class RiskAssessment:
                           who_it_harms=self.who_it_harms)
     
     # TODO: Add ability to see prompt output percentages
+
+    # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
+    # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
     def get_list_of_prompt_outputs(self, LLM_caller: Type[HuggingfaceLLMCaller]):
         return [PromptAndPromptOutput(prompt=self.get_activity_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_activity_input())),

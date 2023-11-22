@@ -40,26 +40,29 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
     activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = response[0]
 
-    RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
-                        uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
-                        uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
-                        controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
+    # RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
+    #                     uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
+    #                     uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
+    #                     controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
-    deBERTa_LLM = LLMWithCandidateLabels(LLM_API_ENDPOINT="https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli")
-    prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(deBERTa_LLM)
+    # deBERTa_LLM = LLMWithCandidateLabels(LLM_API_ENDPOINT="https://api-inference.huggingface.co/models/MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli")
+    # prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(deBERTa_LLM)
 
-    feedback = ''
-    for i in range(len(prompts_and_prompt_outputs)):
-        prompt = prompts_and_prompt_outputs[i].prompt
-        prompt_output = prompts_and_prompt_outputs[i].prompt_output
+    # feedback = ''
 
-        feedback += f'Prompt: {prompt}, Prompt Output: {prompt_output}\n'
+    feedback = f'{activity} {hazard} {who_it_harms}'
+    # for i in range(len(prompts_and_prompt_outputs)):
+    #     prompt = prompts_and_prompt_outputs[i].prompt
+    #     prompt_output = prompts_and_prompt_outputs[i].prompt_output
+
+    #     feedback += f'Prompt: {prompt}, Prompt Output: {prompt_output}\n'
     
-    output_from_activity_prompt = prompts_and_prompt_outputs[0].prompt_output
+    # output_from_activity_prompt = prompts_and_prompt_outputs[0].prompt_output
 
     # return model_output
-    if output_from_activity_prompt == 'Yes':
-        feedback = output_from_activity_prompt
-        return Result(is_correct=True, feedback=feedback)
-    else:
-        return Result(is_correct=False, feedback=feedback)
+    # if output_from_activity_prompt == 'Yes':
+    #     feedback = output_from_activity_prompt
+    #     return Result(is_correct=True, feedback=feedback)
+    # else:
+    #     return Result(is_correct=False, feedback=feedback)
+    return Result(is_correct=True, feedback=feedback)
