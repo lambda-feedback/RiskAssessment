@@ -30,19 +30,20 @@ class TestEvaluationFunction(unittest.TestCase):
 
     def test_returns_is_correct_true(self):
         response = [['Using a trombone as a demonstration for a TPS presentation'],
-                          'Impact from instrument',
-                          'Audience',
-                          'Slide could hit audience member, causing impact injury.',
-                          4, 2, 8,
-                          'Keep safe distance between the player and audience; hold instrument securely',
-                          '',
-                          1, 2, 2]
+                          ['Impact from instrument'],
+                          ['Audience'],
+                          ['Slide could hit audience member, causing impact injury.'],
+                          [4], [2], [8],
+                          ['Keep safe distance between the player and audience; hold instrument securely'],
+                          [''],
+                          [1], [2], [2]]
         answer, params = None, None
         result = evaluation_function(response, answer, params)
 
         self.assertIn(result.get("is_correct"), [True, False])
         # self.assertEqual(result.get("is_correct"), True)
 
+    # TODO: Is the below test necessary?
     def test_convert_RiskAssessment_object_into_lambda_response_list(self):
         actual_value = RA_1.convert_RiskAssessment_object_into_lambda_response_list()
         expected_value = ['Using a trombone as a demonstration for a TPS presentation',
