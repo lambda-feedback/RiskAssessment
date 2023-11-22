@@ -70,8 +70,8 @@ class RiskAssessment:
     # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
     def get_list_of_prompt_outputs(self, LLM_caller: Type[HuggingfaceLLMCaller]):
-        return [PromptAndPromptOutput(prompt=self.get_activity_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_activity_input()))]
-                                #   PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input())),
+        return [PromptAndPromptOutput(prompt=self.get_activity_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_activity_input())),
+                                  PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input()))]
                                 #   PromptAndPromptOutput(prompt=self.get_how_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_how_it_harms_input())),
                                 #   PromptAndPromptOutput(prompt=self.get_who_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_who_it_harms_input())),
                                 #   PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_prevention_input())),
