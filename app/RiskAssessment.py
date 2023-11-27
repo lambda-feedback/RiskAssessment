@@ -3,10 +3,10 @@ import csv
 
 try:
     from .PromptInputs import *
-    from .HuggingfaceLLMCaller import *
+    from .LLMCaller import *
 except ImportError:
     from PromptInputs import *
-    from HuggingfaceLLMCaller import *
+    from LLMCaller import *
 
 class PromptAndPromptOutput:
     def __init__(self, prompt, prompt_output):
@@ -69,15 +69,15 @@ class RiskAssessment:
     # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
     # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
-    def get_list_of_prompt_outputs(self, LLM_caller: Type[HuggingfaceLLMCaller]):
+    def get_list_of_prompt_outputs(self, LLM_caller: Type[LLMCaller]):
         return [PromptAndPromptOutput(prompt=self.get_activity_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_activity_input())),
-                                  PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input()))]
-                                #   PromptAndPromptOutput(prompt=self.get_how_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_how_it_harms_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_who_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_who_it_harms_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_prevention_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_mitigation_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_mitigation_input()))]
+                                  PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input())),
+                                  PromptAndPromptOutput(prompt=self.get_how_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_how_it_harms_input())),
+                                  PromptAndPromptOutput(prompt=self.get_who_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_who_it_harms_input())),
+                                  PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_prevention_input())),
+                                  PromptAndPromptOutput(prompt=self.get_mitigation_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_mitigation_input()))]
     
-    def write_prompt_outputs_to_csv(self, LLM_caller: Type[HuggingfaceLLMCaller], file_name, folder_path):
+    def write_prompt_outputs_to_csv(self, LLM_caller: Type[LLMCaller], file_name, folder_path):
         prompt_and_prompt_outputs =  self.get_list_of_prompt_outputs(LLM_caller=LLM_caller)
 
         output_file = folder_path / file_name

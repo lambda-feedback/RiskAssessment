@@ -14,9 +14,13 @@ class Activity(PromptInput): # TODO so inherits expected_output from PromptInput
         self.candidate_labels = ['Yes', 'No']
 
     def generate_prompt(self):
-        activity_definition = "a form of organized, supervised, often extracurricular recreation"
+        activity_definition = """An activity is generally defined as a specific action or process that involves 
+        physical or mental effort, often undertaken for enjoyment, recreation, or as a part of a routine."""
+        
         return f'''If an 'activity' is defined as '{activity_definition}', 
-        is the following: '{self.activity}' an example of a 'activity'?'''
+        First provide a description of "{self.activity}" then compare this description 
+        with the provided definition, then decide if "{self.activity}" is "an activity" 
+        or "not an activity". End your answer in the format: \ndict('input': "{self.activity}", is_an_activity: True/False)'''
 
 class Hazard(PromptInput):
     def __init__(self, activity: str, hazard: str):

@@ -11,23 +11,17 @@ try:
 except ImportError:
     from PromptInputs import *
 
-class ModelOutputAndExpectedOutput:
-    def __init__(self, model_output, expected_output):
-        self.model_output = model_output
-        self.expected_output = expected_output
-
-class HuggingfaceLLMCaller:
-    def __init__(self, LLM_API_ENDPOINT):
-        self.LLM_API_ENDPOINT = LLM_API_ENDPOINT
+class LLMCaller:
+    def __init__(self):
+        pass
          # NOTE: Don't need to pass self as input to calls of methods within a class 
          # as it is automatically passed in, i.e. it is not self.update_api_key_from_env_file(self) but:
-        self.update_api_key_from_env_file()
 
     def update_api_key_from_env_file(self):
-            
-        load_dotenv()
+        pass
 
-        self.HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
+    def get_prompt_input(self, prompt_input: Type[PromptInput]):
+        return prompt_input.generate_prompt()
     
     def get_JSON_output_from_API_call(self, prompt_input: Type[PromptInput]):
         pass
@@ -35,11 +29,15 @@ class HuggingfaceLLMCaller:
     def get_model_output(self):
         pass
 
-    def get_both_model_output_and_expected_output(self, expected_output):
-        return ModelOutputAndExpectedOutput(
-            model_output=self.get_model_output(self),
-            expected_output=expected_output)
+class HuggingfaceLLMCaller(LLMCaller):
+    def __init__(self, LLM_API_ENDPOINT):
+        self.LLM_API_ENDPOINT = LLM_API_ENDPOINT
+        self.update_api_key_from_env_file()
     
+    def update_api_key_from_env_file(self):
+        load_dotenv()
+        self.HUGGINGFACE_API_KEY = os.environ.get("HUGGINGFACE_API_KEY")
+
 class LLMWithGeneratedText(HuggingfaceLLMCaller):
     def __init__(self, LLM_API_ENDPOINT):
         super().__init__(LLM_API_ENDPOINT)
@@ -47,13 +45,14 @@ class LLMWithGeneratedText(HuggingfaceLLMCaller):
     def get_JSON_output_from_API_call(self, prompt_input: Type[PromptInput]):
         headers = {"Authorization": f"Bearer {self.HUGGINGFACE_API_KEY}"}
         prompt = prompt_input.generate_prompt()
-        payload = {"inputs": prompt}
+        payload = {"inputs": prompt,
+                   "options": {"wait_for_model": True}}
         return requests.post(self.LLM_API_ENDPOINT, 
                              headers=headers, 
                              json=payload).json()
     
     def get_model_output(self, prompt_input: Type[PromptInput]):
-        LLM_output = super().get_JSON_output_from_API_call(prompt_input)
+        LLM_output = self.get_JSON_output_from_API_call(prompt_input)
         return LLM_output[0]['generated_text']
     
 class LLMWithCandidateLabels(HuggingfaceLLMCaller):
@@ -76,3 +75,26 @@ class LLMWithCandidateLabels(HuggingfaceLLMCaller):
         predicted_label = LLM_output['labels'][max_score_index]
 
         return predicted_label
+
+class OpenAILLM(LLMCaller):
+    def __init__(self):
+        self.update_api_key_from_env_file()
+
+    def update_api_key_from_env_file(self):
+        load_dotenv()
+        openai.api_key = os.environ.get("OPEN_AI_API_KEY")
+
+    def get_JSON_output_from_API_call(self, prompt_input: Type[PromptInput]):
+
+        prompt = self.get_prompt_input(prompt_input=prompt_input)
+        
+        messages = [{"role": "user", "content": prompt}]
+
+        # TODO: Fine tune max_tokens parameter
+        LLM_output = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages, temperature=0.7, max_tokens=400)
+        
+        return LLM_output
+    
+    def get_model_output(self, prompt_input: Type[PromptInput]):
+        LLM_output = self.get_JSON_output_from_API_call(prompt_input)
+        return LLM_output.choices[0].message["content"]
