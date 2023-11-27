@@ -1,0 +1,45 @@
+Example prompt input:
+If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort, often undertaken for enjoyment, recreation, or as a part of a routine.', 
+        First provide a description of "dog" then compare this description 
+        with the provided definition, then decide if "dog" is "an activity" 
+        or "not an activity". End your answer in the format: 
+dict('input': "dog", is_an_activity: True/False)
+
+Example prompt output:
+dict('input': "dog", is_an_activity: False)
+
+All model outputs and expected outputs:
+{'input': 'dog', 'is_an_activity': False, 'expected_output': False}
+{'input': 'Butterfly spotting', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Climbing a mountain', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Paris', 'is_an_activity': False, 'expected_output': False}
+{'input': 'table', 'is_an_activity': False, 'expected_output': False}
+{'input': 'cat', 'is_an_activity': False, 'expected_output': False}
+{'input': 'team', 'is_an_activity': False, 'expected_output': False}
+{'input': 'toothpaste', 'is_an_activity': False, 'expected_output': False}
+{'input': "John's car", 'is_an_activity': False, 'expected_output': False}
+{'input': 'he', 'is_an_activity': False, 'expected_output': False}
+{'input': 'swimming', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Cooking a meal', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Painting a picture', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Writing a letter', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Riding a bike', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Singing a song', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Building a sandcastle', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Planting flowers', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Chess', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Marathon', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Puzzle', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Party', 'is_an_activity': True, 'expected_output': True}
+{'input': 'Movie', 'is_an_activity': True, 'expected_output': True}
+
+
+The following are the prompt outputs for incorrect responses: 
+NOTE: Pattern not in the correct format, should have curly braces:
+ dict(input: "water", is_an_activity: False)
+
+NOTE: 'input' should be 'swimming' not 'swimming in a pool'
+{'input': "Swimming in a pool", 'is_an_activity': True}
+
+Accuracy = 92.0 %

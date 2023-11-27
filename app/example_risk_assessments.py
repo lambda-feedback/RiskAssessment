@@ -94,4 +94,4 @@ RA_6 = RiskAssessment(
 )
 
 
-risk_assessment_examples = [RA_1, RA_2, RA_3, RA_4, RA_5, RA_6]
+example_risk_assessments = [RA_1, RA_2, RA_3, RA_4, RA_5, RA_6]
