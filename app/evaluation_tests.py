@@ -10,13 +10,11 @@ import datetime
 try:
     from .evaluation import Params, evaluation_function
     from .example_risk_assessments import RA_1
-    from .example_activities import activities
     from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
-except ImportError:
+except:
     from evaluation import Params, evaluation_function
     from example_risk_assessments import RA_1
-    from example_activities import activities
     from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from PromptInputs import Activity
 

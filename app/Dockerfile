@@ -21,7 +21,6 @@ COPY preview_tests.py ./app/
 COPY PromptInputs.py ./app/
 COPY RiskAssessment.py ./app/
 COPY LLMCaller.py ./app/
-COPY example_risk_assessments.py ./app/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md
