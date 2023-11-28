@@ -3,9 +3,6 @@
 # The -s option above is so you can see printouts even if the test fails
 
 import unittest
-import re
-import pathlib
-import datetime
 
 try:
     from .evaluation import Params, evaluation_function
