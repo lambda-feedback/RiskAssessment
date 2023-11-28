@@ -47,7 +47,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
-    LLM = LLMWithGeneratedText(LLM_API_ENDPOINT='https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf')
+    LLM = LLMWithGeneratedText(LLM_API_ENDPOINT='https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf')
     prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
 
     feedback = ''
