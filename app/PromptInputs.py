@@ -1,5 +1,8 @@
     # TODO: Add requirement to have a generate_prompt function
 
+    # TODO: Make it easier to add new prompts. At the moment it is too difficult. 
+    # Have to change code in 2 places.
+
 class PromptInput:
     def __init__(self):
         pass
