@@ -5,7 +5,7 @@ import re
 try:
     from .RiskAssessment import RiskAssessment
     from .LLMCaller import LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
-except ImportError:
+except:
     from RiskAssessment import RiskAssessment
     from LLMCaller import LLMWithCandidateLabels, LLMWithGeneratedText
 
@@ -47,7 +47,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
-    LLM = LLMWithGeneratedText(LLM_API_ENDPOINT='https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf')
+    LLM = LLMWithGeneratedText(LLM_API_ENDPOINT='https://api-inference.huggingface.co/models/meta-llama/Llama-2-70b-chat-hf')
     prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
 
     feedback = ''
@@ -56,9 +56,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         prompt = prompts_and_prompt_outputs[i].prompt
         prompt_output = prompts_and_prompt_outputs[i].prompt_output
 
-        feedback += f'Prompt: {prompt}\n Prompt Output: {prompt_output}\n\n'
-
     output_from_activity_prompt = prompts_and_prompt_outputs[0].prompt_output
+
+    feedback += f'Prompt Output: {output_from_activity_prompt}\n\n'
 
     pattern = r'dict\(\'input\': "({})", is_an_activity: (True|False)\)'.format(re.escape(activity))
     match = re.search(pattern, output_from_activity_prompt)
@@ -66,7 +66,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if match:
         is_an_activity = match.group(2) == "True"
     
-    if is_an_activity == True:
-        return Result(is_correct=True, feedback=feedback)
+        if is_an_activity == True:
+            return Result(is_correct=True, feedback=feedback)
+    
     else:
         return Result(is_correct=False, feedback=feedback)
