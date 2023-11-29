@@ -16,6 +16,9 @@ COPY evaluation_tests.py ./app/
 COPY preview.py ./app/
 COPY preview_tests.py ./app/
 
+# Copy the local testing scripts
+COPY local_test.py ./app/
+
 # Copy additional files not included in the template repository
 # that are used in evaluation.py
 COPY PromptInputs.py ./app/

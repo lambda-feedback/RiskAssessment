@@ -1,0 +1,61 @@
+Example prompt input:
+In one sentence, provide a description of "dog". Then in one sentence 
+        compare this description with the provided definition. Then if "dog" is an activity, 
+        is_correct = True. Then write one sentence in the format: 
+dict(is_correct=True/False)
+
+Example prompt output:
+A dog is a domesticated carnivorous mammal that typically has a long snout, an acute sense of smell, non-retractable claws, and a barking, howling, or whining voice.
+The provided definition accurately describes a dog as a domesticated mammal with specific physical characteristics and vocalization patterns.
+is_correct = False
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': True, 'expected_output': False}
+{'input': 'Activity(activity=Butterfly spotting)', 'is_correct': True, 'expected_output': True}
+{'input': 'Activity(activity=Climbing a mountain)', 'is_correct': None, 'expected_output': True}
+{'input': 'Activity(activity=Paris)', 'is_correct': None, 'expected_output': False}
+{'input': 'Activity(activity=table)', 'is_correct': True, 'expected_output': False}
+{'input': 'Activity(activity=cat)', 'is_correct': True, 'expected_output': False}
+{'input': 'Activity(activity=water)', 'is_correct': None, 'expected_output': False}
+{'input': 'Activity(activity=team)', 'is_correct': True, 'expected_output': False}
+{'input': 'Activity(activity=toothpaste)', 'is_correct': True, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ A dog is a domesticated mammal that is commonly kept as a pet or used for various working purposes.
+The provided definition accurately describes a dog as a domesticated mammal that is commonly kept as a pet or used for various working purposes.
+dict(is_correct=True)
+
+"Climbing a mountain" is the act of ascending a steep natural elevation, typically with the goal of reaching the summit.
+
+Description of "Paris": A city known for its iconic landmarks, culture, and history.
+Comparison with definition: The provided description aligns with the general definition of Paris as a city with famous landmarks and rich cultural heritage.
+Is "Paris" an activity? False.
+
+Description of "table": A flat surface with four legs used for eating or working on.
+
+Comparison with provided definition: The description accurately defines a table as a flat surface with legs for various purposes.
+
+is_correct = True
+
+dict(is_correct=True)
+
+A cat is a small domesticated carnivorous mammal that is often kept as a pet.
+
+The provided definition accurately describes a cat as a small domesticated carnivorous mammal that is often kept as a pet.
+
+dict(is_correct=True)
+
+Water is a clear, odorless, and tasteless liquid that is essential for all living organisms.
+
+A team is a group of individuals who come together to work towards a common goal, using their individual skills and strengths to achieve success.
+The provided definition accurately describes a team as a collective group of individuals working together towards a shared objective.
+dict(is_correct=True)
+
+"Toothpaste" is a gel or paste-like substance used to clean teeth and maintain oral hygiene.
+The provided definition accurately describes toothpaste as a gel or paste used for dental hygiene.
+dict(is_correct=True)
+
+ 
+
+Accuracy = 11.11111111111111 %

@@ -1,0 +1,44 @@
+Example prompt input:
+The definition of a common noun is "fa noun denoting a class of objects or a concept as opposed 
+        to a particular individual.".
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "dog".
+        Then in one sentence compare this description of "dog" 
+        with the provided definition of a common noun.
+        Then in one sentence compare this description of "dog" 
+        with the provided definition of an activity. 
+        Then if "dog" is an common noun, is_correct = False.
+        And if is_correct = False, if "dog" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)
+
+Example prompt output:
+{"is_correct": True}
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=Butterfly spotting)', 'is_correct': False, 'expected_output': True}
+{'input': 'Activity(activity=Climbing a mountain)', 'is_correct': False, 'expected_output': True}
+{'input': 'Activity(activity=Paris)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=table)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=cat)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=water)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=team)', 'is_correct': False, 'expected_output': False}
+{'input': 'Activity(activity=toothpaste)', 'is_correct': False, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ "Butterfly spotting" is the act of observing and identifying different species of butterflies in their natural habitat.
+
+The description of "Butterfly spotting" aligns with the definition of a common noun as it denotes a class of objects (butterflies) rather than a particular individual.
+
+The description of "Butterfly spotting" aligns with the definition of an activity as it involves a specific action or process (observing and identifying butterflies) that requires mental effort.
+
+is_correct=False
+
+dict(is_correct=False)
+
+ 
+
+Accuracy = 77.77777777777779 %
