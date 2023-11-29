@@ -1,0 +1,25 @@
+Example prompt input:
+In one sentence, describe the hazard: 'Handling corrosive chemicals without protective gear' during the 
+        activity: 'Chemical handling'. Then in one sentence, determine whether or not 
+        'Chemical burns' is a way that this hazard causes harm. 
+        If it does cause harm, is_correct = True. Then write the final sentence of your answer 
+        in the format: dict(is_correct=True/False).
+
+Example prompt output:
+Handling corrosive chemicals without protective gear during chemical handling can result in chemical burns. 
+
+dict(is_correct=True)
+
+All model outputs and expected outputs:
+{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': True, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Fires, activity=Fire safety demonstration, hazard=Presence of combustible materials near an open flame)', 'is_correct': True, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Fires, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Fire safety demonstration, hazard=Presence of combustible materials near an open flame)', 'is_correct': True, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ The hazard is the presence of combustible materials near an open flame during the fire safety demonstration, and chemical burns can be a way that this hazard causes harm, therefore dict(is_correct=True).
+
+ 
+
+Accuracy = 75.0 %

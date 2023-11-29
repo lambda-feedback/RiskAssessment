@@ -10,27 +10,41 @@ class PromptInput:
     def generate_prompt(self):
         pass
 
+    def to_string(self):
+        class_name = self.__class__.__name__
+        if hasattr(self, '__dict__'):
+            attributes = ', '.join([f"{key}={value}" for key, value in self.__dict__.items()])
+            return f"{class_name}({attributes})"
+        else:
+            return f"{class_name}()"
+
 class Activity(PromptInput): # TODO so inherits expected_output from PromptInput
     def __init__(self, activity: str):
         super().__init__()
         self.activity = activity
-        self.candidate_labels = ['Yes', 'No']
 
     def generate_prompt(self):
-        activity_definition = """An activity is generally defined as a specific action or process that involves 
-        physical or mental effort, often undertaken for enjoyment, recreation, or as a part of a routine."""
+        common_noun_definition = """a noun denoting a class of objects or a concept as opposed 
+        to a particular individual."""
+
+        activity_definition = """a specific action or process that involves 
+        physical or mental effort."""
         
-        return f'''If an 'activity' is defined as '{activity_definition}', 
-        First provide a description of "{self.activity}" then compare this description 
-        with the provided definition, then decide if "{self.activity}" is "an activity" 
-        or "not an activity". End your answer in the format: \ndict('input': "{self.activity}", is_an_activity: True/False)'''
+        return f'''
+        The definition of activity is: "{activity_definition}". 
+        In one sentence, provide a description of "{self.activity}".
+        Then in one sentence compare this description of "{self.activity}" 
+        with the provided definition of an activity. 
+        If "{self.activity}" is an activity, is_correct = True. 
+        Then write one sentence in the format: \ndict(is_correct=True/False)'''
+
+        # dict\(\'input\'=({}), is_correct=(True|False)\)''.format(re.escape(input))
 
 class Hazard(PromptInput):
     def __init__(self, activity: str, hazard: str):
         super().__init__()
         self.activity = activity
         self.hazard = hazard
-        self.candidate_labels = ['Yes', 'No, it is not a hazard', 'No, it is a hazard but the activity is not related to the hazard']
 
     def generate_prompt(self):
         hazard_definition = """a dangerous phenomenon, substance, human activity or condition. 
@@ -45,12 +59,15 @@ class HowItHarms(PromptInput):
         self.how_it_harms = how_it_harms
         self.activity = activity
         self.hazard = hazard
-        self.candidate_labels = ['Yes', 'No']
     
     def generate_prompt(self):
         # TODO: Do knowledge generation prompt for this
-        return f''''Is '{self.how_it_harms}' a way that the hazard: '{self.hazard}', during the activity: '{self.activity}', 
-        may cause harm?'''
+
+        return f'''In one sentence, describe the hazard: '{self.hazard}' during the 
+        activity: '{self.activity}'. Then in one sentence, explain whether or not 
+        '{self.how_it_harms}' is a way that this hazard causes harm. 
+        If it does cause harm, is_correct = True. Then write the final sentence of your answer 
+        in the format: dict(is_correct=True/False).'''
 
 class WhoItHarms(PromptInput):
     def __init__(self, who_it_harms, how_it_harms, activity, hazard):
@@ -59,9 +76,6 @@ class WhoItHarms(PromptInput):
         self.how_it_harms = how_it_harms
         self.activity = activity
         self.hazard = hazard
-        self.candidate_labels = ['Who it harms is a noun and they are likely to be harmed by the hazard',
-                                 'Who it harms is a noun, but they are unlikely to be harmed by the hazard',
-                                 'Who it harms is not a noun']
 
     def generate_prompt(self):
         noun_definition = "a word (other than a pronoun) used to identify any of a class of people, places, or things"
@@ -78,7 +92,6 @@ class Prevention(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
-        self.candidate_labels = ['Yes', 'No']
 
     def generate_prompt(self):
         prevention_definition = f'an action which reduces the probability that the hazard occurs.'
@@ -94,7 +107,6 @@ class Mitigation(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
-        self.candidate_labels = ['Yes', 'No']
 
     def generate_prompt(self):
         severity_definition = """a measure of the seriousness of adverse consequences that could occur if the hazard 

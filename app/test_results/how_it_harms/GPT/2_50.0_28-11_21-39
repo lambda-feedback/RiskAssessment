@@ -1,0 +1,21 @@
+Example prompt input:
+First describe the hazard: 'Handling corrosive chemicals without protective gear' during the activity: 'Chemical handling'.
+        Then determine whether 'Chemical burns, respiratory issues, and health problems' is a way that this hazard
+        causes harm in the activity. If so, is_correct = True. End your answer in the format: 
+        
+dict(is_correct=True/False)
+
+Example prompt output:
+{'is_correct': True}
+
+All model outputs and expected outputs:
+{'input': 'HowItHarms(how_it_harms=Chemical burns, respiratory issues, and health problems, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': True, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Chemical burns, respiratory issues, and health problems, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': None, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ {'is_correct': True}
+
+ 
+
+Accuracy = 50.0 %

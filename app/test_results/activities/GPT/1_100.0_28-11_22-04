@@ -1,0 +1,18 @@
+Example prompt input:
+If an 'activity' is defined as 'a specific action or process that involves 
+        physical or mental effort, often undertaken for enjoyment, recreation, or as a part of a routine.', 
+        First provide a description of "dog" then compare this description 
+        with the provided definition, then if "dog" is an activity, is_correct = True. 
+        End your answer in the format: 
+dict(is_correct=True/False)
+
+Example prompt output:
+{
+  "is_correct": false
+}
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': False, 'expected_output': False}
+
+
+Accuracy = 100.0 %
