@@ -39,7 +39,7 @@ class TestEvaluationFunction(unittest.TestCase):
                           ['Impact from instrument'],
                           ['Audience watching presentation'],
                           ['Slide could hit audience member, causing impact injury.'],
-                          [4], [2], [8],
+                          [1], [2], [8],
                           ['Keep safe distance between the player and audience; hold instrument securely'],
                           [''],
                           [1], [2], [2]]
