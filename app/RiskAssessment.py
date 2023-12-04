@@ -1,5 +1,6 @@
 from typing import Type
 import csv
+from RegexPatternMatcher import RegexPatternMatcher
 
 try:
     from .PromptInputs import *
@@ -7,11 +8,6 @@ try:
 except ImportError:
     from PromptInputs import *
     from LLMCaller import *
-
-class PromptAndPromptOutput:
-    def __init__(self, prompt, prompt_output):
-        self.prompt = prompt
-        self.prompt_output = prompt_output
 
 class RiskAssessment:
     def __init__(self, activity, hazard, who_it_harms, how_it_harms,
@@ -36,19 +32,22 @@ class RiskAssessment:
     def get_activity_input(self):
         return Activity(activity=self.activity)
     
-    def get_hazard_input(self):
-        return Hazard(activity=self.activity, hazard=self.hazard)
-    
     def get_how_it_harms_input(self):
+        return HowItHarmsInContext(how_it_harms=self.how_it_harms)
+    
+    def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
                           activity=self.activity,
                           hazard = self.hazard)
 
     def get_who_it_harms_input(self):
+        return WhoItHarms(who_it_harms=self.who_it_harms)
+    
+    def get_who_it_harms_in_context_input(self):
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
-                          how_it_harms=self.how_it_harms,
-                          activity=self.activity,
-                          hazard=self.hazard)
+                            how_it_harms=self.how_it_harms,
+                            activity=self.activity,
+                            hazard=self.hazard)
     
     def get_prevention_input(self):
         return Prevention(prevention=self.prevention,
@@ -64,42 +63,55 @@ class RiskAssessment:
                           how_it_harms=self.how_it_harms,
                           who_it_harms=self.who_it_harms)
     
-    ### TODO: Add get_who_it_harms_classification 
+    def get_prevention_classification_input(self):
+        return PreventionClassification(
+                        prevention=self.prevention,
+                        activity=self.activity,
+                        hazard=self.hazard,
+                        how_it_harms=self.how_it_harms,
+                        who_it_harms=self.who_it_harms)
+    
+    def get_mitigation_classification_input(self):
+        return MitigationClassification(
+                        mitigation=self.mitigation,
+                        activity=self.activity,
+                        hazard=self.hazard,
+                        how_it_harms=self.how_it_harms,
+                        who_it_harms=self.who_it_harms)
     
     # TODO: Add ability to see prompt output percentages
 
     # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
     # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
-    def get_list_of_prompt_outputs(self, LLM_caller: Type[LLMCaller]):
-        return [PromptAndPromptOutput(prompt=self.get_activity_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_activity_input()))]
-                                #   PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_how_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_how_it_harms_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_who_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_who_it_harms_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_Prevention_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_mitigation_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_mitigation_input()))]
+    def get_list_of_prompts(self, LLM_caller: Type[LLMCaller]):
+        return [self.get_activity_input().generate_prompt(),
+                self.get_how_it_harms_input().generate_prompt(),
+                self.get_how_it_harms_in_context_input().generate_prompt(),
+                self.get_who_it_harms_input().generate_prompt(),
+                self.get_who_it_harms_in_context_input().generate_prompt(),
+                self.get_prevention_input().generate_prompt(),
+                self.get_mitigation_input().generate_prompt(),
+                self.get_prevention_classification_input().generate_prompt(),
+                self.get_mitigation_classification_input().generate_prompt()]
     
-    def write_prompt_outputs_to_csv(self, LLM_caller: Type[LLMCaller], file_name, folder_path):
-        prompt_and_prompt_outputs =  self.get_list_of_prompt_outputs(LLM_caller=LLM_caller)
+    def get_list_of_prompt_outputs(self, LLM_caller: Type[LLMCaller]):
+        return [LLM_caller.get_model_output(self.get_activity_input()),
+                LLM_caller.get_model_output(self.get_how_it_harms_input()),
+                LLM_caller.get_model_output(self.get_how_it_harms_in_context_input()),
+                LLM_caller.get_model_output(self.get_who_it_harms_input()),
+                LLM_caller.get_model_output(self.get_who_it_harms_in_context_input()),
+                LLM_caller.get_model_output(self.get_prevention_input()),
+                LLM_caller.get_model_output(self.get_mitigation_input()),
+                LLM_caller.get_model_output(self.get_prevention_classification_input()),
+                LLM_caller.get_model_output(self.get_mitigation_classification_input())]
+    
+    def get_list_of_regex_matches_for_prompt_outputs(self, prompt_outputs):
+        regex_pattern_matcher = RegexPatternMatcher()
 
-        output_file = folder_path / file_name
+        regex_matches = []
 
-        # Open a CSV file for writing
-        with open(output_file, 'w', newline='') as csv_file:
-            csv_writer = csv.writer(csv_file)
-            
-            # Write headers to the CSV file
-            csv_writer.writerow(["Prompt", "Response"])
-            
-            for i in range(len(prompt_and_prompt_outputs)):
-
-                prompt = prompt_and_prompt_outputs[i].prompt
-                response = prompt_and_prompt_outputs[i].prompt_output
-                
-                # Write the prompt and response to the CSV file
-                csv_writer.writerow([prompt, response])
-
-                print(prompt)
-                print(response)
-
-        print(f"CSV file '{output_file}' has been created.")
+        for prompt_output in prompt_outputs:
+            regex_matches.append(regex_pattern_matcher.check_string_against_pattern(prompt_output))
+        
+        return regex_matches
