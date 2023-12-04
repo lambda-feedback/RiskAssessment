@@ -62,8 +62,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         feedback += f'Prompt Output {i+1}: {prompt_output}\n\n'
         feedback += f'Regex Match {i+1}: {regex_match}\n\n\n'
 
-    feedback += f'Controlled risk: {RA.check_controlled_risk()}\n'
-    feedback += f'Uncontrolled risk: {RA.check_uncontrolled_risk()}\n'
+    feedback += f'Controlled risk multiplication: {RA.check_controlled_risk()}\n'
+    feedback += f'Uncontrolled risk multiplication: {RA.check_uncontrolled_risk()}\n'
 
     is_an_activity = regex_matches[0]
     
