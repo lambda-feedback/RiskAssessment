@@ -56,13 +56,14 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     feedback = ''
 
     for i in range(len(prompts)):
-        prompt = prompts[i]
         prompt_output = prompt_outputs[i]
         regex_match = regex_matches[i]
 
-        feedback += f'Prompt {i+1}: {prompt}\n'
-        feedback += f'Prompt Output {i+1}: {prompt_output}\n'
-        feedback += f'Regex Match {i+1}: {regex_match}\n\n'
+        feedback += f'Prompt Output {i+1}: {prompt_output}\n\n'
+        feedback += f'Regex Match {i+1}: {regex_match}\n\n\n'
+
+    feedback += f'Controlled risk: {RA.check_controlled_risk()}\n'
+    feedback += f'Uncontrolled risk: {RA.check_uncontrolled_risk()}\n'
 
     is_an_activity = regex_matches[0]
     

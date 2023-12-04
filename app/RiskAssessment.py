@@ -81,6 +81,27 @@ class RiskAssessment:
                         how_it_harms=self.how_it_harms,
                         who_it_harms=self.who_it_harms)
     
+    def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
+        try:
+            likelihood = int(likelihood)
+            severity = int(severity)
+            risk = int(risk)
+
+            return likelihood * severity == risk
+        
+        except ValueError:
+            return 'Please make sure that the likelihood, severity, and risk are all integers.'
+
+    def check_uncontrolled_risk(self):
+        return self.check_that_risk_equals_likelihood_times_severity(self.uncontrolled_likelihood,
+                                                                self.uncontrolled_severity,
+                                                                self.uncontrolled_risk)
+    
+    def check_controlled_risk(self):
+        return self.check_that_risk_equals_likelihood_times_severity(self.controlled_likelihood,
+                                                                self.controlled_severity,
+                                                                self.controlled_risk)
+    
     # TODO: Add ability to see prompt output percentages
 
     # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
