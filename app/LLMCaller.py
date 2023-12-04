@@ -84,7 +84,7 @@ class OpenAILLM(LLMCaller):
 
     def update_api_key_from_env_file(self):
         load_dotenv()
-        openai.api_key = os.environ.get("OPEN_AI_API_KEY")
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
 
     def get_JSON_output_from_API_call(self, prompt_input: Type[PromptInput]):
 
