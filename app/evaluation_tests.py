@@ -39,10 +39,14 @@ class TestEvaluationFunction(unittest.TestCase):
                           ['Impact from instrument'],
                           ['Audience watching presentation'],
                           ['Slide could hit audience member, causing impact injury.'],
-                          [1], [2], [8],
+                          [4],
+                          [2], 
+                          [8],
                           ['Keep safe distance between the player and audience; hold instrument securely'],
+                          [1],
                           [''],
-                          [1], [2], [2]]
+                          [2], 
+                          [2]]
         answer, params = None, None
 
         result = evaluation_function(response, answer, params)
