@@ -1,4 +1,4 @@
-from PromptInputs import PromptInput, HowItHarms, WhoItHarmsInContext
+from PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
 from InputAndExpectedOutput import InputAndExpectedOutput
 
 class ExamplesGenerator:

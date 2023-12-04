@@ -40,7 +40,7 @@ class RiskAssessment:
         return Hazard(activity=self.activity, hazard=self.hazard)
     
     def get_how_it_harms_input(self):
-        return HowItHarms(how_it_harms=self.how_it_harms,
+        return HowItHarmsInContext(how_it_harms=self.how_it_harms,
                           activity=self.activity,
                           hazard = self.hazard)
 
@@ -76,7 +76,7 @@ class RiskAssessment:
                                 #   PromptAndPromptOutput(prompt=self.get_hazard_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_hazard_input())),
                                 #   PromptAndPromptOutput(prompt=self.get_how_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_how_it_harms_input())),
                                 #   PromptAndPromptOutput(prompt=self.get_who_it_harms_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_who_it_harms_input())),
-                                #   PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_prevention_input())),
+                                #   PromptAndPromptOutput(prompt=self.get_prevention_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_Prevention_input())),
                                 #   PromptAndPromptOutput(prompt=self.get_mitigation_input().generate_prompt(), prompt_output=LLM_caller.get_model_output(self.get_mitigation_input()))]
     
     def write_prompt_outputs_to_csv(self, LLM_caller: Type[LLMCaller], file_name, folder_path):

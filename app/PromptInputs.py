@@ -3,7 +3,17 @@
 
 class PromptInput:
     def __init__(self):
-        pass
+        self.activity_definition = """an action or process that involves
+        physical or mental effort."""
+
+        self.hazard_definition = """a dangerous phenomenon, substance, human activity or condition. 
+        It may cause loss of life, injury or other health impacts, property damage, loss of livelihoods 
+        and services, social and economic disruption, or environmental damage."""
+
+        self.who_it_harms_entry_definition = """
+        specific individuals, groups, environmental components or infrastructure
+        likely to be negatively affected by identified risks, 
+        excluding abstract concepts, generic terms or vague terms."""
 
     def generate_prompt(self):
         pass
@@ -26,12 +36,8 @@ class Activity(PromptInput):
         common_noun_definition = """a noun denoting a class of objects or a concept as opposed 
         to a particular individual."""
 
-        activity_definition = """a specific action or process that involves 
-        physical or mental effort."""
-
         return f'''
-        An 'activity' is defined as 'a specific action or process that involves 
-        physical or mental effort'. 
+        An 'activity' is defined as {self.activity_definition}
         Firstly, in one sentence, provide a description of "{self.activity}". Secondly, in one sentence, 
         compare this description with the provided definition of an activity. Then decide if "{self.activity}" 
         is an activity. Thirdly, write the sentence in the format: 
@@ -54,13 +60,32 @@ class Hazard(PromptInput):
         self.hazard = hazard
 
     def generate_prompt(self):
-        hazard_definition = """a dangerous phenomenon, substance, human activity or condition. 
-        It may cause loss of life, injury or other health impacts, property damage, loss of livelihoods 
-        and services, social and economic disruption, or environmental damage."""
-        return f'''If a 'hazard' is defined as '{hazard_definition}', is the following: '{self.hazard}', 
+        return f'''If a 'hazard' is defined as '{self.hazard_definition}', is the following: '{self.hazard}', 
         during the activity: '{self.activity}', an example of a 'hazard'?'''
 
 class HowItHarms(PromptInput):
+    def __init__(self, how_it_harms):
+        super().__init__()
+        self.how_it_harms = how_it_harms
+    
+    def generate_prompt(self):
+        how_it_harms_entry_definition = f"""
+            the potential negative consequences of a hazard. It can outline the specific impacts on
+            human health, property, environment, economics, social structures, livelihoods, essential 
+            services, and the risk of loss of life. It must be specific, clear and precise."""
+        
+        return f'''An "appropriate entry for the how it harms field" in a Risk Assessment is 
+        defined as: "{how_it_harms_entry_definition}". 
+        Firstly, comparing the entry: "{self.how_it_harms}"
+        with the definition of an "appropriate entry for the how it harms field", 
+        explain whether "{self.how_it_harms}" is an appropriate entry. Secondly, 
+        answer True if "{self.how_it_harms} is an appropriate entry, or False if it is not.
+        
+        The output should be in the format:
+        Comparison and Explanation: your_explanation
+        Answer: your_answer'''
+
+class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
         super().__init__()
         self.how_it_harms = how_it_harms
@@ -81,21 +106,16 @@ class WhoItHarms(PromptInput):
 
     def generate_prompt(self):
 
-        who_it_harms_entry_definition = """
-            specific individuals, groups, environmental components or infrastructure
-            likely to be negatively affected by identified risks, 
-            excluding abstract concepts, generic terms or vague terms."""
-
         return f'''The "expected entry" for the "who it harms" field in a Risk Assessment is 
-        defined as: "{who_it_harms_entry_definition}".
+        defined as: "{self.who_it_harms_entry_definition}".
         Firstly, describe "{self.who_it_harms}" in one sentence. Secondly, comparing this description
         with the definition of the "expected entry" for the "who it harms" field, 
         explain whether "{self.who_it_harms}" is an appropriate entry.
         Thirdly, answer True if "{self.who_it_harms} is an appropriate entry, or False if it is not.
         
         The output should be in the format:
-        Description: your_description
-        Comparison: your_explanation
+        Comparison: your_comparison
+        Explanation: your_explanation
         Answer: your_answer'''
 
 class WhoItHarmsInContext(PromptInput):
@@ -128,6 +148,7 @@ class WhoItHarmsInContext(PromptInput):
         # If not, is '{self.who_it_harms}' likely to be harmed by hazard: '{self.hazard}' during the activity: '{self.activity}' 
         # because of how the hazard causes harm: '{self.how_it_harms}'?'''
 
+# TODO: Could also do a test to see if a model can correctly classify between Prevention and mitigation.
 class Prevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
@@ -138,10 +159,14 @@ class Prevention(PromptInput):
         self.who_it_harms = who_it_harms
 
     def generate_prompt(self):
-        prevention_definition = f'an action which reduces the probability that the hazard occurs.'
-        return f'''If a 'prevention measure' is defined as '{prevention_definition}', is the following: '{self.prevention}' 
-        an example of a 'prevention measure' for the following hazard: '{self.hazard}' during the activity: '{self.activity}' 
-        given how it harms: '{self.how_it_harms}' and who it harms: '{self.who_it_harms}'?'''
+        prevention_definition = f'an action which directly reduces the probability that the hazard occurs.'
+        return f'''A 'prevention measure' is defined as '{prevention_definition}'. Given this definition,
+        explain in one sentence whether '{self.prevention}' is a prevention measure for the following hazard: '{self.hazard}' 
+        during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
+        and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'prevention measure', answer True, 
+        else answer False. The prompt output should be in the format:
+        Explanation: your_explanation_in_one_sentence
+        Answer: your_answer'''
 
 class Mitigation(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
@@ -153,10 +178,42 @@ class Mitigation(PromptInput):
         self.who_it_harms = who_it_harms
 
     def generate_prompt(self):
+
         severity_definition = """a measure of the seriousness of adverse consequences that could occur if the hazard 
         leads to an accident."""
-        mitigation_definition = f'an action which reduces the severity of a hazard. Severity in this context is {severity_definition}'
+        mitigation_definition = f'an action which directly reduces the severity of a hazard. Severity in this context is {severity_definition}'
 
-        return f'''If a 'mitigation measure' is defined as '{mitigation_definition}', is the following: '{self.mitigation}' 
-        an example of a 'mitigation measure' for the following hazard: '{self.hazard}' during the activity '{self.activity}' 
-        given how it harms: '{self.how_it_harms}' and who it harms: '{self.who_it_harms}'?'''
+        return f'''A 'mitigation measure' is defined as '{mitigation_definition}'. Given this definition,
+        explain in one sentence whether '{self.mitigation}' is a mitigation measure for the following hazard: 
+        '{self.hazard}' during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
+        and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'mitigation measure', answer True, 
+        else answer False. The prompt output should be in the format:
+        Explanation: your_explanation_in_one_sentence
+        Answer: your_answer'''
+
+class PreventionClassification(PromptInput):
+    def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
+        super().__init__()
+        self.prevention = prevention
+        self.activity = activity
+        self.hazard = hazard
+        self.how_it_harms = how_it_harms
+        self.who_it_harms = who_it_harms
+
+    # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
+    def generate_prompt(self):
+
+        prevention_definition = f'an action which directly reduces the probability that the hazard occurs.'
+
+        severity_definition = """a measure of the seriousness of adverse consequences that could occur if the hazard 
+        leads to an accident."""
+        mitigation_definition = f'an action which directly reduces the severity of a hazard. Severity in this context is {severity_definition}'
+
+        return f'''Given that a 'prevention measure' is defined as {prevention_definition} and a 'mitigation measure' 
+        is defined as {mitigation_definition}, explain in one sentence whether the following:
+        '{self.prevention}' is a 'prevention measure' or a 'mitigation measure' for the following hazard: 
+        '{self.hazard}' during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}'
+        and who/what the hazard harms: '{self.who_it_harms}'. Then answer True if it is a prevention measure
+        and False if it is a mitigation measure. The output should be in the format:
+        Explanation: your_explanation_in_one_sentence
+        Answer: your_answer'''

@@ -1,23 +1,12 @@
 from ExamplesGenerator import InputAndExpectedOutputGenerator
 from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
-from PromptInputs import WhoItHarms
+from PromptInputs import PromptInput, WhoItHarms
+from typing import Type
 
-def create_classification_objects(*lists):
-    combined_list = []
+from CombineAndFlattenLists import CombineAndFlattenListsOfPromptInputs
 
-    for sublist in lists:
-        combined_list.extend(sublist)
-
-    # Flattening the list using list comprehension
-    flattened_list = [item for sublist in combined_list for item in sublist.split(', ')]
-
-    classification_objects = []
-
-    for who_it_harms in flattened_list:
-        classification_objects.append(WhoItHarms(who_it_harms))
-
-    return classification_objects
+### CORRECT EXAMPLES OF 'WHO IT HARMS' ###
 
 individuals = [
     "Employees",
@@ -79,16 +68,8 @@ infrastructure = [
     "Information systems"
 ]
 
-correct_examples_list = create_classification_objects(
-    individuals,
-    groups,
-    occupational_roles,
-    specific_demographics,
-    community_members,
-    environmental_components,
-    specific_individuals,
-    infrastructure
-)
+
+### INCORRECT EXAMPLES OF 'WHO IT HARMS'###
 
 abstract_concepts = [
     "Happiness",
@@ -144,19 +125,25 @@ unspecified_entities = [
     "Anybody"
 ]
 
-incorrect_examples_list = create_classification_objects(
-    abstract_concepts,
-    general_terms,
-    vague_descriptions,
-    broad_categories,
-    unquantifiable_terms,
-    overly_generalized_groups,
-    generic_descriptions,
-    undefined_terms,
-    unspecified_entities
-)
-
 if __name__ == '__main__':
+    combine_and_flatten = CombineAndFlattenListsOfPromptInputs(prompt_input_class=WhoItHarms)
+    correct_examples_list = combine_and_flatten.create_prompt_input_objects(individuals,
+                                                                            groups,
+                                                                            occupational_roles,
+                                                                            specific_demographics,
+                                                                            community_members,
+                                                                            environmental_components,
+                                                                            specific_individuals,
+                                                                            infrastructure)
+    incorrect_examples_list = combine_and_flatten.create_prompt_input_objects(abstract_concepts,
+                                                                            general_terms,
+                                                                            vague_descriptions,
+                                                                            broad_categories,
+                                                                            unquantifiable_terms,
+                                                                            overly_generalized_groups,
+                                                                            generic_descriptions,
+                                                                            undefined_terms,
+                                                                            unspecified_entities)
 
     examples_generator = InputAndExpectedOutputGenerator(correct_examples_list=correct_examples_list,
                                                          incorrect_examples_list=incorrect_examples_list)
