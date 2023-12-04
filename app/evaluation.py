@@ -47,24 +47,23 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
-    # LLM = LLMWithGeneratedText(LLM_API_ENDPOINT='https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-hf')
     LLM = OpenAILLM()
-    
-    prompts_and_prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
+
+    prompts = RA.get_list_of_prompts(LLM)
+    prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
+    regex_matches = RA.get_list_of_regex_matches_for_prompt_outputs(prompt_outputs)
 
     feedback = ''
 
-    # for i in range(len(prompts_and_prompt_outputs)):
-    #     prompt = prompts_and_prompt_outputs[i].prompt
-    #     prompt_output = prompts_and_prompt_outputs[i].prompt_output
+    for i in range(len(prompts)):
+        prompt = prompts[i]
+        prompt_output = prompt_outputs[i]
+        regex_match = regex_matches[i]
 
-    output_from_activity_prompt = prompts_and_prompt_outputs[0].prompt_output
+        feedback += f'Prompt {i+1}: {prompt}\n'
+        feedback += f'Prompt Output {i+1}: {prompt_output}\n'
+        feedback += f'Regex Match {i+1}: {regex_match}\n\n'
 
-    feedback += f'Prompt Output: {output_from_activity_prompt}\n\n'
-
-    pattern = re.compile(r"(true|false)", re.IGNORECASE)
-    match = re.search(pattern, output_from_activity_prompt)
-
-    is_an_activity = match.group(1).lower() == "true"
+    is_an_activity = regex_matches[0]
     
     return Result(is_correct=is_an_activity, feedback=feedback)

@@ -3,16 +3,11 @@ import csv
 import pathlib
 from datetime import datetime
 
-try:
-    from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
-    from .GPTCostCalculator import GPTCostCalculator
-    from .InputAndExpectedOutput import InputAndExpectedOutput
-    from .GoogleSheetsWriter import GoogleSheetsWriter
-except:
-    from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
-    from GPTCostCalculator import GPTCostCalculator
-    from InputAndExpectedOutput import InputAndExpectedOutput
-    from GoogleSheetsWriter import GoogleSheetsWriter
+from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
+from GPTCostCalculator import GPTCostCalculator
+from InputAndExpectedOutput import InputAndExpectedOutput
+from GoogleSheetsWriter import GoogleSheetsWriter
+from RegexPatternMatcher import RegexPatternMatcher
 
 class TestModelAccuracy:
     def __init__(self, 
@@ -33,21 +28,6 @@ class TestModelAccuracy:
         prompt_output = self.LLM.get_model_output(prompt_input=input)
         
         return prompt_input, prompt_output
-    
-    def get_regex_pattern(self, input_and_expected_output):
-        return re.compile(r"(true|false)", re.IGNORECASE)
-    
-    def check_prompt_output_against_regex_pattern(self, pattern, prompt_output):
-        
-        try:
-            match = re.search(pattern, prompt_output)
-            if match:
-                return match.group(1).lower() == "true"
-            else:
-                raise Exception("Pattern not found in output prompt")
-            
-        except Exception as e:
-            print(f'Caught an exception: {e}')
 
     def convert_list_of_lists_to_string(self, list_of_lists):
         # Convert each sublist to a string with newline
@@ -70,9 +50,8 @@ class TestModelAccuracy:
 
         for i in range(len(self.list_of_input_and_expected_outputs)):
             prompt_input, prompt_output = self.get_prompt_input_and_output(self.list_of_input_and_expected_outputs[i])
-            pattern = self.get_regex_pattern(self.list_of_input_and_expected_outputs[i])
-
-            is_correct = self.check_prompt_output_against_regex_pattern(pattern, prompt_output)
+            regex_pattern_matcher = RegexPatternMatcher()
+            is_correct = regex_pattern_matcher.check_string_against_pattern(prompt_output)
             expected_output = self.list_of_input_and_expected_outputs[i].expected_output
 
             result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
