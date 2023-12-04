@@ -1,13 +1,15 @@
 from typing import Type
 import csv
-from RegexPatternMatcher import RegexPatternMatcher
+
 
 try:
     from .PromptInputs import *
     from .LLMCaller import *
+    from .RegexPatternMatcher import RegexPatternMatcher
 except ImportError:
     from PromptInputs import *
     from LLMCaller import *
+    from RegexPatternMatcher import RegexPatternMatcher
 
 class RiskAssessment:
     def __init__(self, activity, hazard, who_it_harms, how_it_harms,
