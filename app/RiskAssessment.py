@@ -35,7 +35,7 @@ class RiskAssessment:
         return Activity(activity=self.activity)
     
     def get_how_it_harms_input(self):
-        return HowItHarmsInContext(how_it_harms=self.how_it_harms)
+        return HowItHarms(how_it_harms=self.how_it_harms)
     
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
