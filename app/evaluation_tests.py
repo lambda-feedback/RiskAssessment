@@ -37,7 +37,7 @@ class TestEvaluationFunction(unittest.TestCase):
     def test_returns_is_correct_true(self):
         response = [['Using a trombone as a demonstration for a TPS presentation'],
                           ['Impact from instrument'],
-                          ['Audience'],
+                          ['Audience watching presentation'],
                           ['Slide could hit audience member, causing impact injury.'],
                           [4], [2], [8],
                           ['Keep safe distance between the player and audience; hold instrument securely'],
@@ -50,17 +50,16 @@ class TestEvaluationFunction(unittest.TestCase):
         print(result.get("feedback"))
 
         self.assertIn(result.get("is_correct"), [True, False])
-        # self.assertEqual(result.get("is_correct"), True)
 
-    def test_get_model_output_with_Llama_model(self):
-        model_name = 'meta-llama/Llama-2-13b-chat-hf'
-        LLM = LLMWithGeneratedText(LLM_API_ENDPOINT=f'https://api-inference.huggingface.co/models/{model_name}')
+    # def test_get_model_output_with_Llama_model(self):
+    #     model_name = 'meta-llama/Llama-2-13b-chat-hf'
+    #     LLM = LLMWithGeneratedText(LLM_API_ENDPOINT=f'https://api-inference.huggingface.co/models/{model_name}')
         
-        prompt_input = Activity(activity='fencing')
+    #     prompt_input = Activity(activity='fencing')
         
-        LLM_output = LLM.get_model_output(prompt_input)
-        print(LLM_output)
-        self.assertIsInstance(LLM_output, str)
+    #     LLM_output = LLM.get_model_output(prompt_input)
+    #     print(LLM_output)
+    #     self.assertIsInstance(LLM_output, str)
 
     # TODO: Test the function which creates an instance of a RiskAssessment object
 

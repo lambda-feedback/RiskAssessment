@@ -1,7 +1,7 @@
 import re
 
 class RegexPatternMatcher:
-    def __init__(self, pattern):
+    def __init__(self):
         self.pattern = re.compile(r"(true|false)", re.IGNORECASE)
     
     def check_string_against_pattern(self, string):
