@@ -49,9 +49,21 @@ class TestModelAccuracy:
         except Exception as e:
             print(f'Caught an exception: {e}')
 
+    def convert_list_of_lists_to_string(self, list_of_lists):
+        # Convert each sublist to a string with newline
+        sublist_strings = ['[' + ', '.join(map(str, sublist)) + ']' for sublist in list_of_lists]
+
+        # Join the sublist strings with a newline and add outer brackets
+        return '[' + ',\n'.join(sublist_strings) + ']'
+
     def get_model_accuracy_and_model_outputs(self):
         print('Counting correct responses...')
         count_correct = 0
+        count_true_positives = 0
+        count_false_positives = 0
+        count_false_negatives = 0
+        count_true_negatives = 0
+
         output_string = ''
         prompt_outputs_for_correct_responses = ''
         prompt_outputs_for_incorrect_responses = ''
@@ -61,23 +73,33 @@ class TestModelAccuracy:
             pattern = self.get_regex_pattern(self.list_of_input_and_expected_outputs[i])
 
             is_correct = self.check_prompt_output_against_regex_pattern(pattern, prompt_output)
+            expected_output = self.list_of_input_and_expected_outputs[i].expected_output
 
             result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
                             'is_correct': is_correct, 
-                            'expected_output': self.list_of_input_and_expected_outputs[i].expected_output}
+                            'expected_output': expected_output}
             
             output_string += f'{i + 1}: {str(result_dict)}\n\n'
 
-            if is_correct == self.list_of_input_and_expected_outputs[i].expected_output:
+            if is_correct == expected_output:
                 count_correct += 1
+                if is_correct == True:
+                    count_true_positives += 1
+                else:
+                    count_true_negatives += 1
                 prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\n\n'
                 print(count_correct)
             else:
+                if is_correct == True:
+                    count_false_positives += 1
+                else:  
+                    count_false_negatives += 1
                 prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\n\n'
         
         accuracy = round(count_correct / len(self.list_of_input_and_expected_outputs) * 100, 2)
+        confusion_matrix = [[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]]
 
-        return accuracy, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
+        return accuracy, self.convert_list_of_lists_to_string(confusion_matrix), output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
     
     def get_first_prompt_input_and_output(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
@@ -102,6 +124,7 @@ class TestModelAccuracy:
     
     def save_test_results(self, 
                           accuracy, 
+                          confusion_matrix,
                           output_string, 
                           prompt_outputs_for_correct_responses,
                           prompt_outputs_for_incorrect_responses,
@@ -126,6 +149,7 @@ class TestModelAccuracy:
                             model_parameters, 
                             accuracy, 
                             num_examples,
+                            confusion_matrix,
                             output_string,
                             first_prompt_input,
                             first_prompt_output,
@@ -137,9 +161,10 @@ class TestModelAccuracy:
         
     # TODO: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
-        accuracy, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
+        accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
         first_prompt_input, first_prompt_output = self.get_first_prompt_input_and_output()
         self.save_test_results(accuracy=accuracy, 
+                               confusion_matrix=confusion_matrix,
                                output_string=output_string, 
                                first_prompt_input=first_prompt_input,
                                first_prompt_output=first_prompt_output,

@@ -4,7 +4,7 @@
 
 from TestModelAccuracy import TestModelAccuracy, TestModelAccuracyForActivitiesWithLLAMA
 from LLMCaller import OpenAILLM, LLMWithGeneratedText
-from example_activities import activities
+
 import re
 
 try:
