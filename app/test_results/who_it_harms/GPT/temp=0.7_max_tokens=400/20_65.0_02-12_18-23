@@ -1,0 +1,63 @@
+Example prompt input:
+In one sentence, describe the hazard: 'Potential vehicle collision or sudden stop' during the 
+        activity: 'Driving without Seatbelt' and how it harms: Increased risk of severe injury or fatality in the event of an accident. Then in one sentence,
+        explain whether or not 'who it harms': 'Driver and passengers in the vehicle' is harmed by this hazard. 
+        If 'who it harms' is harmed by this hazard, is_correct = True. 
+        Then write the final sentence of your answer in the format: dict(is_correct=True/False).
+
+Example prompt output:
+'Potential vehicle collision or sudden stop' during the activity of 'Driving without Seatbelt' increases the risk of severe injury or fatality in the event of an accident. 
+
+Driver and passengers in the vehicle are harmed by this hazard, therefore is_correct = True. 
+
+dict(is_correct=True)
+
+All model outputs and expected outputs:
+{'input': 'WhoItHarmsInContext(who_it_harms=Driver and passengers in the vehicle, how_it_harms=Increased risk of severe injury or fatality in the event of an accident, activity=Driving without Seatbelt, hazard=Potential vehicle collision or sudden stop)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Non-smokers sharing the same space, how_it_harms=Increased risk of respiratory issues for nonsmokers, activity=Smoking in Closed Spaces, hazard=Secondhand smoke exposure)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Driver, passengers, and others on the road, how_it_harms=Higher likelihood of accidents due to diverted attention, activity=Texting While Driving, hazard=Distracted driving)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individual consuming alcohol and potentially others around them, how_it_harms=Increased risk of accidents and health issues, activity=Excessive Alcohol Consumption, hazard=Impaired judgment and coordination)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Office workers or anyone using the workstation, how_it_harms=Development of chronic pain and discomfort, activity=Poor Ergonomics in Office Setup, hazard=Musculoskeletal strain)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals, businesses, and organizations, how_it_harms=Risk of data breaches and financial losses, activity=Ignoring Cybersecurity Practices, hazard=Increased vulnerability to cyberattacks)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals neglecting physical exercise, how_it_harms=Increased risk of obesity, cardiovascular diseases, and mental health issues, activity=Skipping Regular Exercise, hazard=Physical inactivity)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals pushing themselves without adequate self-care, how_it_harms=Reduced mental well-being and productivity, activity=Ignoring Mental Health Breaks, hazard=Burnout and mental exhaustion)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals exposed to the sun without protection, how_it_harms=Increased risk of skin cancer and premature aging, activity=Not Using Sunscreen, hazard=UV radiation)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=The environment and future generations, how_it_harms=Damage to ecosystems, water sources, and wildlife, activity=Reckless Waste Disposal, hazard=Environmental contamination)', 'is_correct': True, 'expected_output': True}
+{'input': 'WhoItHarmsInContext(who_it_harms=Non-smokers sharing the same space, how_it_harms=Increased risk of severe injury or fatality in the event of an accident, activity=Driving without Seatbelt, hazard=Potential vehicle collision or sudden stop)', 'is_correct': False, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Driver, passengers, and others on the road, how_it_harms=Increased risk of respiratory issues for nonsmokers, activity=Smoking in Closed Spaces, hazard=Secondhand smoke exposure)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individual consuming alcohol and potentially others around them, how_it_harms=Higher likelihood of accidents due to diverted attention, activity=Texting While Driving, hazard=Distracted driving)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Office workers or anyone using the workstation, how_it_harms=Increased risk of accidents and health issues, activity=Excessive Alcohol Consumption, hazard=Impaired judgment and coordination)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals, businesses, and organizations, how_it_harms=Development of chronic pain and discomfort, activity=Poor Ergonomics in Office Setup, hazard=Musculoskeletal strain)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals neglecting physical exercise, how_it_harms=Risk of data breaches and financial losses, activity=Ignoring Cybersecurity Practices, hazard=Increased vulnerability to cyberattacks)', 'is_correct': False, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals pushing themselves without adequate self-care, how_it_harms=Increased risk of obesity, cardiovascular diseases, and mental health issues, activity=Skipping Regular Exercise, hazard=Physical inactivity)', 'is_correct': None, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Individuals exposed to the sun without protection, how_it_harms=Reduced mental well-being and productivity, activity=Ignoring Mental Health Breaks, hazard=Burnout and mental exhaustion)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=The environment and future generations, how_it_harms=Increased risk of skin cancer and premature aging, activity=Not Using Sunscreen, hazard=UV radiation)', 'is_correct': True, 'expected_output': False}
+{'input': 'WhoItHarmsInContext(who_it_harms=Driver and passengers in the vehicle, how_it_harms=Damage to ecosystems, water sources, and wildlife, activity=Reckless Waste Disposal, hazard=Environmental contamination)', 'is_correct': False, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ {'is_correct': True}
+
+{'is_correct': True}
+
+Impaired judgment and coordination during excessive alcohol consumption increases the risk of accidents and health issues. 
+
+Office workers or anyone using the workstation can be harmed by this hazard, therefore is_correct = True. 
+
+dict(is_correct=True)
+
+Musculoskeletal strain during poor ergonomics in office setup can lead to the development of chronic pain and discomfort, which harms individuals, businesses, and organizations. 
+
+dict(is_correct=True)
+
+Individuals who skip regular exercise and engage in physical inactivity face an increased risk of obesity, cardiovascular diseases, and mental health issues, which harm their overall well-being.
+
+Dict(is_correct=True)
+
+'UV radiation' during the activity 'Not Using Sunscreen' increases the risk of skin cancer and premature aging by damaging the skin cells. 
+'The environment and future generations' are harmed by this hazard as UV radiation can also harm marine life, crops, and contribute to climate change, leading to long-term negative effects. 
+{'is_correct': True}
+
+ 
+
+Accuracy = 65.0 %

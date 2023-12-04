@@ -1,3 +1,12 @@
+# pytest -v -s local_tests.py
+
+# The -s option above is so you can see printouts even if the test fails
+
+from TestModelAccuracy import TestModelAccuracy, TestModelAccuracyForActivitiesWithLLAMA
+from LLMCaller import OpenAILLM, LLMWithGeneratedText
+from example_activities import activities
+import re
+
 try:
     from InputAndExpectedOutput import InputAndExpectedOutput
     from LLMCaller import *
@@ -33,3 +42,22 @@ activities = [
     InputAndExpectedOutput(input=Activity(activity='Puzzle'), expected_output=True),
     InputAndExpectedOutput(input=Activity(activity='Party'), expected_output=True),
     InputAndExpectedOutput(input=Activity(activity='Movie'), expected_output=True)]
+
+if __name__ == "__main__":
+    
+    test_accuracy = TestModelAccuracy(
+        LLM=OpenAILLM(),
+        LLM_name='gpt-3.5-turbo',
+        list_of_input_and_expected_outputs=activities,
+        sheet_name='Activities')
+    test_accuracy.run_test()
+
+    # Llama_model_name = 'Llama-2-7b-hf'
+    # test_accuracy = TestModelAccuracyForActivitiesWithLLAMA(
+    #     LLM=LLMWithGeneratedText(
+    #         LLM_API_ENDPOINT=f"https://api-inference.huggingface.co/models/meta-llama/{Llama_model_name}"
+    #         ),
+    #     LLM_name=Llama_model_name,
+    #     list_of_input_and_expected_outputs=activities,
+    #     folder_name='activities')
+    # test_accuracy.run_test()

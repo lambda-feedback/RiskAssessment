@@ -1,0 +1,35 @@
+Example prompt input:
+
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        First provide a description of "dog". Then compare this description 
+        with the provided definition of an activity. Then if dog is an activity, is_correct = True. 
+        End your answer in the format: dict('input': dog, is_an_activity: True/False)
+
+Example prompt output:
+
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        First provide a description of "dog". Then compare this description 
+        with the provided definition of an activity. Then if dog is an activity, is_correct = True. 
+        End your answer in the format: dict('input': dog, is_an_activity: True/False)
+
+        dog = "A dog is a domesticated carnivorous mammal and
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': None, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ 
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        First provide a description of "dog". Then compare this description 
+        with the provided definition of an activity. Then if dog is an activity, is_correct = True. 
+        End your answer in the format: dict('input': dog, is_an_activity: True/False)
+
+        dog = "A dog is a domesticated carnivorous mammal and
+
+ 
+
+Accuracy = 0.0 %

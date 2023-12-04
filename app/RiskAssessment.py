@@ -45,7 +45,7 @@ class RiskAssessment:
                           hazard = self.hazard)
 
     def get_who_it_harms_input(self):
-        return WhoItHarms(who_it_harms=self.who_it_harms,
+        return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
                           how_it_harms=self.how_it_harms,
                           activity=self.activity,
                           hazard=self.hazard)
@@ -63,6 +63,8 @@ class RiskAssessment:
                           hazard=self.hazard,
                           how_it_harms=self.how_it_harms,
                           who_it_harms=self.who_it_harms)
+    
+    ### TODO: Add get_who_it_harms_classification 
     
     # TODO: Add ability to see prompt output percentages
 

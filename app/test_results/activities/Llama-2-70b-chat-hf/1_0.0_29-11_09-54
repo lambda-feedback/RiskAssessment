@@ -1,0 +1,180 @@
+Example prompt input:
+
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "dog".
+        Then in one sentence compare this description of "dog" 
+        with the provided definition of an activity. 
+        If "dog" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)
+
+Example prompt output:
+
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "dog".
+        Then in one sentence compare this description of "dog" 
+        with the provided definition of an activity. 
+        If "dog" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "dog" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Dog is an activity because it involves physical effort."
+dict(is_correct=False)['reason'] = "Dog is not an activity because it is a living being and not a specific action or process."
+
+# 2. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "playing chess".
+        Then in one sentence compare this description of "playing chess" 
+        with the provided definition of an activity. 
+        If "playing chess" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "playing chess" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Playing chess is an activity because it involves mental effort."
+dict(is_correct=False)['reason'] = "Playing chess is not an activity because it is a game and not a specific action or process."
+
+# 3. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "watching TV".
+        Then in one sentence compare this description of "watching TV" 
+        with the provided definition of an activity. 
+        If "watching TV" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "watching TV" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=False)['reason'] = "Watching TV is not an activity because it does not involve physical or mental effort."
+dict(is_correct=True)['reason'] = "Watching TV could be considered an activity because it involves mental effort in paying attention to the show."
+
+# 4. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "eating".
+        Then in one sentence compare this description of "eating" 
+        with the provided definition of an activity. 
+        If "eating" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "eating" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Eating is an activity because it involves physical effort in chewing and swallowing food."
+dict(is_correct=False)['reason'] = "Eating is not an activity because it is a natural bodily function and not a specific action or process."
+
+# 5. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "thinking".
+        Then in one sentence compare this description of "thinking" 
+        with the provided definition of an activity. 
+        If "thinking" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "thinking" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Thinking is an activity because it involves mental effort."
+dict(is_correct=False)['reason'] = "Thinking is not an activity because it is a mental process and not a specific action or process."
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': True, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "dog".
+        Then in one sentence compare this description of "dog" 
+        with the provided definition of an activity. 
+        If "dog" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "dog" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Dog is an activity because it involves physical effort."
+dict(is_correct=False)['reason'] = "Dog is not an activity because it is a living being and not a specific action or process."
+
+# 2. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "playing chess".
+        Then in one sentence compare this description of "playing chess" 
+        with the provided definition of an activity. 
+        If "playing chess" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "playing chess" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Playing chess is an activity because it involves mental effort."
+dict(is_correct=False)['reason'] = "Playing chess is not an activity because it is a game and not a specific action or process."
+
+# 3. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "watching TV".
+        Then in one sentence compare this description of "watching TV" 
+        with the provided definition of an activity. 
+        If "watching TV" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "watching TV" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=False)['reason'] = "Watching TV is not an activity because it does not involve physical or mental effort."
+dict(is_correct=True)['reason'] = "Watching TV could be considered an activity because it involves mental effort in paying attention to the show."
+
+# 4. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "eating".
+        Then in one sentence compare this description of "eating" 
+        with the provided definition of an activity. 
+        If "eating" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "eating" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Eating is an activity because it involves physical effort in chewing and swallowing food."
+dict(is_correct=False)['reason'] = "Eating is not an activity because it is a natural bodily function and not a specific action or process."
+
+# 5. 
+        The definition of activity is: "a specific action or process that involves 
+        physical or mental effort.". 
+        In one sentence, provide a description of "thinking".
+        Then in one sentence compare this description of "thinking" 
+        with the provided definition of an activity. 
+        If "thinking" is an activity, is_correct = True. 
+        Then write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+        If "thinking" is not an activity, is_correct = False. 
+        Write one sentence in the format: 
+dict(is_correct=True/False)['reason'] = "reason for True/False"
+
+dict(is_correct=True)['reason'] = "Thinking is an activity because it involves mental effort."
+dict(is_correct=False)['reason'] = "Thinking is not an activity because it is a mental process and not a specific action or process."
+
+ 
+
+Accuracy = 0.0 %

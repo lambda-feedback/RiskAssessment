@@ -52,18 +52,15 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertIn(result.get("is_correct"), [True, False])
         # self.assertEqual(result.get("is_correct"), True)
 
-    # TODO: Is the below test necessary?
-    def test_convert_RiskAssessment_object_into_lambda_response_list(self):
-        actual_value = RA_1.convert_RiskAssessment_object_into_lambda_response_list()
-        expected_value = ['Using a trombone as a demonstration for a TPS presentation',
-                          'Impact from instrument',
-                          'Audience',
-                          'Slide could hit audience member, causing impact injury.',
-                          4, 2, 8,
-                          'Keep safe distance between the player and audience; hold instrument securely',
-                          '',
-                          1, 2, 2]
-        self.assertEqual(actual_value, expected_value)
+    def test_get_model_output_with_Llama_model(self):
+        model_name = 'meta-llama/Llama-2-13b-chat-hf'
+        LLM = LLMWithGeneratedText(LLM_API_ENDPOINT=f'https://api-inference.huggingface.co/models/{model_name}')
+        
+        prompt_input = Activity(activity='fencing')
+        
+        LLM_output = LLM.get_model_output(prompt_input)
+        print(LLM_output)
+        self.assertIsInstance(LLM_output, str)
 
     # TODO: Test the function which creates an instance of a RiskAssessment object
 
