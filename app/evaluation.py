@@ -62,14 +62,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
     feedback += f'Prompt Output: {output_from_activity_prompt}\n\n'
 
-    pattern = r'dict\(\'input\': "({})", is_an_activity: (True|False)\)'.format(re.escape(activity))
+    pattern = re.compile(r"(true|false)", re.IGNORECASE)
     match = re.search(pattern, output_from_activity_prompt)
 
-    if match:
-        is_an_activity = match.group(2) == "True"
+    is_an_activity = match.group(1).lower() == "true"
     
-        if is_an_activity == True:
-            return Result(is_correct=True, feedback=feedback)
-    
-    else:
-        return Result(is_correct=False, feedback=feedback)
+    return Result(is_correct=is_an_activity, feedback=feedback)
