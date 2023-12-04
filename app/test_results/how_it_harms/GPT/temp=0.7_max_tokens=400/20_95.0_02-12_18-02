@@ -6,41 +6,36 @@ In one sentence, describe the hazard: 'Handling corrosive chemicals without prot
         in the format: dict(is_correct=True/False).
 
 Example prompt output:
-The hazard of handling corrosive chemicals without protective gear during chemical handling can result in chemical burns, which is a way that this hazard causes harm, therefore is_correct = True. 
+The hazard of handling corrosive chemicals without protective gear during the activity of chemical handling is the risk of chemical burns. 
+Chemical burns is a way that this hazard causes harm, so is_correct = True. 
 {'is_correct': True}
 
 All model outputs and expected outputs:
-{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': False, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Fires, activity=Fire safety demonstration, hazard=Presence of combustible materials near an open flame)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Electric shocks, activity=Electrical equipment maintenance, hazard=Frayed electrical cords or exposed wiring)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Cuts, activity=Tool maintenance, hazard=Improperly stored cutting tools with exposed blades)', 'is_correct': True, 'expected_output': True}
-{'input': 'HowItHarms(how_it_harms=Infections, activity=Laboratory work, hazard=Exposure to pathogens in a laboratory or healthcare setting)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Hearing loss or auditory issues over time, activity=Heavy machinery operation, hazard=Operating heavy machinery without hearing protection)', 'is_correct': True, 'expected_output': True}
-{'input': 'HowItHarms(how_it_harms=Falls, activity=Working at heights, hazard=Working at heights without proper fall protection)', 'is_correct': True, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Infections, activity=Laboratory work, hazard=Exposure to pathogens in a laboratory or healthcare setting)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Crushing injuries, activity=Industrial machinery operation, hazard=Operating industrial machinery without proper training or safety features)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Radiation exposure, activity=Working with radioactive materials, hazard=Lack of shielding in an environment with radioactive materials)', 'is_correct': True, 'expected_output': True}
+{'input': 'HowItHarms(how_it_harms=Falls, activity=Working at heights, hazard=Working at heights without proper fall protection)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Asphyxiation, activity=Working in confined spaces, hazard=Entering confined spaces without proper ventilation or rescue procedures)', 'is_correct': True, 'expected_output': True}
 {'input': 'HowItHarms(how_it_harms=Fires, activity=Chemical handling, hazard=Handling corrosive chemicals without protective gear)', 'is_correct': False, 'expected_output': False}
 {'input': 'HowItHarms(how_it_harms=Electric shocks, activity=Fire safety demonstration, hazard=Presence of combustible materials near an open flame)', 'is_correct': False, 'expected_output': False}
 {'input': 'HowItHarms(how_it_harms=Cuts, activity=Electrical equipment maintenance, hazard=Frayed electrical cords or exposed wiring)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Infections, activity=Tool maintenance, hazard=Improperly stored cutting tools with exposed blades)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Hearing loss or auditory issues over time, activity=Laboratory work, hazard=Exposure to pathogens in a laboratory or healthcare setting)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Falls, activity=Heavy machinery operation, hazard=Operating heavy machinery without hearing protection)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Crushing injuries, activity=Working at heights, hazard=Working at heights without proper fall protection)', 'is_correct': True, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Hearing loss or auditory issues over time, activity=Tool maintenance, hazard=Improperly stored cutting tools with exposed blades)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Infections, activity=Heavy machinery operation, hazard=Operating heavy machinery without hearing protection)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Crushing injuries, activity=Laboratory work, hazard=Exposure to pathogens in a laboratory or healthcare setting)', 'is_correct': False, 'expected_output': False}
 {'input': 'HowItHarms(how_it_harms=Radiation exposure, activity=Industrial machinery operation, hazard=Operating industrial machinery without proper training or safety features)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Asphyxiation, activity=Working with radioactive materials, hazard=Lack of shielding in an environment with radioactive materials)', 'is_correct': False, 'expected_output': False}
-{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Working in confined spaces, hazard=Entering confined spaces without proper ventilation or rescue procedures)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Falls, activity=Working with radioactive materials, hazard=Lack of shielding in an environment with radioactive materials)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Asphyxiation, activity=Working at heights, hazard=Working at heights without proper fall protection)', 'is_correct': False, 'expected_output': False}
+{'input': 'HowItHarms(how_it_harms=Chemical burns, activity=Working in confined spaces, hazard=Entering confined spaces without proper ventilation or rescue procedures)', 'is_correct': True, 'expected_output': False}
 
 
 The following are the prompt outputs for incorrect responses: 
- The hazard of handling corrosive chemicals without protective gear during the activity of chemical handling is the potential for chemical burns. 
-"Chemical burns" is a way that this hazard causes harm, so is_correct = True. 
-{"is_correct": true}
-
-The hazard is the risk of falling from heights without proper fall protection during the activity of working at heights. 
-Crushing injuries may occur if a worker falls from a height and is subsequently crushed by equipment or structures, so is_correct = True. 
-{'is_correct': True}
+ The hazard of entering confined spaces without proper ventilation or rescue procedures during the activity of working in confined spaces can lead to asphyxiation or suffocation due to the lack of oxygen or presence of toxic gases, and chemical burns can occur if there are corrosive substances present, thus causing harm, dict(is_correct=True).
 
  
 
-Accuracy = 90.0 %
+Accuracy = 95.0 %

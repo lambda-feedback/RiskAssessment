@@ -1,0 +1,50 @@
+Example prompt input:
+
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        Firstly, in one sentence, provide a description of "dog". Secondly, in one sentence, 
+        compare this description with the provided definition of an activity. Then if "dog" 
+        is an activity, is_correct = True. Write your final sentence in the format: 
+        dict('input'="dog", is_correct=True/False)
+
+Example prompt output:
+
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        Firstly, in one sentence, provide a description of "dog". Secondly, in one sentence, 
+        compare this description with the provided definition of an activity. Then if "dog" 
+        is an activity, is_correct = True. Write your final sentence in the format: 
+        dict('input'="dog", is_correct=True/False)
+        If "dog" is not an activity, is_correct = False.
+        Please provide your answer in the format requested.
+        """ 
+        description = "A dog is a living being that is often considered a member of the family, known for its loyalty, affection, and ability to perform various tasks."
+        comparison = "A dog is not an activity, as it is a living being and not a specific action or process."
+        is_correct = False
+        output = dict(input="dog", is_correct=is_correct)
+        return output
+
+All model outputs and expected outputs:
+{'input': 'Activity(activity=dog)', 'is_correct': None, 'expected_output': False}
+
+
+The following are the prompt outputs for incorrect responses: 
+ 
+        If an 'activity' is defined as 'An activity is generally defined as a specific action or process that involves 
+        physical or mental effort.', 
+        Firstly, in one sentence, provide a description of "dog". Secondly, in one sentence, 
+        compare this description with the provided definition of an activity. Then if "dog" 
+        is an activity, is_correct = True. Write your final sentence in the format: 
+        dict('input'="dog", is_correct=True/False)
+        If "dog" is not an activity, is_correct = False.
+        Please provide your answer in the format requested.
+        """ 
+        description = "A dog is a living being that is often considered a member of the family, known for its loyalty, affection, and ability to perform various tasks."
+        comparison = "A dog is not an activity, as it is a living being and not a specific action or process."
+        is_correct = False
+        output = dict(input="dog", is_correct=is_correct)
+        return output
+
+ 
+
+Accuracy = 0.0 %

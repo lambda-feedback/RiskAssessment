@@ -79,6 +79,8 @@ class LLMWithCandidateLabels(HuggingfaceLLMCaller):
 class OpenAILLM(LLMCaller):
     def __init__(self):
         self.update_api_key_from_env_file()
+        self.temperature = 0.7
+        self.max_tokens = 400
 
     def update_api_key_from_env_file(self):
         load_dotenv()
@@ -90,8 +92,12 @@ class OpenAILLM(LLMCaller):
         
         messages = [{"role": "user", "content": prompt}]
 
-        # TODO: Fine tune max_tokens parameter
-        LLM_output = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages, temperature=0.7, max_tokens=400)
+        # TODO: Vary max_tokens based on prompt and test different temperatures.
+        # NOTE: Lower temperature means more deterministic output.
+        LLM_output = openai.ChatCompletion.create(model="gpt-3.5-turbo", 
+                                                  messages=messages, 
+                                                  temperature=self.temperature, 
+                                                  max_tokens=self.max_tokens)
         
         return LLM_output
     
