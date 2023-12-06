@@ -88,9 +88,9 @@ class RiskAssessment:
             risk = int(risk)
 
             if likelihood * severity == risk:
-                return 'Correct'
+                return 'Multiplication is correct.'
             else:
-                return 'Incorrect. Please check your multiplication'
+                return 'Incorrect. Please check your multiplication.'
         
         except ValueError:
             return 'Please make sure that the likelihood, severity, and risk are all integers.'
@@ -110,7 +110,29 @@ class RiskAssessment:
     # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
     # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
-    def get_list_of_prompts(self, LLM_caller: Type[LLMCaller]):
+    def get_list_of_question_titles(self):
+        return [self.get_activity_input().get_question_title(),
+                self.get_how_it_harms_input().get_question_title(),
+                self.get_how_it_harms_in_context_input().get_question_title(),
+                self.get_who_it_harms_input().get_question_title(),
+                self.get_who_it_harms_in_context_input().get_question_title(),
+                self.get_prevention_input().get_question_title(),
+                self.get_mitigation_input().get_question_title(),
+                self.get_prevention_classification_input().get_question_title(),
+                self.get_mitigation_classification_input().get_question_title()]
+    
+    def get_list_of_questions(self):
+        return [self.get_activity_input().get_question(),
+                self.get_how_it_harms_input().get_question(),
+                self.get_how_it_harms_in_context_input().get_question(),
+                self.get_who_it_harms_input().get_question(),
+                self.get_who_it_harms_in_context_input().get_question(),
+                self.get_prevention_input().get_question(),
+                self.get_mitigation_input().get_question(),
+                self.get_prevention_classification_input().get_question(),
+                self.get_mitigation_classification_input().get_question()]
+    
+    def get_list_of_prompts(self):
         return [self.get_activity_input().generate_prompt(),
                 self.get_how_it_harms_input().generate_prompt(),
                 self.get_how_it_harms_in_context_input().generate_prompt(),
@@ -132,12 +154,16 @@ class RiskAssessment:
                 LLM_caller.get_model_output(self.get_prevention_classification_input()),
                 LLM_caller.get_model_output(self.get_mitigation_classification_input())]
     
-    def get_list_of_regex_matches_for_prompt_outputs(self, prompt_outputs):
+    def get_list_of_answers_from_prompt_outputs(self, prompt_outputs):
         regex_pattern_matcher = RegexPatternMatcher()
 
-        regex_matches = []
+        answers = []
 
         for prompt_output in prompt_outputs:
-            regex_matches.append(regex_pattern_matcher.check_string_against_pattern(prompt_output))
+            regex_match = regex_pattern_matcher.check_string_against_pattern(prompt_output)
+            if regex_match == True:
+                answers.append('YES THAT IS CORRECT')
+            else:
+                answers.append('NO THAT IS INCORRECT')
         
-        return regex_matches
+        return answers

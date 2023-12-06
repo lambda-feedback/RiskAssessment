@@ -43,8 +43,8 @@ class TestEvaluationFunction(unittest.TestCase):
                           [2], 
                           [8],
                           ['Keep safe distance between the player and audience; hold instrument securely'],
-                          [1],
                           [''],
+                          [1],
                           [2], 
                           [2]]
         answer, params = None, None
