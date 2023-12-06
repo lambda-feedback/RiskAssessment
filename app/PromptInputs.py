@@ -1,6 +1,11 @@
     # TODO: Make it easier to add new prompts. At the moment it is too difficult. 
     # Have to change code in 2 places.
 
+class ShortformFeedback:
+    def __init__(self, positive_feedback, negative_feedback):
+        self.positive_feedback = positive_feedback
+        self.negative_feedback = negative_feedback
+
 class PromptInput:
     def __init__(self):
         self.activity_definition = """an action or process that involves
@@ -27,10 +32,16 @@ class PromptInput:
         
         self.mitigation_definition = f'an action which directly reduces the severity of a hazard. Severity in this context is {severity_definition}'
 
+    def get_question(self):
+        pass
+
+    def get_question_title(self):
+        pass
+
     def generate_prompt(self):
         pass
 
-    def get_question(self):
+    def get_shortform_feedback(self):
         pass
 
     def to_string(self):
@@ -51,7 +62,7 @@ class Activity(PromptInput):
         return 'Activity'
 
     def get_question(self):
-        return f'''Is the 'activity': '{self.activity}' entered correct?'''
+        return f'''Is the 'activity': '{self.activity}' correct?'''
 
     def generate_prompt(self):
         return f'''
@@ -64,6 +75,10 @@ class Activity(PromptInput):
         Description: your_description
         Comparison: your_comparison
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.activity}' is an activity.",
+                                 negative_feedback=f"Incorrect. '{self.activity}' is not an activity.")
 
 class HowItHarms(PromptInput):
     def __init__(self, how_it_harms):
@@ -74,7 +89,7 @@ class HowItHarms(PromptInput):
         return 'How It Harms'
 
     def get_question(self):
-        return f'''Is 'how it harms': '{self.how_it_harms}' entered correct?'''
+        return f'''Is 'how it harms': '{self.how_it_harms}' correct?'''
     
     def generate_prompt(self):
         return f'''An "appropriate entry for the how it harms field" in a Risk Assessment is 
@@ -87,6 +102,11 @@ class HowItHarms(PromptInput):
         The output should be in the format:
         Comparison and Explanation: your_explanation
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is an appropriate entry for the how it harms field.",
+                                    negative_feedback=f"Incorrect. '{self.how_it_harms}' is not an appropriate entry for the how it harms field.")
+
 
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
@@ -113,6 +133,10 @@ class HowItHarmsInContext(PromptInput):
         Comparison: your_comparison
         Answer: your_answer'''
     
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is a way that the hazard causes harm.",
+                                    negative_feedback=f"Incorrect. '{self.how_it_harms}' is not a way that the hazard causes harm.")
+    
 class WhoItHarms(PromptInput):
     def __init__(self, who_it_harms):
         super().__init__()
@@ -134,9 +158,14 @@ class WhoItHarms(PromptInput):
         Thirdly, answer True if "{self.who_it_harms} is an appropriate entry, or False if it is not.
         
         The output should be in the format:
+        Description: your_description
         Comparison: your_comparison
         Explanation: your_explanation
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' is an appropriate entry for the who it harms field.",
+                                    negative_feedback=f"Incorrect. '{self.who_it_harms}' is not an appropriate entry for the who it harms field.")
 
 class WhoItHarmsInContext(PromptInput):
     def __init__(self, who_it_harms, how_it_harms, activity, hazard):
@@ -167,6 +196,10 @@ class WhoItHarmsInContext(PromptInput):
         Explanation: your_explanation
         Answer: your_answer'''
     
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' could be harmed by the hazard.",
+                                    negative_feedback=f"Incorrect. '{self.who_it_harms}' could not be harmed by the hazard.")
+    
 class Prevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
@@ -192,6 +225,10 @@ class Prevention(PromptInput):
         else answer False. The prompt output should be in the format:
         Explanation: your_explanation_in_one_sentence
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure.",
+                                    negative_feedback=f"Incorrect. '{self.prevention}' is not a prevention measure.")
 
 class Mitigation(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
@@ -218,6 +255,10 @@ class Mitigation(PromptInput):
         else answer False. The prompt output should be in the format:
         Explanation: your_explanation_in_one_sentence
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure.",
+                                    negative_feedback=f"Incorrect. '{self.mitigation}' is not a mitigation measure.")
 
 class PreventionClassification(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
@@ -247,6 +288,10 @@ class PreventionClassification(PromptInput):
         Explanation: your_explanation_in_one_sentence
         Answer: your_answer'''
     
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure.",
+                                    negative_feedback=f"Incorrect. '{self.prevention}' is actually a mitigation measure.")
+    
 class MitigationClassification(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
@@ -261,7 +306,7 @@ class MitigationClassification(PromptInput):
 
     def get_question(self):
         return f'''Given that a 'prevention' measure reduces the likelihood of a hazard
-        and a 'mitigation' measure reduces the severity of a hazard, is the 'prevention': 
+        and a 'mitigation' measure reduces the severity of a hazard, is the 'mitigation': 
         '{self.mitigation}' an example of a 'prevention' or 'mitigation'''
     
         # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
@@ -274,3 +319,7 @@ class MitigationClassification(PromptInput):
         and False if it is a prvention measure. The output should be in the format:
         Explanation: your_explanation_in_one_sentence
         Answer: your_answer'''
+    
+    def get_shortform_feedback(self):
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure.",
+                                    negative_feedback=f"Incorrect. '{self.mitigation}' is actually a prevention measure.")
