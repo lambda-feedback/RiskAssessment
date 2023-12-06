@@ -40,7 +40,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     to output the evaluation response.
     """
 
-    activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, controlled_likelihood, mitigation, controlled_severity, controlled_risk = np.array(response).flatten()
+    activity, hazard, who_it_harms, how_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
     RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
@@ -49,22 +49,33 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     
     LLM = OpenAILLM()
 
-    prompts = RA.get_list_of_prompts(LLM)
+    question_titles = RA.get_list_of_question_titles()
+    questions = RA.get_list_of_questions()
+    prompts = RA.get_list_of_prompts()
     prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
-    regex_matches = RA.get_list_of_regex_matches_for_prompt_outputs(prompt_outputs)
+    answers = RA.get_list_of_answers_from_prompt_outputs(prompt_outputs)
 
-    feedback = ''
+    is_an_activity = answers[0] == 'YES THAT IS CORRECT'
+
+    feedback = f'''
+    For the activity field, you answered {activity}, which is correct!
+    
+
+    ------ FEEDBACK ------\n\n
+    '''
 
     for i in range(len(prompts)):
+        question_title = question_titles[i]
+        question = questions[i]
         prompt_output = prompt_outputs[i]
-        regex_match = regex_matches[i]
+        answer = answers[i]
 
-        feedback += f'Prompt Output {i+1}: {prompt_output}\n\n'
-        feedback += f'Regex Match {i+1}: {regex_match}\n\n\n'
+        feedback += f'--- Q{i + 1}: {question_title} ---\n'
+        feedback += f'{question}\n\n'
+        feedback += f'Answer {i+1}: {answer}\n\n'
+        feedback += f'Explanation {i+1}: {prompt_output}\n\n\n'
 
-    feedback += f'Controlled risk multiplication: {RA.check_controlled_risk()}\n'
-    feedback += f'Uncontrolled risk multiplication: {RA.check_uncontrolled_risk()}\n'
+    feedback += f'Controlled risk multiplication: {RA.check_controlled_risk()}\n\n'
+    feedback += f'Uncontrolled risk multiplication: {RA.check_uncontrolled_risk()}'
 
-    is_an_activity = regex_matches[0]
-    
     return Result(is_correct=is_an_activity, feedback=feedback)

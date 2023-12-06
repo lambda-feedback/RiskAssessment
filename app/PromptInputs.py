@@ -10,6 +10,11 @@ class PromptInput:
         It may cause loss of life, injury or other health impacts, property damage, loss of livelihoods 
         and services, social and economic disruption, or environmental damage."""
 
+        self.how_it_harms_entry_definition = """
+        the potential negative consequences of a hazard. It can outline the specific impacts on
+        human health, property, environment, economics, social structures, livelihoods, essential 
+        services, and the risk of loss of life. It must be specific, clear and precise."""
+
         self.who_it_harms_entry_definition = """
         specific individuals, groups, environmental components or infrastructure
         likely to be negatively affected by identified risks, 
@@ -23,6 +28,9 @@ class PromptInput:
         self.mitigation_definition = f'an action which directly reduces the severity of a hazard. Severity in this context is {severity_definition}'
 
     def generate_prompt(self):
+        pass
+
+    def get_question(self):
         pass
 
     def to_string(self):
@@ -39,10 +47,13 @@ class Activity(PromptInput):
         super().__init__()
         self.activity = activity
 
-    def generate_prompt(self):
-        common_noun_definition = """a noun denoting a class of objects or a concept as opposed 
-        to a particular individual."""
+    def get_question_title(self):
+        return 'Activity'
 
+    def get_question(self):
+        return f'''Is the 'activity': '{self.activity}' entered correct?'''
+
+    def generate_prompt(self):
         return f'''
         An 'activity' is defined as {self.activity_definition}
         Firstly, in one sentence, provide a description of "{self.activity}". Secondly, in one sentence, 
@@ -58,15 +69,16 @@ class HowItHarms(PromptInput):
     def __init__(self, how_it_harms):
         super().__init__()
         self.how_it_harms = how_it_harms
+
+    def get_question_title(self):
+        return 'How It Harms'
+
+    def get_question(self):
+        return f'''Is 'how it harms': '{self.how_it_harms}' entered correct?'''
     
     def generate_prompt(self):
-        how_it_harms_entry_definition = f"""
-            the potential negative consequences of a hazard. It can outline the specific impacts on
-            human health, property, environment, economics, social structures, livelihoods, essential 
-            services, and the risk of loss of life. It must be specific, clear and precise."""
-        
         return f'''An "appropriate entry for the how it harms field" in a Risk Assessment is 
-        defined as: "{how_it_harms_entry_definition}". 
+        defined as: "{self.how_it_harms_entry_definition}". 
         Firstly, comparing the entry: "{self.how_it_harms}"
         with the definition of an "appropriate entry for the how it harms field", 
         explain whether "{self.how_it_harms}" is an appropriate entry. Secondly, 
@@ -82,6 +94,13 @@ class HowItHarmsInContext(PromptInput):
         self.how_it_harms = how_it_harms
         self.activity = activity
         self.hazard = hazard
+
+    def get_question_title(self):
+        return 'How It Harms In Context'
+
+    def get_question(self):
+        return f'''Is 'how it harms': '{self.how_it_harms}' a way that the 'hazard': '{self.hazard}' 
+        during the 'activity': '{self.activity}' causes harm?'''
     
     def generate_prompt(self):
         return f'''Firstly, in one sentence, describe the hazard: '{self.hazard}' during the 
@@ -98,6 +117,12 @@ class WhoItHarms(PromptInput):
     def __init__(self, who_it_harms):
         super().__init__()
         self.who_it_harms = who_it_harms
+
+    def get_question_title(self):
+        return 'Who It Harms'
+
+    def get_question(self):
+        return f'''Is 'who it harms': '{self.who_it_harms}' correct?'''
 
     def generate_prompt(self):
 
@@ -121,6 +146,14 @@ class WhoItHarmsInContext(PromptInput):
         self.activity = activity
         self.hazard = hazard
 
+    def get_question_title(self):
+        return 'Who It Harms In Context'
+
+    def get_question(self):
+        return f'''Could 'who it harms': '{self.who_it_harms}' 
+        be harmed by the 'hazard': '{self.hazard}' during 'activity': '{self.activity}'
+        given how the hazard harms: '{self.how_it_harms}'?'''
+
     def generate_prompt(self):
         
         return f'''In one sentence, describe the hazard: '{self.hazard}' during the 
@@ -143,8 +176,15 @@ class Prevention(PromptInput):
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
 
+    def get_question_title(self):
+        return 'Prevention In Context'
+    
+    def get_question(self):
+        return f'''Will the prevention measure: '{self.prevention}' reduce the likelihood of the
+        'hazard': '{self.hazard}' occurring during the 'activity': {self.activity}, given
+        given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
+
     def generate_prompt(self):
-        
         return f'''A 'prevention measure' is defined as '{self.prevention_definition}'. Given this definition,
         explain in one sentence whether '{self.prevention}' is a prevention measure for the following hazard: '{self.hazard}' 
         during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
@@ -161,6 +201,14 @@ class Mitigation(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
+
+    def get_question_title(self):
+        return 'Mitigation In Context'
+
+    def get_question(self):
+        return f'''Will the mitigation measure: '{self.mitigation}' reduce the severity of the
+        'hazard': '{self.hazard}' occurring during the 'activity': {self.activity}, given
+        given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
 
     def generate_prompt(self):
         return f'''A 'mitigation measure' is defined as '{self.mitigation_definition}'. Given this definition,
@@ -179,6 +227,14 @@ class PreventionClassification(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
+
+    def get_question_title(self):
+        return 'Prevention Classification'
+    
+    def get_question(self):
+        return f'''Given that a 'prevention' measure reduces the likelihood of a hazard
+        and a 'mitigation' measure reduces the severity of a hazard, is the 'prevention': 
+        '{self.prevention}' an example of a 'prevention' or 'mitigation'''
 
     # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
     def generate_prompt(self):
@@ -199,6 +255,14 @@ class MitigationClassification(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
+
+    def get_question_title(self):
+        return 'Mitigation Classification'
+
+    def get_question(self):
+        return f'''Given that a 'prevention' measure reduces the likelihood of a hazard
+        and a 'mitigation' measure reduces the severity of a hazard, is the 'prevention': 
+        '{self.mitigation}' an example of a 'prevention' or 'mitigation'''
     
         # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
     def generate_prompt(self):
