@@ -61,7 +61,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     feedback = f'''
     For the activity field, you answered {activity}, which is correct!
     
-
     ------ FEEDBACK ------\n\n
     '''
 
@@ -73,10 +72,10 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
         feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
         feedback += f'{question}\n\n'
-        feedback += f'{shortform_feedback}\n\n'
-        feedback += f'Explanation {i+1}: {prompt_output}\n\n\n'
+        feedback += f'Feedback {i + 1}: {shortform_feedback}\n\n'
+        feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
 
-    feedback += f'Controlled risk multiplication: {RA.check_controlled_risk()}\n\n'
-    feedback += f'Uncontrolled risk multiplication: {RA.check_uncontrolled_risk()}'
+    feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
+    feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'
 
     return Result(is_correct=is_an_activity, feedback=feedback)

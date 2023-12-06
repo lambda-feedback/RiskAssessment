@@ -88,9 +88,9 @@ class RiskAssessment:
             risk = int(risk)
 
             if likelihood * severity == risk:
-                return 'Multiplication is correct.'
+                return 'correct'
             else:
-                return 'Incorrect. Please check your multiplication.'
+                return 'incorrect. Please check your multiplication.'
         
         except ValueError:
             return 'Please make sure that the likelihood, severity, and risk are all integers.'
