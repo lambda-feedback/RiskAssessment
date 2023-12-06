@@ -53,9 +53,10 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     questions = RA.get_list_of_questions()
     prompts = RA.get_list_of_prompts()
     prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
-    answers = RA.get_list_of_answers_from_prompt_outputs(prompt_outputs)
+    regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
+    shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
 
-    is_an_activity = answers[0] == 'YES THAT IS CORRECT'
+    is_an_activity = regex_matches[0]
 
     feedback = f'''
     For the activity field, you answered {activity}, which is correct!
@@ -68,11 +69,11 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         question_title = question_titles[i]
         question = questions[i]
         prompt_output = prompt_outputs[i]
-        answer = answers[i]
+        shortform_feedback = shortform_feedbacks[i]
 
-        feedback += f'--- Q{i + 1}: {question_title} ---\n'
+        feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
         feedback += f'{question}\n\n'
-        feedback += f'Answer {i+1}: {answer}\n\n'
+        feedback += f'{shortform_feedback}\n\n'
         feedback += f'Explanation {i+1}: {prompt_output}\n\n\n'
 
     feedback += f'Controlled risk multiplication: {RA.check_controlled_risk()}\n\n'

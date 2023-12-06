@@ -110,60 +110,77 @@ class RiskAssessment:
     # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
     # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
+    def get_list_of_prompt_input_objects(self):
+        return [self.get_activity_input(),
+                self.get_how_it_harms_input(),
+                self.get_how_it_harms_in_context_input(),
+                # self.get_who_it_harms_input(),
+                self.get_who_it_harms_in_context_input(),
+                self.get_prevention_input(),
+                self.get_mitigation_input(),
+                self.get_prevention_classification_input(),
+                self.get_mitigation_classification_input()]
+    
     def get_list_of_question_titles(self):
-        return [self.get_activity_input().get_question_title(),
-                self.get_how_it_harms_input().get_question_title(),
-                self.get_how_it_harms_in_context_input().get_question_title(),
-                self.get_who_it_harms_input().get_question_title(),
-                self.get_who_it_harms_in_context_input().get_question_title(),
-                self.get_prevention_input().get_question_title(),
-                self.get_mitigation_input().get_question_title(),
-                self.get_prevention_classification_input().get_question_title(),
-                self.get_mitigation_classification_input().get_question_title()]
+        question_titles = []
+        
+        for prompt_input_object in self.get_list_of_prompt_input_objects():
+            question_titles.append(prompt_input_object.get_question_title())
+
+        return question_titles
     
     def get_list_of_questions(self):
-        return [self.get_activity_input().get_question(),
-                self.get_how_it_harms_input().get_question(),
-                self.get_how_it_harms_in_context_input().get_question(),
-                self.get_who_it_harms_input().get_question(),
-                self.get_who_it_harms_in_context_input().get_question(),
-                self.get_prevention_input().get_question(),
-                self.get_mitigation_input().get_question(),
-                self.get_prevention_classification_input().get_question(),
-                self.get_mitigation_classification_input().get_question()]
+        questions = []
+
+        for prompt_input_object in self.get_list_of_prompt_input_objects():
+            questions.append(prompt_input_object.get_question())
+        
+        return questions
     
     def get_list_of_prompts(self):
-        return [self.get_activity_input().generate_prompt(),
-                self.get_how_it_harms_input().generate_prompt(),
-                self.get_how_it_harms_in_context_input().generate_prompt(),
-                self.get_who_it_harms_input().generate_prompt(),
-                self.get_who_it_harms_in_context_input().generate_prompt(),
-                self.get_prevention_input().generate_prompt(),
-                self.get_mitigation_input().generate_prompt(),
-                self.get_prevention_classification_input().generate_prompt(),
-                self.get_mitigation_classification_input().generate_prompt()]
+        prompts = []
+
+        for prompt_input_object in self.get_list_of_prompt_input_objects():
+            prompts.append(prompt_input_object.generate_prompt())
+
+        return prompts
     
     def get_list_of_prompt_outputs(self, LLM_caller: Type[LLMCaller]):
-        return [LLM_caller.get_model_output(self.get_activity_input()),
-                LLM_caller.get_model_output(self.get_how_it_harms_input()),
-                LLM_caller.get_model_output(self.get_how_it_harms_in_context_input()),
-                LLM_caller.get_model_output(self.get_who_it_harms_input()),
-                LLM_caller.get_model_output(self.get_who_it_harms_in_context_input()),
-                LLM_caller.get_model_output(self.get_prevention_input()),
-                LLM_caller.get_model_output(self.get_mitigation_input()),
-                LLM_caller.get_model_output(self.get_prevention_classification_input()),
-                LLM_caller.get_model_output(self.get_mitigation_classification_input())]
+        prompt_outputs = []
+
+        for prompt_input_object in self.get_list_of_prompt_input_objects():
+            prompt_outputs.append(LLM_caller.get_model_output(prompt_input_object))
+        
+        return prompt_outputs
     
-    def get_list_of_answers_from_prompt_outputs(self, prompt_outputs):
+    def get_list_of_regex_matches(self, prompt_outputs):
         regex_pattern_matcher = RegexPatternMatcher()
 
-        answers = []
+        regex_matches = []
 
         for prompt_output in prompt_outputs:
             regex_match = regex_pattern_matcher.check_string_against_pattern(prompt_output)
-            if regex_match == True:
-                answers.append('YES THAT IS CORRECT')
-            else:
-                answers.append('NO THAT IS INCORRECT')
+            regex_matches.append(regex_match)
         
-        return answers
+        return regex_matches
+    
+    def get_list_of_shortform_feedback_objects(self):
+        shortform_feedback_objects = []
+
+        for prompt_input_object in self.get_list_of_prompt_input_objects():
+            shortform_feedback_objects.append(prompt_input_object.get_shortform_feedback())
+
+        return shortform_feedback_objects
+
+    def get_list_of_shortform_feedback_from_regex_matches(self, regex_matches):
+        list_of_shortform_feedback = []
+
+        shortform_feedback_objects = self.get_list_of_shortform_feedback_objects()
+
+        for i in range(len(regex_matches)):
+            if regex_matches[i] == True:
+                list_of_shortform_feedback.append(shortform_feedback_objects[i].positive_feedback)
+            else:
+                list_of_shortform_feedback.append(shortform_feedback_objects[i].negative_feedback)
+        
+        return list_of_shortform_feedback

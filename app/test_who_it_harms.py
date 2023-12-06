@@ -55,9 +55,8 @@ environmental_components = [
 ]
 
 specific_individuals = [
-    "John Doe (if there's a specific person affected)",
-    "Jane Smith (if there's a specific person affected)",
-    "Key stakeholders",
+    "John Doe",
+    "Jane Smith",
     "Project team members"
 ]
 
