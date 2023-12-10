@@ -48,7 +48,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
     if RA.are_any_fields_in_risk_assessment_blank():
-        empty_fields = RA.get_empty_fields().join(', ')
+        empty_fields = ', '.join(RA.get_empty_fields())
 
         return Result(is_correct=False, feedback=f'Please fill in the fields: {empty_fields}.')
     

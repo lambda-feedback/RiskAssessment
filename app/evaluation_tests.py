@@ -36,24 +36,46 @@ class TestEvaluationFunction(unittest.TestCase):
 
     def test_returns_is_correct_true(self):
         response = [['Using a trombone as a demonstration for a TPS presentation'],
-                          ['Impact from instrument'],
-                          ['Audience watching presentation'],
-                          ['Slide could hit audience member, causing impact injury.'],
-                          [4],
-                          [2], 
-                          [8],
-                          ['Keep safe distance between the player and audience; hold instrument securely'],
-                          [''],
-                          [1],
-                          [2], 
-                          [2]]
+                    ['Loud noise'],
+                    ['Everyone present'],
+                    ['Loud noise from instrument can cause hearing damage.'],
+                    [4],
+                    [1], 
+                    [4],
+                    ['Play quietly, at a volume suitable for the room'],
+                    ['Keep a space between the player and audience'],
+                    [1],
+                    [1], 
+                    [1]]
         answer, params = None, None
 
         result = evaluation_function(response, answer, params)
 
         print(result.get("feedback"))
 
-        self.assertIn(result.get("is_correct"), [True, False])
+        self.assertEqual(result.get("is_correct"), True)
+
+    def test_handles_empty_input(self):
+        response = [['Using a trombone as a demonstration for a TPS presentation'],
+                    ['Loud noise'],
+                    ['Everyone present'],
+                    ['Loud noise from instrument can cause hearing damage.'],
+                    [4],
+                    [1], 
+                    [4],
+                    ['Play quietly, at a volume suitable for the room'],
+                    [''],
+                    [1],
+                    [1], 
+                    [1]]
+        
+        answer, params = None, None
+
+        result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+
+        self.assertEqual(result.get("is_correct"), False)
 
     # def test_get_model_output_with_Llama_model(self):
     #     model_name = 'meta-llama/Llama-2-13b-chat-hf'
