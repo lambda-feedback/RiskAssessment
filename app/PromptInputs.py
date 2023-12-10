@@ -107,7 +107,6 @@ class HowItHarms(PromptInput):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is an appropriate entry for the how it harms field.",
                                     negative_feedback=f"Incorrect. '{self.how_it_harms}' is not an appropriate entry for the how it harms field.")
 
-
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
         super().__init__()

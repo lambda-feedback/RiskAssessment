@@ -47,35 +47,41 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
     
-    LLM = OpenAILLM()
+    if RA.are_any_fields_in_risk_assessment_blank():
+        empty_fields = RA.get_empty_fields().join(', ')
 
-    question_titles = RA.get_list_of_question_titles()
-    questions = RA.get_list_of_questions()
-    prompts = RA.get_list_of_prompts()
-    prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
-    regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
-    shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
-
-    is_an_activity = regex_matches[0]
-
-    feedback = f'''
-    For the activity field, you answered {activity}, which is correct!
+        return Result(is_correct=False, feedback=f'Please fill in the fields: {empty_fields}.')
     
-    ------ FEEDBACK ------\n\n
-    '''
+    else:
+        LLM = OpenAILLM()
 
-    for i in range(len(prompts)):
-        question_title = question_titles[i]
-        question = questions[i]
-        prompt_output = prompt_outputs[i]
-        shortform_feedback = shortform_feedbacks[i]
+        question_titles = RA.get_list_of_question_titles()
+        questions = RA.get_list_of_questions()
+        prompts = RA.get_list_of_prompts()
+        prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
+        regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
+        shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
 
-        feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
-        feedback += f'{question}\n\n'
-        feedback += f'Feedback {i + 1}: {shortform_feedback}\n\n'
-        feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
+        is_an_activity = regex_matches[0]
 
-    feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
-    feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'
+        feedback = f'''
+        For the activity field, you answered {activity}, which is correct!
+        
+        ------ FEEDBACK ------\n\n
+        '''
 
-    return Result(is_correct=is_an_activity, feedback=feedback)
+        for i in range(len(prompts)):
+            question_title = question_titles[i]
+            question = questions[i]
+            prompt_output = prompt_outputs[i]
+            shortform_feedback = shortform_feedbacks[i]
+
+            feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
+            feedback += f'{question}\n\n'
+            feedback += f'Feedback {i + 1}: {shortform_feedback}\n\n'
+            feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
+
+        feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
+        feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'
+
+        return Result(is_correct=is_an_activity, feedback=feedback)
