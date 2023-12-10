@@ -28,6 +28,31 @@ class RiskAssessment:
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
 
+        self.fields = self.get_fields_list()
+
+    def get_fields_list(self):
+        return [self.activity, 
+            self.hazard, 
+            self.who_it_harms, 
+            self.how_it_harms, 
+            self.uncontrolled_likelihood, 
+            self.uncontrolled_severity, 
+            self.uncontrolled_risk, 
+            self.prevention, 
+            self.mitigation, 
+            self.controlled_likelihood, 
+            self.controlled_severity, 
+            self.controlled_risk]
+
+    def are_any_fields_in_risk_assessment_blank(self):
+        if any(field == '' for field in self.fields):
+            return True
+        else:
+            return False
+        
+    def get_empty_fields(self):
+        return [field for field in self.fields if field == '']
+
     def convert_RiskAssessment_object_into_lambda_response_list(self):
         return list(vars(self).values())
     
@@ -106,9 +131,6 @@ class RiskAssessment:
                                                                 self.controlled_risk)
     
     # TODO: Add ability to see prompt output percentages
-
-    # TODO: Put a function in each of the PromptInputs which gets the prompt output. Each PromptInput class
-    # should inherit this method. That way, you would no longer need a PromptAndPromptOutput class.
     
     def get_list_of_prompt_input_objects(self):
         return [self.get_activity_input(),
