@@ -80,7 +80,7 @@ class OpenAILLM(LLMCaller):
     def __init__(self):
         self.update_api_key_from_env_file()
         self.temperature = 0.5
-        self.max_tokens = 200
+        self.max_tokens = 300
 
     def update_api_key_from_env_file(self):
         load_dotenv()

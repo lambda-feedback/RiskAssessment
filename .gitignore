@@ -133,3 +133,5 @@ dmypy.json
 
 # .env file
 app/.env
+
+app/private_data/

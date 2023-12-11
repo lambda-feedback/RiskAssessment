@@ -1,7 +1,7 @@
 from PromptInputs import Mitigation
-from ExamplesGenerator import ExamplesGenerator
+from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 
-class MitigationExamplesGenerator(ExamplesGenerator):
+class MitigationExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
         return Mitigation(
                 mitigation=self.correct_examples_list[incorrect_index].mitigation,
@@ -9,6 +9,18 @@ class MitigationExamplesGenerator(ExamplesGenerator):
                 hazard=self.correct_examples_list[correct_index].hazard, 
                 how_it_harms=self.correct_examples_list[correct_index].how_it_harms,
                 who_it_harms=self.correct_examples_list[correct_index].who_it_harms)
+    
+    def generate_correct_and_incorrect_examples_list(self):
+        correct_examples_list = []
+        incorrect_examples_list = []
+
+        for risk_assessment in self.risk_assessments:
+            if risk_assessment.is_mitigation_correct:
+                correct_examples_list.append(risk_assessment.get_mitigation_input())
+            else:
+                incorrect_examples_list.append(risk_assessment.get_mitigation_input())
+
+        return correct_examples_list, incorrect_examples_list
 
 correct_mitigation_examples_list = [
     Mitigation(
