@@ -1,7 +1,7 @@
 from PromptInputs import Prevention
-from ExamplesGenerator import ExamplesGenerator
+from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 
-class PreventionExamplesGenerator(ExamplesGenerator):
+class PreventionExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
         return Prevention(
                 prevention=self.correct_examples_list[incorrect_index].prevention,

@@ -1,3 +1,10 @@
+# Low hanging fruit:
+# TODO: Add typecheck for all the response fields, e.g. uncontrolled_likelihood should be an int
+# TODO: Refactor all tests files so they use new ExampleGenerator classes
+# TODO: Because 'how it harms' is so intrinsically linked to 'hazard' remove the not in-context check
+# TODO: Improve few shot prompting examples so they don't parrot back input prompt
+# TODO: Try using chain of thought prompt engineering for the mitigation prompt
+
 from typing import Any, TypedDict
 import numpy as np
 import re
@@ -45,12 +52,11 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
-                        controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk)
+                        controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
+                        is_prevention_correct=True, is_mitigation_correct=True)
     
-    if RA.are_any_fields_in_risk_assessment_blank():
-        empty_fields = ', '.join(RA.get_empty_fields())
-
-        return Result(is_correct=False, feedback=f'Please fill in the fields: {empty_fields}.')
+    if RA.get_input_check_feedback_message() != '':
+        return Result(is_correct=False, feedback= RA.get_input_check_feedback_message())
     
     else:
         LLM = OpenAILLM()

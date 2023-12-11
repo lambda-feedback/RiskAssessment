@@ -30,7 +30,8 @@ class PromptInput:
         severity_definition = """a measure of the seriousness of adverse consequences that could occur if the hazard 
         leads to an accident."""
         
-        self.mitigation_definition = f'an action which directly reduces the severity of a hazard. Severity in this context is {severity_definition}'
+        self.mitigation_definition = f'''an action which directly reduces the severity of a hazard or the consequences of the hazard. 
+        Severity in this context is {severity_definition}'''
 
     def get_question(self):
         pass
@@ -247,10 +248,28 @@ class Mitigation(PromptInput):
         given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
 
     def generate_prompt(self):
-        return f'''A 'mitigation measure' is defined as '{self.mitigation_definition}'. Given this definition,
+        return f'''
+        Example Input: For the hazard: "Electrocution" during the activity: "Fluids laboratory", 
+        given the consequences of the hazard: "Electrocuted by mains voltage" and who/what the hazard harms: 
+        "Students", is the following: "First aid on site" a mitigation measure?
+        
+        Output: 'First aid on site' is not a mitigation meausure for the hazard: 'Electrocution'
+        since having the first aid on site alone does not reduce the severity of the hazard
+        and additional measures such as 'applying the first aid and seeking medical assistance' is required.
+        Answer: False' 
+
+        Example Input: For the hazard: "Ink spillage" during the activity: "Fluids laboratory",
+        given how the hazard harms: "Serious eye damage" and who/what the hazard harms: "Students",
+        is the following: "Wash your eyes with clean water" a mitigation measure?
+
+        Output: 'Wash your eyes with clean water' is a mitigation measure for the hazard: 'Ink spillage'
+        since it reduces the severity of the consequences of the hazard: "Serious eye damage" as
+        the water will help wash the ink out of the eye. Answer: True.
+        
+        A 'mitigation measure' is defined as '{self.mitigation_definition}'. Given this definition,
         explain in one sentence whether '{self.mitigation}' is a mitigation measure for the following hazard: 
-        '{self.hazard}' during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
-        and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'mitigation measure', answer True, 
+        '{self.hazard}' during the activity: '{self.activity}', given the potential consequences of the hazard:
+        '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'mitigation measure', answer True, 
         else answer False. The prompt output should be in the format:
         Explanation: your_explanation_in_one_sentence
         Answer: your_answer'''

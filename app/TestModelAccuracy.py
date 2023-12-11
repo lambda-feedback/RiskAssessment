@@ -14,12 +14,14 @@ class TestModelAccuracy:
                 LLM: LLMCaller,
                 LLM_name: str,
                 list_of_input_and_expected_outputs: list[InputAndExpectedOutput],
-                sheet_name: str):
+                sheet_name: str,
+                test_description: str):
         
         self.LLM = LLM
         self.LLM_name = LLM_name
         self.list_of_input_and_expected_outputs = list_of_input_and_expected_outputs
         self.sheet_name = sheet_name
+        self.test_description = test_description
 
     def get_prompt_input_and_output(self, input_and_expected_output):
         input = input_and_expected_output.input
@@ -121,7 +123,7 @@ class TestModelAccuracy:
 
         total_cost_of_calling_LLM_API = self.total_cost_of_calling_LLM_API()
 
-        new_line_data = ['', 
+        new_line_data = [self.test_description, 
                          self.LLM_name, 
                             datetime_now, 
                             total_cost_of_calling_LLM_API,
