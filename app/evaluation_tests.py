@@ -48,7 +48,7 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
                     seek medical advice without delay."""],
                     ["1"],
-                    ["2"], 
+                    ["1"], 
                     ["1"]]
         answer, params = None, None
 
@@ -56,7 +56,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
         print(result.get("feedback"))
 
-        self.assertIn(result.get("is_correct"), True)
+        self.assertEqual(result.get("is_correct"), True)
         
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['activity'])
