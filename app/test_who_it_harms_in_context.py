@@ -1,9 +1,9 @@
 from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
-from ExamplesGenerator import ExamplesGenerator
+from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from PromptInputs import WhoItHarmsInContext
 
-class WhoItHarmsInContextExamplesGenerator(ExamplesGenerator):
+class WhoItHarmsInContextExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
         return WhoItHarmsInContext(
                 activity=self.correct_examples_list[correct_index].activity, 
@@ -23,7 +23,7 @@ correct_examples_list = [
                 hazard="Increased risk of burnout and mental health issues",
                 how_it_harms="Reduced overall well-being and productivity",
                 who_it_harms="Professionals working long hours without adequate breaks"
-            )
+            ),
             # WhoItHarmsInContext(
             #     activity="Going outside on sunny day without sunscreen",
             #     hazard="UV radiation",
@@ -71,7 +71,7 @@ correct_examples_list = [
             #     hazard="Digital eye strain and potential vision problems",
             #     how_it_harms="Increased risk of headaches, blurred vision, and long-term impact on eyesight",
             #     who_it_harms="People spending extended periods on digital devices without breaks"
-            # ),
+            # )
         ]
 
 if __name__ == "__main__":
@@ -80,5 +80,6 @@ if __name__ == "__main__":
     test_accuracy = TestModelAccuracy(LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=who_it_harms_examples,
-                                                sheet_name='Who It Harms In Context')
+                                                sheet_name='Who It Harms In Context',
+                                                test_description='Evaluating prompt on Chat GPT generated data for activities')
     test_accuracy.run_test()

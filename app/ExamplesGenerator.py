@@ -18,30 +18,27 @@ class ExamplesGenerator:
         
         return input_and_expected_output_list
 
-class RiskAssessmentExamplesGenerator(ExamplesGenerator):
-    def __init__(self, risk_assessments, risk_assessment_parameter_checked, method_to_get_prompt_input):
+class RiskAssessmentExamplesGenerator:
+    def __init__(self, risk_assessments, ground_truth_parameter, method_to_get_prompt_input):
         self.risk_assessments = risk_assessments
-        self.risk_assessment_parameter_checked = risk_assessment_parameter_checked
+        self.ground_truth_parameter = ground_truth_parameter
         self.method_to_get_prompt_input = method_to_get_prompt_input
 
-        self.correct_examples_list, self.incorrect_examples_list = self.generate_correct_and_incorrect_examples_list_from_risk_assessment_examples()
-    
-    def generate_correct_and_incorrect_examples_list_from_risk_assessment_examples(self):
-        correct_examples_list = []
-        incorrect_examples_list = []
-
+    def get_input_and_expected_output_list(self):
+        input_and_expected_output_list = []
+        
         for risk_assessment in self.risk_assessments:
-            method_to_get_prompt_input = getattr(risk_assessment, self.method_to_get_prompt_input)
+            prompt_input = getattr(risk_assessment, self.method_to_get_prompt_input)()
+            expected_output = getattr(risk_assessment, self.ground_truth_parameter)
 
-            if callable(method_to_get_prompt_input):
-                prompt_input = method_to_get_prompt_input()
-                if getattr(risk_assessment, self.risk_assessment_parameter_checked) == True:
-                    correct_examples_list.append(prompt_input)
-                else:
-                    incorrect_examples_list.append(prompt_input)
+            if expected_output == '':
+                continue
+            else:
+                input_and_expected_output_list.append(InputAndExpectedOutput(input=prompt_input, expected_output=expected_output))
 
-        return correct_examples_list, incorrect_examples_list
-    
+        return input_and_expected_output_list
+
+
 class ExamplesGeneratorFromCorrectExamples(ExamplesGenerator):
     def __init__(self, correct_examples_list):
         self.correct_examples_list = correct_examples_list

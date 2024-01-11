@@ -27,11 +27,12 @@ class PromptInput:
 
         self.prevention_definition = f'an action which directly reduces the probability that the hazard occurs.'
 
-        severity_definition = """a measure of the seriousness of adverse consequences that could occur if the hazard 
-        leads to an accident."""
-        
-        self.mitigation_definition = f'''an action which directly reduces the severity of a hazard or the consequences of the hazard. 
-        Severity in this context is {severity_definition}'''
+        ## TODO: I changed the definition of mitigation. See if this has an effect.
+        self.mitigation_definition = f'''an action which directly reduces the harm caused by a hazard occurring
+        or reduces the harm caused by the hazard after it has occurred.''' 
+
+        self.pattern_matching_method = 'check_string_for_true_or_false'
+        self.correct_matched_pattern = True
 
     def get_question(self):
         pass
@@ -69,8 +70,8 @@ class Activity(PromptInput):
         return f'''
         An 'activity' is defined as {self.activity_definition}
         Firstly, in one sentence, provide a description of "{self.activity}". Secondly, in one sentence, 
-        compare this description with the provided definition of an activity. Then if "{self.activity}",
-        answer True, else answer False. 
+        compare this description with the provided definition of an activity. Then if "{self.activity}"
+        is an activity, answer True, else answer False. 
         
         The output should be in the format:
         Description: your_description
@@ -80,34 +81,7 @@ class Activity(PromptInput):
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.activity}' is an activity.",
                                  negative_feedback=f"Incorrect. '{self.activity}' is not an activity.")
-
-class HowItHarms(PromptInput):
-    def __init__(self, how_it_harms):
-        super().__init__()
-        self.how_it_harms = how_it_harms
-
-    def get_question_title(self):
-        return 'How It Harms'
-
-    def get_question(self):
-        return f'''Is 'how it harms': '{self.how_it_harms}' correct?'''
     
-    def generate_prompt(self):
-        return f'''An "appropriate entry for the how it harms field" in a Risk Assessment is 
-        defined as: "{self.how_it_harms_entry_definition}". 
-        Firstly, comparing the entry: "{self.how_it_harms}"
-        with the definition of an "appropriate entry for the how it harms field", 
-        explain whether "{self.how_it_harms}" is an appropriate entry. Secondly, 
-        answer True if "{self.how_it_harms} is an appropriate entry, or False if it is not.
-        
-        The output should be in the format:
-        Comparison and Explanation: your_explanation
-        Answer: your_answer'''
-    
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is an appropriate entry for the how it harms field.",
-                                    negative_feedback=f"Incorrect. '{self.how_it_harms}' is not an appropriate entry for the how it harms field.")
-
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
         super().__init__()
@@ -137,36 +111,6 @@ class HowItHarmsInContext(PromptInput):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is a way that the hazard causes harm.",
                                     negative_feedback=f"Incorrect. '{self.how_it_harms}' is not a way that the hazard causes harm.")
     
-class WhoItHarms(PromptInput):
-    def __init__(self, who_it_harms):
-        super().__init__()
-        self.who_it_harms = who_it_harms
-
-    def get_question_title(self):
-        return 'Who It Harms'
-
-    def get_question(self):
-        return f'''Is 'who it harms': '{self.who_it_harms}' correct?'''
-
-    def generate_prompt(self):
-
-        return f'''The "expected entry" for the "who it harms" field in a Risk Assessment is 
-        defined as: "{self.who_it_harms_entry_definition}".
-        Firstly, describe "{self.who_it_harms}" in one sentence. Secondly, comparing this description
-        with the definition of the "expected entry" for the "who it harms" field, 
-        explain whether "{self.who_it_harms}" is an appropriate entry.
-        Thirdly, answer True if "{self.who_it_harms} is an appropriate entry, or False if it is not.
-        
-        The output should be in the format:
-        Description: your_description
-        Comparison: your_comparison
-        Explanation: your_explanation
-        Answer: your_answer'''
-    
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' is an appropriate entry for the who it harms field.",
-                                    negative_feedback=f"Incorrect. '{self.who_it_harms}' is not an appropriate entry for the who it harms field.")
-
 class WhoItHarmsInContext(PromptInput):
     def __init__(self, who_it_harms, how_it_harms, activity, hazard):
         super().__init__()
@@ -209,6 +153,9 @@ class Prevention(PromptInput):
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
 
+        self.pattern_matching_method = 'check_string_for_prevention_mitigation_or_neither'
+        self.correct_matched_pattern = 'prevention'
+
     def get_question_title(self):
         return 'Prevention In Context'
     
@@ -218,13 +165,75 @@ class Prevention(PromptInput):
         given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
 
     def generate_prompt(self):
-        return f'''A 'prevention measure' is defined as '{self.prevention_definition}'. Given this definition,
-        explain in one sentence whether '{self.prevention}' is a prevention measure for the following hazard: '{self.hazard}' 
-        during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
-        and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'prevention measure', answer True, 
-        else answer False. The prompt output should be in the format:
-        Explanation: your_explanation_in_one_sentence
+        example_of_correct_prevention = '''
+        Example Input:
+        For the hazard: "Slippage of weight for contraption" during the activity: "Using a spring contraption as a demonstration for a TPS presentation",
+        given the potential consequences of the hazard: "Heavy impact when falling onto demonstator, causing injury" and who/what the hazard harms: "Demonstrator",
+        is the following: "Keep away from below the contraption" a mitigation measure?
+        
+        Output:
+        Explanation: "Keep away from below the contraption" is a prevention meausure for the hazard of
+        slippage of weight for contraption since it reduces the likelihood of the consequence of the hazard:
+        "Heavy impact when falling onto demonstator, causing injury". This is because
+        it is less likely there will be a heavy impact falling onto the demonstrator if they are standing away from 
+        below the contraption.
+        Answer: prevention'''
+
+        example_of_mitigation = '''
+        Example Input: 
+        For the hazard: "Ink spillage" during the activity: "Fluids laboratory",
+        given the potential consequences of the hazard: "Serious eye damage" and who/what the hazard harms: "Students",
+        is the following: "Wash your eyes with clean water" a mitigation measure?
+
+        Output: 
+        Explanation: Washing your eyes with clean water is a mitigation measure for the hazard of ink spillage
+        since it reduces the harm caused by the serious eye damage. This is because the water will help wash the 
+        ink out of the eye. Since, it is a mitigation measure, it is True.
+        Answer: mitigation.'''
+
+        example_of_incorrect_prevention = '''
+        Example Input:
+        For the hazard: "Exposure to toxic welding fumes" during the activity: "Welding metal structures", 
+        given the potential consequences of the hazard: "Inhaling welding fumes can lead to respiratory problems, lung damage, and long-term health issues." 
+        and who/what the hazard harms: "Welders and individuals in the vicinity of the welding area.",
+        is the following: "Using the welding equipment in an enclosed space without proper ventilation." a prevention measure?
+
+        Output:
+        Exaplanation: "Using the welding equipment in an enclosed space without proper ventilation" 
+        is not a prevention meausure for the hazard of exposure to toxic welding fumes
+        since it does not reduce the likelihood of the hazard occurring; 
+        an enclosed space without proper ventilation will mean the fumes will become concentrated more quickly. 
+        It is also not a mitigation measure since it does not reduce the harm caused by the hazard; 
+        the respiratory problems from inhaling the fumes will not be mitigated by using the 
+        welding equipment in an enclosed space.
+        Answer: neither'''
+
+        return f'''
+        {example_of_correct_prevention}
+
+        {example_of_mitigation}
+
+        {example_of_incorrect_prevention}
+        
+        A 'prevention measure' is defined as '{self.prevention_definition}'.
+        A 'mitigation measure' is defined as '{self.mitigation_definition}'. Given these definitions,
+        explain why '{self.prevention}' is either a prevention measure, a mitigation measure, 
+        or neither a prevention nor a mitigation measure, for the following hazard: 
+        '{self.hazard}' during the activity: '{self.activity}', given the potential consequences of the hazard:
+        '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}'.
+        If it is a prevention measure, answer prevention. If it is a migitation meausure, answer mitigation. 
+        If it is neither a prevention measure nor a mitigation measure, answer neither. 
+        The prompt output should be in the format:
+        Explanation: your_explanation
         Answer: your_answer'''
+
+        # return f'''A 'prevention measure' is defined as '{self.prevention_definition}'. Given this definition,
+        # explain in one sentence whether '{self.prevention}' is a prevention measure for the following hazard: '{self.hazard}' 
+        # during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}' 
+        # and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'prevention measure', answer True, 
+        # else answer False. The prompt output should be in the format:
+        # Explanation: your_explanation_in_one_sentence
+        # Answer: your_answer'''
     
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure.",
@@ -239,6 +248,9 @@ class Mitigation(PromptInput):
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
 
+        self.pattern_matching_method = 'check_string_for_prevention_mitigation_or_neither'
+        self.correct_matched_pattern = 'mitigation'
+
     def get_question_title(self):
         return 'Mitigation In Context'
 
@@ -248,96 +260,66 @@ class Mitigation(PromptInput):
         given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
 
     def generate_prompt(self):
-        return f'''
-        Example Input: For the hazard: "Electrocution" during the activity: "Fluids laboratory", 
-        given the consequences of the hazard: "Electrocuted by mains voltage" and who/what the hazard harms: 
-        "Students", is the following: "First aid on site" a mitigation measure?
-        
-        Output: 'First aid on site' is not a mitigation meausure for the hazard: 'Electrocution'
-        since having the first aid on site alone does not reduce the severity of the hazard
-        and additional measures such as 'applying the first aid and seeking medical assistance' is required.
-        Answer: False' 
 
-        Example Input: For the hazard: "Ink spillage" during the activity: "Fluids laboratory",
-        given how the hazard harms: "Serious eye damage" and who/what the hazard harms: "Students",
+        example_of_correct_mitigation = '''
+        Example Input: 
+        For the hazard: "Ink spillage" during the activity: "Fluids laboratory",
+        given the potential consequences of the hazard: "Serious eye damage" and who/what the hazard harms: "Students",
         is the following: "Wash your eyes with clean water" a mitigation measure?
 
-        Output: 'Wash your eyes with clean water' is a mitigation measure for the hazard: 'Ink spillage'
-        since it reduces the severity of the consequences of the hazard: "Serious eye damage" as
-        the water will help wash the ink out of the eye. Answer: True.
+        Output: 
+        Explanation: Washing your eyes with clean water is a mitigation measure for the hazard of ink spillage
+        since it reduces the harm caused by the serious eye damage. This is because the water will help wash the 
+        ink out of the eye.
+        Answer: mitigation.'''
+
+        example_of_prevention = '''
+        Example Input:
+        For the hazard: "Slippage of weight for contraption" during the activity: "Using a spring contraption as a demonstration for a TPS presentation",
+        given the potential consequences of the hazard: "Heavy impact when falling onto demonstator, causing injury" and who/what the hazard harms: "Demonstrator",
+        is the following: "Keep away from below the contraption" a mitigation measure?
         
-        A 'mitigation measure' is defined as '{self.mitigation_definition}'. Given this definition,
-        explain in one sentence whether '{self.mitigation}' is a mitigation measure for the following hazard: 
+        Output:
+        Explanation: "Keep away from below the contraption" is a prevention meausure for the hazard of
+        slippage of weight for contraption since it reduces the likelihood of the consequence of the hazard:
+        "Heavy impact when falling onto demonstator, causing injury". This is because
+        it is less likely there will be a heavy impact falling onto the demonstrator if they are standing away from 
+        below the contraption.
+        Answer: prevention'''
+
+        example_of_incorrect_mitigation = '''
+        Example Input:
+        For the hazard: "Broken shards of glass" during the activity: "Fluids laboratory", 
+        given the potential consequences of the hazard: "Get trapped in soles of shoes" and who/what the hazard harms: "Students",
+        is the following: "Vacate area of damage" a mitigation measure?
+
+        Output:
+        Exaplanation: "Vacate area of damage" is not a mitigation meausure for the hazard of broken shards of glass
+        since it does not reduce the harm caused by the hazard; the broken shards of glass will still
+        be on the floor and could still get trapped in the soles of shoes. It is also not a prevention measure since
+        it does not reduce the likelihood of the hazard occurring; the hazard of "Broken shards of glass" will still
+        occur if students vacate area of damage.
+        Answer: neither'''
+
+        return f'''
+        {example_of_correct_mitigation}
+
+        {example_of_prevention}
+
+        {example_of_incorrect_mitigation}
+        
+        A 'mitigation measure' is defined as '{self.mitigation_definition}'.
+        A 'prevention measure' is defined as '{self.prevention_definition}'. Given these definitions,
+        explain why '{self.mitigation}' is either a mitigation measure, a prevention measure, 
+        or neither a mitigation nor a prevention measure, for the following hazard: 
         '{self.hazard}' during the activity: '{self.activity}', given the potential consequences of the hazard:
-        '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}'. If it is a 'mitigation measure', answer True, 
-        else answer False. The prompt output should be in the format:
-        Explanation: your_explanation_in_one_sentence
+        '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}'.
+        If it is a mitigation measure, answer mitigation. If it is a prevention meausure, answer prevention. 
+        If it is neither a mitigation measure nor a prevention measure, answer neither. 
+        The prompt output should be in the format:
+        Explanation: your_explanation
         Answer: your_answer'''
     
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure.",
                                     negative_feedback=f"Incorrect. '{self.mitigation}' is not a mitigation measure.")
-
-class PreventionClassification(PromptInput):
-    def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
-        super().__init__()
-        self.prevention = prevention
-        self.activity = activity
-        self.hazard = hazard
-        self.how_it_harms = how_it_harms
-        self.who_it_harms = who_it_harms
-
-    def get_question_title(self):
-        return 'Prevention Classification'
-    
-    def get_question(self):
-        return f'''Given that a 'prevention' measure reduces the likelihood of a hazard
-        and a 'mitigation' measure reduces the severity of a hazard, is the 'prevention': 
-        '{self.prevention}' an example of a 'prevention' or 'mitigation'''
-
-    # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
-    def generate_prompt(self):
-        return f'''Given that a 'prevention measure' is defined as {self.prevention_definition} and a 'mitigation measure' 
-        is defined as {self.mitigation_definition}, explain in one sentence whether the following:
-        '{self.prevention}' is a 'prevention measure' or a 'mitigation measure' for the following hazard: 
-        '{self.hazard}' during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}'
-        and who/what the hazard harms: '{self.who_it_harms}'. Then answer True if it is a prevention measure
-        and False if it is a mitigation measure. The output should be in the format:
-        Explanation: your_explanation_in_one_sentence
-        Answer: your_answer'''
-    
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure.",
-                                    negative_feedback=f"Incorrect. '{self.prevention}' is actually a mitigation measure.")
-    
-class MitigationClassification(PromptInput):
-    def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
-        super().__init__()
-        self.mitigation = mitigation
-        self.activity = activity
-        self.hazard = hazard
-        self.how_it_harms = how_it_harms
-        self.who_it_harms = who_it_harms
-
-    def get_question_title(self):
-        return 'Mitigation Classification'
-
-    def get_question(self):
-        return f'''Given that a 'prevention' measure reduces the likelihood of a hazard
-        and a 'mitigation' measure reduces the severity of a hazard, is the 'mitigation': 
-        '{self.mitigation}' an example of a 'prevention' or 'mitigation'''
-    
-        # TODO: Change to it either outputting Prevention or Mitigation (not true or false)
-    def generate_prompt(self):
-        return f'''Given that a 'prevention measure' is defined as {self.prevention_definition} and a 'mitigation measure' 
-        is defined as {self.mitigation_definition}, explain in one sentence whether the following:
-        '{self.mitigation}' is a 'prevention measure' or a 'mitigation measure' for the following hazard: 
-        '{self.hazard}' during the activity: '{self.activity}', given how the hazard harms: '{self.how_it_harms}'
-        and who/what the hazard harms: '{self.who_it_harms}'. Then answer True if it is a mitigation measure
-        and False if it is a prvention measure. The output should be in the format:
-        Explanation: your_explanation_in_one_sentence
-        Answer: your_answer'''
-    
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure.",
-                                    negative_feedback=f"Incorrect. '{self.mitigation}' is actually a prevention measure.")

@@ -15,7 +15,7 @@ class RiskAssessment:
     def __init__(self, activity, hazard, who_it_harms, how_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
-                 is_prevention_correct, is_mitigation_correct):
+                 prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
         self.who_it_harms = who_it_harms
@@ -29,8 +29,8 @@ class RiskAssessment:
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
 
-        self.is_prevention_correct = is_prevention_correct
-        self.is_mitigation_correct = is_mitigation_correct
+        self.prevention_prompt_expected_output = prevention_prompt_expected_output
+        self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
 
     def get_word_fields(self):
         return ['activity',
@@ -96,13 +96,13 @@ class RiskAssessment:
         feedback_message = ''
 
         if len(empty_fields) > 0:
-            feedback_message += f'Please fill in the following fields: {empty_fields}.\n'
+            feedback_message += f'Please fill in the following fields: {empty_fields}.\n\n'
         
         if len(word_fields_incorrect) > 0:
-            feedback_message += f'Please make sure that the following fields only contain words: {word_fields_incorrect}.\n'
+            feedback_message += f'Please make sure that the following fields only contain words: {word_fields_incorrect}.\n\n'
         
         if len(integer_fields_incorrect) > 0:
-            feedback_message += f'Please make sure that the following fields are a single integer: {integer_fields_incorrect}.\n'
+            feedback_message += f'Please make sure that the following fields are a single integer: {integer_fields_incorrect}.\n\n'
         
         return feedback_message
 
@@ -112,16 +112,10 @@ class RiskAssessment:
     def get_activity_input(self):
         return Activity(activity=self.activity)
     
-    def get_how_it_harms_input(self):
-        return HowItHarms(how_it_harms=self.how_it_harms)
-    
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
                           activity=self.activity,
                           hazard = self.hazard)
-
-    def get_who_it_harms_input(self):
-        return WhoItHarms(who_it_harms=self.who_it_harms)
     
     def get_who_it_harms_in_context_input(self):
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
@@ -142,22 +136,6 @@ class RiskAssessment:
                           hazard=self.hazard,
                           how_it_harms=self.how_it_harms,
                           who_it_harms=self.who_it_harms)
-    
-    def get_prevention_classification_input(self):
-        return PreventionClassification(
-                        prevention=self.prevention,
-                        activity=self.activity,
-                        hazard=self.hazard,
-                        how_it_harms=self.how_it_harms,
-                        who_it_harms=self.who_it_harms)
-    
-    def get_mitigation_classification_input(self):
-        return MitigationClassification(
-                        mitigation=self.mitigation,
-                        activity=self.activity,
-                        hazard=self.hazard,
-                        how_it_harms=self.how_it_harms,
-                        who_it_harms=self.who_it_harms)
     
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
@@ -187,14 +165,11 @@ class RiskAssessment:
     
     def get_list_of_prompt_input_objects(self):
         return [self.get_activity_input(),
-                self.get_how_it_harms_input(),
                 self.get_how_it_harms_in_context_input(),
-                # self.get_who_it_harms_input(),
                 self.get_who_it_harms_in_context_input(),
                 self.get_prevention_input(),
-                self.get_mitigation_input(),
-                self.get_prevention_classification_input(),
-                self.get_mitigation_classification_input()]
+                self.get_mitigation_input()
+                ]
     
     def get_list_of_question_titles(self):
         question_titles = []
@@ -233,8 +208,12 @@ class RiskAssessment:
 
         regex_matches = []
 
-        for prompt_output in prompt_outputs:
-            regex_match = regex_pattern_matcher.check_string_against_pattern(prompt_output)
+        prompt_inputs = self.get_list_of_prompt_input_objects()
+
+        for i in range(len(prompt_inputs)):
+            pattern_matching_method = getattr(regex_pattern_matcher, prompt_inputs[i].pattern_matching_method)
+
+            regex_match = pattern_matching_method(prompt_outputs[i])
             regex_matches.append(regex_match)
         
         return regex_matches
@@ -250,12 +229,27 @@ class RiskAssessment:
     def get_list_of_shortform_feedback_from_regex_matches(self, regex_matches):
         list_of_shortform_feedback = []
 
+        prompt_inputs = self.get_list_of_prompt_input_objects()
+
         shortform_feedback_objects = self.get_list_of_shortform_feedback_objects()
 
         for i in range(len(regex_matches)):
-            if regex_matches[i] == True:
+            if regex_matches[i] == prompt_inputs[i].correct_matched_pattern:
                 list_of_shortform_feedback.append(shortform_feedback_objects[i].positive_feedback)
             else:
                 list_of_shortform_feedback.append(shortform_feedback_objects[i].negative_feedback)
-        
+            
         return list_of_shortform_feedback
+    
+    def are_all_multiplications_correct(self)->bool:
+        return self.check_uncontrolled_risk() == 'correct' and self.check_controlled_risk() == 'correct'
+    
+    def are_all_prompt_outputs_correct(self, prompt_outputs) -> bool:
+        regex_matches = self.get_list_of_regex_matches(prompt_outputs)
+        prompt_inputs = self.get_list_of_prompt_input_objects()
+
+        for i in range(len(regex_matches)):
+            if regex_matches[i] != prompt_inputs[i].correct_matched_pattern:
+                return False
+        
+        return True

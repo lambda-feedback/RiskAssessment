@@ -1,9 +1,9 @@
 from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
-from ExamplesGenerator import ExamplesGenerator
+from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from PromptInputs import HowItHarmsInContext
 
-class HowItHarmsInContextExamplesGenerator(ExamplesGenerator):
+class HowItHarmsInContextExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
         return HowItHarmsInContext(
                 activity=self.correct_examples_list[correct_index].activity, 
@@ -19,7 +19,7 @@ correct_examples_list = [
         HowItHarmsInContext(
             hazard="Presence of combustible materials near an open flame",
             how_it_harms="Fires",
-            activity="Fire safety demonstration")
+            activity="Fire safety demonstration"),
         # HowItHarmsInContext(
         #     hazard="Frayed electrical cords or exposed wiring",
         #     how_it_harms="Electric shocks",
@@ -68,5 +68,6 @@ if __name__ == "__main__":
     test_accuracy = TestModelAccuracy(LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=how_it_harms_examples,
-                                                sheet_name='How It Harms In Context')
+                                                sheet_name='How It Harms In Context',
+                                                test_description='Evaluating prompt on Chat GPT generated data for activities')
     test_accuracy.run_test()

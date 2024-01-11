@@ -9,11 +9,13 @@ try:
     from .example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
+    from .RegexPatternMatcher import RegexPatternMatcher
 except:
     from evaluation import Params, evaluation_function
     from example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from PromptInputs import Activity
+    from RegexPatternMatcher import RegexPatternMatcher
 
 class TestEvaluationFunction(unittest.TestCase):
     """
@@ -35,17 +37,18 @@ class TestEvaluationFunction(unittest.TestCase):
     """
 
     def test_returns_is_correct_true(self):
-        response = [['Using a trombone as a demonstration for a TPS presentation'],
-                    ['Loud noise'],
-                    ['Everyone present'],
-                    ['Loud noise from instrument can cause hearing damage.'],
+        response = [["Fluids laboratory"],
+                    ["Fluids laboratory"],
+                    ["Students"],
+                    ["Injuries caused by possible slipping on wet floor"],
                     ["4"],
                     ["1"], 
                     ["4"],
-                    ['Play quietly, at a volume suitable for the room'],
-                    ['Keep a space between the player and audience'],
+                    ["Do not move the water tank when it is full"],
+                    ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
+                    seek medical advice without delay."""],
                     ["1"],
-                    ["1"], 
+                    ["2"], 
                     ["1"]]
         answer, params = None, None
 
@@ -53,7 +56,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
         print(result.get("feedback"))
 
-        self.assertIn(result.get("is_correct"), [True, False])
+        self.assertIn(result.get("is_correct"), True)
         
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['activity'])
@@ -76,16 +79,12 @@ class TestEvaluationFunction(unittest.TestCase):
 
     def test_get_integer_fields_incorrect(self):
         self.assertEqual(RA_controlled_likelihood_wrong_type.get_integer_fields_incorrect(), ['controlled_likelihood'])
-    
-    # def test_get_model_output_with_Llama_model(self):
-    #     model_name = 'meta-llama/Llama-2-13b-chat-hf'
-    #     LLM = LLMWithGeneratedText(LLM_API_ENDPOINT=f'https://api-inference.huggingface.co/models/{model_name}')
-        
-    #     prompt_input = Activity(activity='fencing')
-        
-    #     LLM_output = LLM.get_model_output(prompt_input)
-    #     print(LLM_output)
-    #     self.assertIsInstance(LLM_output, str)
+
+    def test_regex_prevention_mitigation_neither(self):
+        regex = RegexPatternMatcher()
+        self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Answer: prevention'), 'prevention')
+        self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Therefore, answer: mitigation'), 'mitigation')
+        self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Thus, answer: Neither'), 'neither')
 
     # TODO: Test the function which creates an instance of a RiskAssessment object
 

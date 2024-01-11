@@ -1,13 +1,24 @@
 # Low hanging fruit:
-# TODO: Add typecheck for all the response fields, e.g. uncontrolled_likelihood should be an int
-# TODO: Refactor all tests files so they use new ExampleGenerator classes
-# TODO: Because 'how it harms' is so intrinsically linked to 'hazard' remove the not in-context check
 # TODO: Improve few shot prompting examples so they don't parrot back input prompt
 # TODO: Try using chain of thought prompt engineering for the mitigation prompt
+# TODO: Try using Llama inference endpoint
+# TODO: Try using Llama inference API but specify the number of tokens you want to receive
+# TODO: Update question description in lambda feedback making it clear that 
+# only one mitigation, one prevention and one 'how it harms' is specified
+
+## More difficult:
+# TODO: Add logic which checks to see if prevention/mitigation correct/incorrect and therefore
+# whether the controlled likelihood/controlled severity are lower than the uncontrolled likelihood/
+# uncontrolled severity
+
+# TODO: Create a file which reads excel files containing risk assessments and converts them 
+# into risk assessment objects
+
+# Add option in RiskAssessment to specify whether prevention is misclassified as mitigation, 
+# is not a suitable prevention, or mitigation is misclassified as prevention, or is not a suitable mitigation
 
 from typing import Any, TypedDict
 import numpy as np
-import re
 
 try:
     from .RiskAssessment import RiskAssessment
@@ -53,7 +64,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
-                        is_prevention_correct=True, is_mitigation_correct=True)
+                        prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation')
     
     if RA.get_input_check_feedback_message() != '':
         return Result(is_correct=False, feedback= RA.get_input_check_feedback_message())
@@ -67,12 +78,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
         regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
         shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
-
-        is_an_activity = regex_matches[0]
+        is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
 
         feedback = f'''
-        For the activity field, you answered {activity}, which is correct!
-        
         ------ FEEDBACK ------\n\n
         '''
 
@@ -90,4 +98,4 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
         feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'
 
-        return Result(is_correct=is_an_activity, feedback=feedback)
+        return Result(is_correct=is_everything_correct, feedback=feedback)
