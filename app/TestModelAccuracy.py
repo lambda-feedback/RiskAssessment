@@ -51,36 +51,55 @@ class TestModelAccuracy:
         prompt_outputs_for_incorrect_responses = ''
 
         for i in range(len(self.list_of_input_and_expected_outputs)):
+            input = self.list_of_input_and_expected_outputs[i].input
+
             prompt_input, prompt_output = self.get_prompt_input_and_output(self.list_of_input_and_expected_outputs[i])
             regex_pattern_matcher = RegexPatternMatcher()
-            is_correct = regex_pattern_matcher.check_string_against_pattern(prompt_output)
-            expected_output = self.list_of_input_and_expected_outputs[i].expected_output
 
-            result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
-                            'is_correct': is_correct, 
-                            'expected_output': expected_output}
-            
-            output_string += f'{i + 1}: {str(result_dict)}\n\n'
+            pattern_matching_method_string = input.pattern_matching_method
+            pattern_matching_method = getattr(regex_pattern_matcher, input.pattern_matching_method)
 
-            if is_correct == expected_output:
-                count_correct += 1
-                if is_correct == True:
-                    count_true_positives += 1
+            if hasattr(regex_pattern_matcher, pattern_matching_method_string) and callable(pattern_matching_method):
+
+                pattern_matched = pattern_matching_method(prompt_output)
+                expected_output = self.list_of_input_and_expected_outputs[i].expected_output
+
+                result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
+                                'pattern_matched': pattern_matched, 
+                                'expected_output': expected_output}
+                
+                output_string += f'{i + 1}: {str(result_dict)}\n\n'
+
+                if pattern_matched == expected_output:
+                    count_correct += 1
+
+                    if pattern_matching_method_string == "check_string_for_true_or_false":
+                        if pattern_matched == True:
+                            count_true_positives += 1
+                        else:
+                            count_true_negatives += 1
+
+                    prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+                
                 else:
-                    count_true_negatives += 1
-                prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\n\n'
-                print(count_correct)
-            else:
-                if is_correct == True:
-                    count_false_positives += 1
-                else:  
-                    count_false_negatives += 1
-                prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\n\n'
-        
-        accuracy = round(count_correct / len(self.list_of_input_and_expected_outputs) * 100, 2)
-        confusion_matrix = [[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]]
 
-        return accuracy, self.convert_list_of_lists_to_string(confusion_matrix), output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
+                    if pattern_matching_method_string == "check_string_for_true_or_false":
+                        if pattern_matched == True:
+                            count_false_positives += 1
+                        else:  
+                            count_false_negatives += 1
+
+                    prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+                
+                print(count_correct)
+        accuracy = round(count_correct / len(self.list_of_input_and_expected_outputs) * 100, 2)
+
+        if pattern_matching_method_string == "check_string_for_true_or_false":
+            confusion_matrix = self.convert_list_of_lists_to_string([[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]])
+        else:
+            confusion_matrix = f'Confusion matrix not yet created for multiclass classification\nNumber correct = {count_correct}'
+
+        return accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
     
     def get_first_prompt_input_and_output(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
@@ -121,12 +140,12 @@ class TestModelAccuracy:
         
         num_examples = len(self.list_of_input_and_expected_outputs)
 
-        total_cost_of_calling_LLM_API = self.total_cost_of_calling_LLM_API()
+        # total_cost_of_calling_LLM_API = self.total_cost_of_calling_LLM_API()
 
         new_line_data = [self.test_description, 
                          self.LLM_name, 
                             datetime_now, 
-                            total_cost_of_calling_LLM_API,
+                            0,
                             model_parameters, 
                             accuracy, 
                             num_examples,

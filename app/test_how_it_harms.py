@@ -92,5 +92,6 @@ if __name__ == '__main__':
     test_accuracy = TestModelAccuracy(LLM=OpenAILLM(),
                                             LLM_name='gpt-3.5-turbo',
                                             list_of_input_and_expected_outputs=who_it_harms_classification_examples,
-                                            sheet_name='How It Harms')
+                                            sheet_name='How It Harms',
+                                            test_description='Evaluating prompt on Chat GPT generated data for activities')
     test_accuracy.run_test()

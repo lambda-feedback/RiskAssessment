@@ -10,14 +10,13 @@ from ExamplesGenerator import RiskAssessmentExamplesGenerator
 if __name__ == '__main__':
     # examples_generator = MitigationExamplesGenerator(correct_examples_list=correct_mitigation_examples_list)
     examples_generator = RiskAssessmentExamplesGenerator(risk_assessments=example_risk_assessments,
-                                                         risk_assessment_parameter_checked='is_mitigation_correct',
+                                                         ground_truth_parameter='mitigation_prompt_expected_output',
                                                         method_to_get_prompt_input='get_mitigation_input')
     
     examples = examples_generator.get_input_and_expected_output_list()
     
-    test_accuracy = TestModelAccuracy(test_description="""Testing prevention input in student Fluids Lab Risk Assessment examples.
-                                      Changed examples so now each mitigation only lists one action.
-                                      Changed prompt to include few shot prompt engineering with one correct and one incorrect example""",
+    test_accuracy = TestModelAccuracy(test_description="""Testing mitigation input in student Fluids Lab and TPS Risk Assessment examples.
+                                      Changed the prevention example in the mitigation prompt so it explicitly states why it is false""",
                                       LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=examples,
