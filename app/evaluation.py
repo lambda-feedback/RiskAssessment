@@ -79,6 +79,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
         shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
         is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
+        booleans_indicating_which_prompts_need_feedback = RA.get_booleans_indicating_which_prompts_need_feedback(regex_matches)
 
         feedback = f'''
         ------ FEEDBACK ------\n\n
@@ -86,14 +87,13 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
         for i in range(len(prompts)):
             question_title = question_titles[i]
-            question = questions[i]
             prompt_output = prompt_outputs[i]
             shortform_feedback = shortform_feedbacks[i]
 
             feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
-            feedback += f'{question}\n\n'
             feedback += f'Feedback {i + 1}: {shortform_feedback}\n\n'
-            feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
+            if booleans_indicating_which_prompts_need_feedback[i] == True:
+                feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
 
         feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
         feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'

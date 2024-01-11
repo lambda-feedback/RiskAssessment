@@ -1,5 +1,7 @@
-    # TODO: Make it easier to add new prompts. At the moment it is too difficult. 
-    # Have to change code in 2 places.
+# TODO: Make it easier to add new prompts. At the moment it is too difficult. 
+# Have to change code in 2 places.
+
+# TODO: Decide whether to remove the get_question method from the PromptInput class.
 
 class ShortformFeedback:
     def __init__(self, positive_feedback, negative_feedback):
@@ -108,8 +110,8 @@ class HowItHarmsInContext(PromptInput):
         Answer: your_answer'''
     
     def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is a way that the hazard causes harm.",
-                                    negative_feedback=f"Incorrect. '{self.how_it_harms}' is not a way that the hazard causes harm.")
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is a way that the hazard: '{self.hazard}' causes harm.",
+        negative_feedback=f"Incorrect. '{self.how_it_harms}' is not a way that the hazard: '{self.hazard}' causes harm.")
     
 class WhoItHarmsInContext(PromptInput):
     def __init__(self, who_it_harms, how_it_harms, activity, hazard):
@@ -141,8 +143,8 @@ class WhoItHarmsInContext(PromptInput):
         Answer: your_answer'''
     
     def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' could be harmed by the hazard.",
-                                    negative_feedback=f"Incorrect. '{self.who_it_harms}' could not be harmed by the hazard.")
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' could be harmed by the hazard: '{self.hazard}'.",
+        negative_feedback=f"Incorrect. '{self.who_it_harms}' could not be harmed by the hazard: '{self.hazard}'.")
     
 class Prevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
@@ -236,8 +238,8 @@ class Prevention(PromptInput):
         # Answer: your_answer'''
     
     def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure.",
-                                    negative_feedback=f"Incorrect. '{self.prevention}' is not a prevention measure.")
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'",
+        negative_feedback=f"Incorrect. '{self.prevention}' is not a prevention measure for the hazard: '{self.hazard}'.")
 
 class Mitigation(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
@@ -321,5 +323,5 @@ class Mitigation(PromptInput):
         Answer: your_answer'''
     
     def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure.",
-                                    negative_feedback=f"Incorrect. '{self.mitigation}' is not a mitigation measure.")
+        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure for the hazard: '{self.hazard}'.",
+        negative_feedback=f"Incorrect. '{self.mitigation}' is not a mitigation measure for the hazard: '{self.hazard}'.")
