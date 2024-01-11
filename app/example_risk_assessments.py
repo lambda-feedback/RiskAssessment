@@ -161,7 +161,7 @@ RA_6 = RiskAssessment(
 
 RA_7 = RiskAssessment(
     activity="Fluids laboratory",
-    hazard="Fluids laboratory",
+    hazard="Wet floor",
     who_it_harms="Students",
     how_it_harms="Injuries caused by possible slipping on wet floor",
     uncontrolled_likelihood="3",

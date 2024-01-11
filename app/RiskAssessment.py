@@ -241,6 +241,19 @@ class RiskAssessment:
             
         return list_of_shortform_feedback
     
+    def get_booleans_indicating_which_prompts_need_feedback(self, regex_matches):
+        booleans_indicating_which_prompts_need_feedback = []
+
+        prompt_inputs = self.get_list_of_prompt_input_objects()
+
+        for i in range(len(regex_matches)):
+            if regex_matches[i] == prompt_inputs[i].correct_matched_pattern:
+                booleans_indicating_which_prompts_need_feedback.append(False)
+            else:
+                booleans_indicating_which_prompts_need_feedback.append(True)
+            
+        return booleans_indicating_which_prompts_need_feedback
+    
     def are_all_multiplications_correct(self)->bool:
         return self.check_uncontrolled_risk() == 'correct' and self.check_controlled_risk() == 'correct'
     
