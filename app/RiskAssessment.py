@@ -161,7 +161,7 @@ class RiskAssessment:
                                                                 self.controlled_severity,
                                                                 self.controlled_risk)
     
-    # TODO: Add ability to see prompt output percentages
+    # TODO: Add ability to see prompt output percentages - might be possible for LLMs other than GPT-3
     
     def get_list_of_prompt_input_objects(self):
         return [self.get_activity_input(),

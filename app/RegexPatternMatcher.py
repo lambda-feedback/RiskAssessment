@@ -13,7 +13,7 @@ class RegexPatternMatcher:
             raise Exception("Pattern not found in output prompt")
         
     def check_string_for_prevention_mitigation_or_neither(self, string):
-        pattern = re.compile(r"(prevention|mitigation|neither)", re.IGNORECASE)
+        pattern = re.compile(r"Answer: (prevention|mitigation|neither)", re.IGNORECASE)
         match = re.search(pattern, string)
         if match:
             return match.group(1).lower()

@@ -6,14 +6,6 @@
 # TODO: Update question description in lambda feedback making it clear that 
 # only one mitigation, one prevention and one 'how it harms' is specified
 
-## More difficult:
-# TODO: Add logic which checks to see if prevention/mitigation correct/incorrect and therefore
-# whether the controlled likelihood/controlled severity are lower than the uncontrolled likelihood/
-# uncontrolled severity
-
-# TODO: Create a file which reads excel files containing risk assessments and converts them 
-# into risk assessment objects
-
 # Add option in RiskAssessment to specify whether prevention is misclassified as mitigation, 
 # is not a suitable prevention, or mitigation is misclassified as prevention, or is not a suitable mitigation
 

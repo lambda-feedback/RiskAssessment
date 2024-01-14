@@ -3,59 +3,6 @@ try:
 except ImportError:
     from RiskAssessment import RiskAssessment
 
-# TODO: For incorrect examples, in PromptInputAndExpectedOutput, could include a reason as to why it is incorrect
-
-RA_1 = RiskAssessment(
-    activity="Using a trombone as a demonstration for a TPS presentation",
-    hazard="Impact from instrument",
-    who_it_harms="Audience",
-    how_it_harms="Slide could hit audience member, causing impact injury.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="2",
-    uncontrolled_risk="8",
-    prevention="Keep safe distance between the player and audience; hold instrument securely",
-    mitigation="",
-    controlled_likelihood="1",
-    controlled_severity="2",
-    controlled_risk="2",
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output=''
-)
-
-RA_2 = RiskAssessment(
-    activity="Using a trombone as a demonstration for a TPS presentation",
-    hazard="Loud noise",
-    who_it_harms="Everyone present",
-    how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
-    prevention="Play quietly, at a volume suitable for the room", # reduces likelihood of loud noise
-    mitigation="Keep a space between the player and audience", # reduces severity of loud noise
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention' # wear ear defenders would be a mitigation measure.
-)
-
-RA_3 = RiskAssessment(
-    activity="Using a trombone as a demonstration for a TPS presentation",
-    hazard="Water from instrument",
-    who_it_harms="Audience",
-    how_it_harms="Condensation formed in instrument could spread germs if released",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
-    prevention="Ensure water is not released during presentation", # Not very specific.
-    # TODO: Should include feedback stating: "How would you ensure water is not released during presentation?"
-    mitigation="Keep a space between the player and audience", # Also a prevention
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention'
-)
 
 RA_empty_input = RiskAssessment(
     activity="",
@@ -102,6 +49,75 @@ RA_controlled_likelihood_wrong_type = RiskAssessment(
     prevention="Play quietly, at a volume suitable for the room",
     mitigation="Keep a space between the player and audience",
     controlled_likelihood="Keep a space between the player and audience",
+    controlled_severity="1",
+    controlled_risk="1",
+    prevention_prompt_expected_output='prevention',
+    mitigation_prompt_expected_output='mitigation'
+)
+
+RA_incorrect_prevention = RiskAssessment(
+    activity="Welding metal structures",
+    hazard="Exposure to toxic welding fumes",
+    how_it_harms="Inhaling welding fumes can lead to respiratory problems, lung damage, and long-term health issues.",
+    who_it_harms="Welders and individuals in the vicinity of the welding area.",
+    uncontrolled_likelihood="4",
+    uncontrolled_severity="3",
+    uncontrolled_risk="12",
+    prevention="Using the welding equipment in an enclosed space without proper ventilation.",
+    mitigation='',
+    controlled_likelihood="1",
+    controlled_severity="1",
+    controlled_risk="1",
+    prevention_prompt_expected_output='neither',
+    mitigation_prompt_expected_output='neither'
+
+)
+RA_1 = RiskAssessment(
+    activity="Using a trombone as a demonstration for a TPS presentation",
+    hazard="Impact from instrument",
+    who_it_harms="Audience",
+    how_it_harms="Slide could hit audience member, causing impact injury.",
+    uncontrolled_likelihood="4",
+    uncontrolled_severity="2",
+    uncontrolled_risk="8",
+    prevention="Keep safe distance between the player and audience; hold instrument securely",
+    mitigation="",
+    controlled_likelihood="1",
+    controlled_severity="2",
+    controlled_risk="2",
+    prevention_prompt_expected_output='prevention',
+    mitigation_prompt_expected_output=''
+)
+
+RA_2 = RiskAssessment(
+    activity="Using a trombone as a demonstration for a TPS presentation",
+    hazard="Loud noise",
+    who_it_harms="Everyone present",
+    how_it_harms="Loud noise from instrument can cause hearing damage.",
+    uncontrolled_likelihood="4",
+    uncontrolled_severity="1",
+    uncontrolled_risk="4",
+    prevention="Play quietly, at a volume suitable for the room", # reduces likelihood of loud noise
+    mitigation="Keep a space between the player and audience", # reduces severity of loud noise
+    controlled_likelihood="1",
+    controlled_severity="1",
+    controlled_risk="1",
+    prevention_prompt_expected_output='prevention', 
+    mitigation_prompt_expected_output='mitigation' 
+)
+
+RA_3 = RiskAssessment(
+    activity="Using a trombone as a demonstration for a TPS presentation",
+    hazard="Water from instrument",
+    who_it_harms="Audience",
+    how_it_harms="Condensation formed in instrument could spread germs if released",
+    uncontrolled_likelihood="4",
+    uncontrolled_severity="1",
+    uncontrolled_risk="4",
+    prevention="Ensure water is not released during presentation", # Not very specific.
+    # Should include feedback stating: "How would you ensure water is not released during presentation?"
+    mitigation="Keep a space between the player and audience", # Reduces severity of water being released
+    controlled_likelihood="1",
     controlled_severity="1",
     controlled_risk="1",
     prevention_prompt_expected_output='prevention',
@@ -161,7 +177,7 @@ RA_6 = RiskAssessment(
 
 RA_7 = RiskAssessment(
     activity="Fluids laboratory",
-    hazard="Wet floor",
+    hazard="Water being spilt on the floor",
     who_it_harms="Students",
     how_it_harms="Injuries caused by possible slipping on wet floor",
     uncontrolled_likelihood="3",
@@ -225,7 +241,7 @@ RA_10 = RiskAssessment(
     controlled_severity="2",
     controlled_risk="2",
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention'
+    mitigation_prompt_expected_output='mitigation'
 )
 
 RA_11 = RiskAssessment(
@@ -329,7 +345,7 @@ RA_16 = RiskAssessment(
     controlled_severity='1',
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention'
+    mitigation_prompt_expected_output='mitigation'
 )
 
 RA_17 = RiskAssessment(
@@ -363,8 +379,7 @@ RA_18 = RiskAssessment(
     controlled_severity='2',
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='mitigation' # If the battery is heating up and the audience isn't holding it for too long, 
-                                # the harm caused will reduce
+    mitigation_prompt_expected_output='mitigation' # it is both mitigation and prevention
 )
 
 RA_19 = RiskAssessment(
@@ -381,8 +396,7 @@ RA_19 = RiskAssessment(
     controlled_severity='2',
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention' # This is another prevention measure as it reduces the likelihood of 
-                                # the weight falling on the demonstrator.
+    mitigation_prompt_expected_output='mitigation'
 )
 
 RA_20 = RiskAssessment(
@@ -399,7 +413,7 @@ RA_20 = RiskAssessment(
     controlled_severity='1',
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention' # Another prevention measure as it reduces the 
+    mitigation_prompt_expected_output='mitigation' # Another prevention measure as it reduces the 
                                 # likelihood of the zip tie hitting an audience member
 )
 
@@ -443,23 +457,6 @@ RA_22 = RiskAssessment(
 )
 
 RA_23 = RiskAssessment(
-    activity='Using a violin as demonstration for TPS presentation',
-    hazard='impact from instrument',
-    who_it_harms='everyone present',
-    how_it_harms='strings could snap and break and hit someone, or bow could hit someone while playing',
-    uncontrolled_likelihood='2',
-    uncontrolled_severity='3',
-    uncontrolled_risk='6',
-    prevention='keep safe distance between player and audience',
-    mitigation='keep space between player and audience',
-    controlled_likelihood='1',
-    controlled_severity='2',
-    controlled_risk='2',
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention' # Another prevention measure
-)
-
-RA_24 = RiskAssessment(
     activity='Using a mechanical pencil and breaking the pencil lead against a surface for demonstration',
     hazard='Pencil lead breaking and becoming a projectile',
     who_it_harms='Anyone present',
@@ -479,4 +476,4 @@ RA_24 = RiskAssessment(
 
 example_risk_assessments = [RA_1, RA_2, RA_3, RA_4, RA_5, RA_6, RA_7, RA_8, RA_9, RA_10, RA_11, 
                             RA_12, RA_13, RA_14, RA_15, RA_16, RA_17, RA_18, RA_19, RA_20, RA_21,
-                            RA_22, RA_23, RA_24]
+                            RA_22, RA_23, RA_23]
