@@ -1,6 +1,6 @@
 from PromptInputs import PromptInput, Prevention, Mitigation
 
-from example_risk_assessments import RA_4, RA_5, RA_incorrect_prevention
+from example_risk_assessments import RA_4, RA_5, RA_incorrect_prevention_and_mitigation
 
 def get_prevention_prompt(risk_assessment):
     prevention = risk_assessment.get_prevention_input()
@@ -15,4 +15,4 @@ def get_mitigation_prompt(risk_assessment):
 if __name__ == "__main__":
     # print(get_mitigation_prompt(RA_4))
     # print(get_prevention_prompt(RA_5))
-    print(get_prevention_prompt(RA_incorrect_prevention))
+    print(get_prevention_prompt(RA_incorrect_prevention_and_mitigation))

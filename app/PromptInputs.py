@@ -81,7 +81,7 @@ class Activity(PromptInput):
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.activity}' is an activity.",
                                  negative_feedback=f"Incorrect. '{self.activity}' is not an activity.")
-    
+        
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
         super().__init__()
@@ -172,19 +172,24 @@ class Prevention(PromptInput):
         1. In one sentence, describe the hazard: 'Wet hands' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Electric shock of students when touching electronics (pump power supply) with wet hands'
         and who/what the hazard harms: 'Students'.
-        2. Given the definition of a 'prevention measure': """an action which directly reduces the probability that the hazard occurs.""",
-        explain whether 'Students should make sure they touch electronics only with dry hands' is a prevention for hazard described in in step 1.
-        3. Given the definition of a 'mitigation measure': """an action which directly reduces the harm caused by a hazard occurring
-        or reduces the harm caused by the hazard after it has occurred.""",
-        explain whether 'Students should make sure they touch electronics only with dry hands' is a mitigation for hazard described in in step 1.
-        4. If it is a prevention measure, answer prevention. If it is a migitation meausure, answer mitigation.
-        If it is neither a prevention measure nor a mitigation measure, answer neither. If it is both a   
-        prevention measure and a mitigation measure, answer both.
+        2. Explain whether or not 'Students should make sure they touch electronics only with dry hands' reduces the likelihood of the hazard described in step 1.
+        If so, it is a prevention measure.
+        3. Assuming the hazard described in step 1 has led to harm, explain whether or not 'Students should make sure they touch electronics only with dry hands'
+        would reduce or remove the harm caused by the hazard described in step 1.
+        If so, it is a mitigation measure.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
+        prevention measure and a mitigation measure, answer 'both'.
         
         Output:
-        1. Description: The hazard of 'Wet hands' during the activity 'Fluids laboratory' can lead to electric shock of students when touching electronics (pump power supply) with wet hands.
-        2. Prevention Explanation: 'Students should make sure they touch electronics only with dry hands' is a prevention measure because it directly reduces the probability that the hazard of electric shock due to wet hands occurs.
-        3. Mitigation Explanation: 'Students should make sure they touch electronics only with dry hands' is not a mitigation measure, as it does not directly reduce the harm caused by the hazard after it has occurred; instead, it focuses on preventing the occurrence of the hazard.
+        1. Description: The hazard of 'Wet hands' during the activity 'Fluids laboratory' can lead to electric shock of students when 
+        touching electronics (pump power supply) with wet hands.
+        2. Prevention Explanation: 'Students should make sure they touch electronics only with dry hands' is a prevention measure reduces the probability 
+        they will have wet hands and that an electric shock due to wet hands occurs. It is therefore a prevention measure.
+        3. Mitigation Explanation: Assuming the hazard of 'Wet hands' has led to the harm of an electric shock, 
+        'Students should make sure they touch electronics only with dry hands' does not directly reduce the severity of this harm
+        as the electric shock has already occurred and touching the electronics with dry hands will not reverse this harm.
+        It is therefore not a mitigation measure.
         4. Answer: Prevention'''
 
         example_of_mitigation = '''
@@ -193,19 +198,22 @@ class Prevention(PromptInput):
         1. In one sentence, describe the hazard: 'Ink spillage' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Serious eye damage'
         and who/what the hazard harms: 'Students'.
-        2. Given the definition of a 'prevention measure': """an action which directly reduces the probability that the hazard occurs.""",
-        explain whether 'Wash your eyes with clean water' is a prevention for hazard described in in step 1.
-        3. Given the definition of a 'mitigation measure': """an action which directly reduces the harm caused by a hazard occurring
-        or reduces the harm caused by the hazard after it has occurred.""",
-        explain whether 'Wash your eyes with clean water' is a mitigation for hazard described in in step 1.
-        4. If it is a prevention measure, answer prevention. If it is a migitation meausure, answer mitigation.
-        If it is neither a prevention measure nor a mitigation measure, answer neither. If it is both a   
-        prevention measure and a mitigation measure, answer both.
+        2. Explain whether or not 'Wash your eyes with clean water' reduces the likelihood of the hazard described in step 1.
+        If so, it is a prevention measure.
+        3. Assuming the hazard described in step 1 has led to harm, explain whether or not 'Wash your eyes with clean water'
+        would reduce or remove the harm caused by the hazard described in step 1.
+        If so, it is a mitigation measure.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
+        prevention measure and a mitigation measure, answer 'both'.
 
         Output: 
         1. Description: The hazard of 'Ink spillage' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
-        2. Prevention Explanation: 'Wash your eyes with clean water' is not a prevention measure; it is a response or first aid action. Prevention measures focus on reducing the probability that the hazard occurs in the first place, whereas washing the eyes is a reactive step taken after exposure.
-        3. Mitigation Explanation: 'Wash your eyes with clean water' is a mitigation measure because it directly reduces the harm caused by the hazard after it has occurred by helping to minimize the potential damage to the eyes and providing initial care.
+        2. Prevention Explanation: 'Wash your eyes with clean water' does not reduce the likelihood that
+        an ink spillage will lead to eye damage; it is a response or first aid action. Therefore, it is not a prevention.
+        3. Mitigation Explanation: Assuming the hazard of ink spillage has led to the harm of serious eye damage, 
+        'Wash your eyes with clean water' will reduce provide initial care and reduce the potential severity of this eye damage.
+        It is therefore a mitigation. 
         4. Answer: Mitigation.'''
 
         example_of_incorrect_prevention = '''
@@ -214,19 +222,25 @@ class Prevention(PromptInput):
         1. In one sentence, describe the hazard: 'Exposure to toxic welding fumes' during the
         activity: 'Welding metal structures' given how the hazard harms: 'Inhaling welding fumes can lead to respiratory problems, lung damage, and long-term health issues.'
         and who/what the hazard harms: 'Welders and individuals in the vicinity of the welding area.'.    
-        2. Given the definition of a 'prevention measure': """an action which directly reduces the probability that the hazard occurs.""",
-        explain whether 'Using the welding equipment in an enclosed space without proper ventilation.' is a prevention for hazard described in in step 1.
-        3. Given the definition of a 'mitigation measure': """an action which directly reduces the harm caused by a hazard occurring
-        or reduces the harm caused by the hazard after it has occurred.""",
-        explain whether 'Using the welding equipment in an enclosed space without proper ventilation.' is a mitigation for hazard described in in step 1.
-        4. If it is a prevention measure, answer prevention. If it is a migitation meausure, answer mitigation.
-        If it is neither a prevention measure nor a mitigation measure, answer neither. If it is both a   
-        prevention measure and a mitigation measure, answer both.
+        2. Explain whether or not 'Using the welding equipment in an enclosed space without proper ventilation.' reduces the likelihood of the hazard described in step 1.
+        If so, it is a prevention measure.
+        3. Assuming the hazard described in step 1 has led to harm, explain whether or not 'Using the welding equipment in an enclosed space without proper ventilation.'
+        would reduce or remove the harm caused by the hazard described in step 1.
+        If so, it is a mitigation measure.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
+        prevention measure and a mitigation measure, answer 'both'.
 
         Output:
-        1. Description: The hazard of 'Exposure to toxic welding fumes' during the activity 'Welding metal structures' can lead to inhaling welding fumes, resulting in respiratory problems, lung damage, and long-term health issues for welders and individuals in the vicinity of the welding area.
-        2. Prevention Explanation: 'Using the welding equipment in an enclosed space without proper ventilation' is not a prevention measure; it exacerbates the hazard by creating a condition where exposure to toxic welding fumes is more likely to occur. 
-        3. Mitigation Explanation: 'Using the welding equipment in an enclosed space without proper ventilation' is not a mitigation measure, as it does not directly reduce the harm caused by the hazard after it has occurred. Instead, it exacerbates the hazard by increasing the likelihood of exposure to toxic welding fumes. 
+        1. Description: The hazard of 'Exposure to toxic welding fumes' during the activity 'Welding metal structures' can lead to 
+        inhaling welding fumes, resulting in respiratory problems, lung damage, and long-term health issues for welders and individuals
+        in the vicinity of the welding area.
+        2. Prevention Explanation: 'Using the welding equipment in an enclosed space without proper ventilation' 
+        will not reduce the likelihood of welders being exposed to toxic welding fumes and actually increases the likelihood of exposure.
+        It is therefore not a prevention. 
+        3. Mitigation Explanation: Assuming the hazard of toxic welding fumes exposure has led to respiratory problems, 
+        'Using the welding equipment in an enclosed space without proper ventilation' will not serve to releive these respiratory problems
+        and hence the severity of the harm is not reduced. It is therefore not a mitigation measure. 
         4. Answer: neither'''
 
         return f'''
@@ -240,13 +254,14 @@ class Prevention(PromptInput):
         1. In one sentence, describe the hazard: '{self.hazard}' during the 
         activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
         and who/what the hazard harms: '{self.who_it_harms}'.
-        2. Given the definition of a 'prevention measure': """{self.prevention_definition}""",
-        explain whether '{self.mitigation}' is a prevention for hazard described in in step 1.
-        3. Given the definition of a 'mitigation measure': """{self.mitigation_definition}""",
-        explain whether '{self.mitigation}' is a mitigation for hazard described in in step 1.
+        2. Explain whether or not '{self.prevention}' reduces the likelihood of the hazard described in step 1.
+        If so, it is a prevention measure.
+        3. Assuming the hazard described in step 1 has already led to harm, explain whether or not '{self.prevention}'
+        would reduce or remove the harm caused by the hazard described in step 1.
+        If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
-        prevention measure and a mitigation measure, answer 'Prevention and Mitigation'.
+        prevention measure and a mitigation measure, answer 'both'.
         
         Use the following output format:
         1. Description: <your description>
@@ -354,13 +369,14 @@ class Mitigation(PromptInput):
         1. In one sentence, describe the hazard: '{self.hazard}' during the 
         activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
         and who/what the hazard harms: '{self.who_it_harms}'.
-        2. Given the definition of a 'prevention measure': """{self.prevention_definition}""",
-        explain whether '{self.mitigation}' is a prevention for hazard described in in step 1.
-        3. Given the definition of a 'mitigation measure': """{self.mitigation_definition}""",
-        explain whether '{self.mitigation}' is a mitigation for hazard described in in step 1.
+        2. Explain whether or not '{self.mitigation}' reduces the likelihood of the hazard described in step 1.
+        If so, it is a prevention measure.
+        3. Assuming the hazard described in step 1 has led to harm, explain whether or not '{self.mitigation}'
+        would reduce or remove the harm caused by the hazard described in step 1.
+        If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
-        prevention measure and a mitigation measure, answer 'Mitigation and Prevention'.
+        prevention measure and a mitigation measure, answer 'both'.
         
         Use the following output format:
         1. Description: <your description>
