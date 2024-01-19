@@ -10,15 +10,14 @@ from ExamplesGenerator import RiskAssessmentExamplesGenerator
 if __name__ == '__main__':
     # examples_generator = PreventionExamplesGenerator(correct_examples_list=correct_prevention_examples_list)
     examples_generator = RiskAssessmentExamplesGenerator(risk_assessments=example_risk_assessments,
-                                                         risk_assessment_parameter_being_checked='prevention',
                                                          ground_truth_parameter='prevention_prompt_expected_output',
                                                         method_to_get_prompt_input='get_prevention_input')
     
     examples = examples_generator.get_input_and_expected_output_list()
 
-    test_accuracy = TestModelAccuracy(test_description="""Testing prevention input in student Fluids Lab Risk Assessment examples.
-                                      Added new example and this to prompt: If '{self.prevention}' is a vague statement, explain 
-                                      that this is why it is not a 'prevention measure'.""",
+    test_accuracy = TestModelAccuracy(test_description="""Testing prevention input in student Fluids Lab and TPS presentation Risk Assessment examples.
+                                      Removed definitions from prompt. Made it more clear that a mitigation reduces severity assuming hazard has led to harm.
+                                       """,
                                       LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=examples,
