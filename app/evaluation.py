@@ -94,8 +94,8 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
         is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
         booleans_indicating_which_prompts_need_feedback = RA.get_booleans_indicating_which_prompts_need_feedback(regex_matches)
 
-        feedback = ''''''
-        full_feedback = ''''''
+        feedback = ''' # Feedback for incorrect inputs'''
+        full_feedback = ''' # Full Feedback'''
         
         n_prompts = len(prompts)
 
@@ -117,15 +117,11 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     definitions_to_look_at = 'Prevention and Mitigation'
 
             feedback_header_to_add = f' ## Feedback for Input{"s" if field == "Hazard & How it harms" else ""}: {fields_checked[i]}'
-            feedback_to_add = f'''
-                        - **Feedback:** {shortform_feedback}
-                        - **Explanation:** {longform_feedback}'
-                        '''
+            feedback_to_add = f'''- **Feedback:** {shortform_feedback}
+            - **Explanation:** {longform_feedback}\n'''
             
             if booleans_indicating_which_prompts_need_feedback[i] == True:
-                feedback_to_add += f'''
-                            - **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.
-                            '''
+                feedback_to_add += f'''- **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.'''
                 
             if booleans_indicating_which_prompts_need_feedback[i] == True and most_pertinent_feedback_already_shown == False:
                 feedback += feedback_header_to_add
