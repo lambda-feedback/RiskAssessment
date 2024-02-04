@@ -59,7 +59,7 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertIn(result.get("is_correct"), [True, False])
         
     def test_handles_empty_input(self):
-        self.assertEqual(RA_empty_input.get_empty_fields(), ['activity'])
+        self.assertEqual(RA_empty_input.get_empty_fields(), ['Activity'])
         self.assertEqual(RA_5.get_empty_fields(), [])
     
     def test_does_string_represent_an_integer(self):
@@ -75,10 +75,10 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertEqual(RA_5.does_string_represent_words('One'), True)
 
     def test_get_word_fields_incorrect(self):
-        self.assertEqual(RA_mitigation_wrong_type.get_word_fields_incorrect(), ['mitigation'])
+        self.assertEqual(RA_mitigation_wrong_type.get_word_fields_incorrect(), ['Mitigation'])
 
     def test_get_integer_fields_incorrect(self):
-        self.assertEqual(RA_controlled_likelihood_wrong_type.get_integer_fields_incorrect(), ['controlled_likelihood'])
+        self.assertEqual(RA_controlled_likelihood_wrong_type.get_integer_fields_incorrect(), ['Controlled Likelihood'])
 
     def test_regex_prevention_mitigation_neither(self):
         regex = RegexPatternMatcher()
