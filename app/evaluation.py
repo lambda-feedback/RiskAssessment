@@ -165,14 +165,22 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
                         prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation')
     
-    if RA.get_input_check_feedback_message() != '':
-        return Result(is_correct=False, feedback= RA.get_input_check_feedback_message())
+    input_check_feedback_message = RA.get_input_check_feedback_message()
+    controlled_risk = RA.check_controlled_risk()
+    uncontrolled_risk = RA.check_uncontrolled_risk()
+
+    if input_check_feedback_message != '':
+        return Result(is_correct=False,
+                    feedback=f'Feedback: \n\n {input_check_feedback_message}')
+    
+    if input_check_feedback_message == '' and controlled_risk != 'correct' or uncontrolled_risk != 'correct':
+        return Result(is_correct=False,
+                      feedback=f'Feedback: \n\n Uncontrolled risk is: {controlled_risk}\n\nUncontrolled risk is {uncontrolled_risk}')
     
     else:
         LLM = OpenAILLM()
-
-        question_titles = RA.get_list_of_question_titles()
-        questions = RA.get_list_of_questions()
+        fields_checked = RA.get_list_of_fields_checked()
+        prompt_input_objects = RA.get_list_of_prompt_input_objects()
         prompts = RA.get_list_of_prompts()
         prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
         regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
@@ -180,21 +188,51 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
         is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
         booleans_indicating_which_prompts_need_feedback = RA.get_booleans_indicating_which_prompts_need_feedback(regex_matches)
 
-        feedback = f'''
-        ------ FEEDBACK ------\n\n
-        '''
+        feedback = ''''''
+        full_feedback = ''''''
+        
+        n_prompts = len(prompts)
 
-        for i in range(len(prompts)):
-            question_title = question_titles[i]
-            prompt_output = prompt_outputs[i]
+        most_pertinent_feedback_already_shown = False
+
+        for i in range(n_prompts):
+            field = fields_checked[i]
             shortform_feedback = shortform_feedbacks[i]
+            definitions_to_look_at = field
+            longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i])
+ 
+            if field == 'Prevention':
+                if regex_matches[i] == 'mitigation':
+                    longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Mitigation Explanation',lookahead_assertion='Answer')
+                    definitions_to_look_at = 'Prevention and Mitigation'
+            if field == 'Mitigation':
+                if regex_matches[i] == 'prevention':
+                    longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
+                    definitions_to_look_at = 'Prevention and Mitigation'
 
-            feedback += f'--- Q{i + 1}: {question_title} ---\n\n'
-            feedback += f'Feedback {i + 1}: {shortform_feedback}\n\n'
+            feedback_header_to_add = f' ## Feedback for Input{"s" if field == "Hazard & How it harms" else ""}: {fields_checked[i]}'
+            feedback_to_add = f'''
+                        - **Feedback:** {shortform_feedback}
+                        - **Explanation:** {longform_feedback}'
+                        '''
+            
             if booleans_indicating_which_prompts_need_feedback[i] == True:
-                feedback += f'Explanation {i + 1}: {prompt_output}\n\n\n'
+                feedback_to_add += f'''
+                            - **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.
+                            '''
+                
+            if booleans_indicating_which_prompts_need_feedback[i] == True and most_pertinent_feedback_already_shown == False:
+                feedback += feedback_header_to_add
 
-        feedback += f'--- Controlled risk multiplication is: {RA.check_controlled_risk()} ---\n\n'
-        feedback += f'--- Uncontrolled risk multiplication is: {RA.check_uncontrolled_risk()} ---\n\n'
+                feedback += feedback_to_add + '\n\n\n\n\n'
 
-        return Result(is_correct=is_everything_correct, feedback=feedback)
+                most_pertinent_feedback_already_shown = True
+                
+            full_feedback += feedback_header_to_add
+            full_feedback += feedback_to_add
+        
+        full_feedback += f'''
+        - Uncontrolled risk multiplication is: {uncontrolled_risk}
+        - Controlled risk multiplication is: {controlled_risk}'''
+        
+        return Result(is_correct=is_everything_correct, feedback=feedback + full_feedback)
