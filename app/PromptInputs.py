@@ -1,5 +1,9 @@
 # TODO: Decide whether to remove the get_question method from the PromptInput class.
-from RegexPatternMatcher import RegexPatternMatcher
+
+try:
+    from RegexPatternMatcher import RegexPatternMatcher
+except:
+    from .RegexPatternMatcher import RegexPatternMatcher
 
 class ShortformFeedback:
     def __init__(self, positive_feedback, negative_feedback):
