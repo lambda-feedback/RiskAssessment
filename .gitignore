@@ -135,3 +135,5 @@ dmypy.json
 app/.env
 
 app/private_data/
+
+app/google_api_credentials.json

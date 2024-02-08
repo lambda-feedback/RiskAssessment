@@ -86,9 +86,5 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Therefore, answer: mitigation'), 'mitigation')
         self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Thus, answer: Neither'), 'neither')
 
-    # TODO: Test the function which creates an instance of a RiskAssessment object
-
-    # TODO: Test the function which calls the LLM
-
 if __name__ == "__main__":
     unittest.main()

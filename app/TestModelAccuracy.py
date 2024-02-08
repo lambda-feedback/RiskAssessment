@@ -1,7 +1,8 @@
 import re
-import csv
-import pathlib
 from datetime import datetime
+import numpy as np
+import pandas as pd
+from tabulate import tabulate
 
 from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
 from GPTCostCalculator import GPTCostCalculator
@@ -27,7 +28,7 @@ class TestModelAccuracy:
         input = input_and_expected_output.input
 
         prompt_input = self.LLM.get_prompt_input(prompt_input=input)
-        prompt_output = self.LLM.get_model_output(prompt_input=input)
+        prompt_output = self.LLM.get_model_output(prompt_input=input.generate_prompt())
         
         return prompt_input, prompt_output
 
@@ -50,19 +51,31 @@ class TestModelAccuracy:
         prompt_outputs_for_correct_responses = ''
         prompt_outputs_for_incorrect_responses = ''
 
-        for i in range(len(self.list_of_input_and_expected_outputs)):
-            input = self.list_of_input_and_expected_outputs[i].input
+        first_prompt_input = self.list_of_input_and_expected_outputs[0].input
 
-            prompt_input, prompt_output = self.get_prompt_input_and_output(self.list_of_input_and_expected_outputs[i])
-            regex_pattern_matcher = RegexPatternMatcher()
+        pattern_matching_method_string = first_prompt_input.pattern_matching_method
+        regex_pattern_matcher = RegexPatternMatcher()
+        pattern_matching_method = getattr(regex_pattern_matcher, first_prompt_input.pattern_matching_method)
 
-            pattern_matching_method_string = input.pattern_matching_method
-            pattern_matching_method = getattr(regex_pattern_matcher, input.pattern_matching_method)
+        classes = first_prompt_input.candidate_labels
+        n_classes = len(classes)
 
-            if hasattr(regex_pattern_matcher, pattern_matching_method_string) and callable(pattern_matching_method):
+        confusion_matrix = np.zeros((n_classes, n_classes))
+
+        if hasattr(regex_pattern_matcher, pattern_matching_method_string) and callable(pattern_matching_method):
+            for i in range(len(self.list_of_input_and_expected_outputs)):
+                input = self.list_of_input_and_expected_outputs[i].input
+
+                prompt_input, prompt_output = self.get_prompt_input_and_output(self.list_of_input_and_expected_outputs[i])
+                
 
                 pattern_matched = pattern_matching_method(prompt_output)
                 expected_output = self.list_of_input_and_expected_outputs[i].expected_output
+
+                pattern_matched_index_in_class_list = classes.index(pattern_matched)
+                expected_output_index_in_class_list = classes.index(expected_output)
+
+                confusion_matrix[pattern_matched_index_in_class_list, expected_output_index_in_class_list] += 1
 
                 result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
                                 'pattern_matched': pattern_matched, 
@@ -73,38 +86,57 @@ class TestModelAccuracy:
                 if pattern_matched == expected_output:
                     count_correct += 1
 
-                    if pattern_matching_method_string == "check_string_for_true_or_false":
-                        if pattern_matched == True:
-                            count_true_positives += 1
-                        else:
-                            count_true_negatives += 1
+                    # if pattern_matching_method_string == "check_string_for_true_or_false":
+                    #     if pattern_matched == True:
+                    #         count_true_positives += 1
+                    #     else:
+                    #         count_true_negatives += 1
 
                     prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
                 
                 else:
-
-                    if pattern_matching_method_string == "check_string_for_true_or_false":
-                        if pattern_matched == True:
-                            count_false_positives += 1
-                        else:  
-                            count_false_negatives += 1
+                    # if pattern_matching_method_string == "check_string_for_true_or_false":
+                    #     if pattern_matched == True:
+                    #         count_false_positives += 1
+                    #     else:  
+                    #         count_false_negatives += 1
+                    
 
                     prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
                 
                 print(count_correct)
+
         accuracy = round(count_correct / len(self.list_of_input_and_expected_outputs) * 100, 2)
 
-        if pattern_matching_method_string == "check_string_for_true_or_false":
-            confusion_matrix = self.convert_list_of_lists_to_string([[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]])
-        else:
-            confusion_matrix = f'Confusion matrix not yet created for multiclass classification\nNumber correct = {count_correct}'
+        # if pattern_matching_method_string == "check_string_for_true_or_false":
+        #     confusion_matrix = self.convert_list_of_lists_to_string([[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]])
+        # else:
+        #     confusion_matrix = f'Confusion matrix not yet created for multiclass classification\nNumber correct = {count_correct}'
 
+        classes_as_strings = [str(e) for e in classes]
+        confusion_matrix_df = pd.DataFrame(confusion_matrix, index=classes_as_strings, columns=classes_as_strings)
+        # Using .values attribute to get NumPy array
+        confusion_matrix_df_values = confusion_matrix_df.values
+
+        # Get column titles
+        confusion_matrix_df_column_titles = confusion_matrix_df.columns
+        column_titles_with_blank_space = confusion_matrix_df_column_titles.insert(0, "")
+
+        # Convert NumPy array to Python list while retaining column titles
+        confusion_matrix_with_column_titles = np.vstack((confusion_matrix_df_column_titles, confusion_matrix_df_values)).tolist()
+
+        # Insert column names at the start of each row
+        for i in range(len(confusion_matrix_with_column_titles)):
+            confusion_matrix_with_column_titles[i].insert(0, column_titles_with_blank_space[i])
+
+        confusion_matrix = tabulate(confusion_matrix_with_column_titles, headers='firstrow', tablefmt='grid')
+        
         return accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
     
     def get_first_prompt_input_and_output(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
         first_prompt_input = self.LLM.get_prompt_input(prompt_input=first_input)
-        first_prompt_output = self.LLM.get_model_output(prompt_input=first_input)
+        first_prompt_output = self.LLM.get_model_output(prompt_input=first_input.generate_prompt())
 
         return first_prompt_input, first_prompt_output
     
@@ -159,7 +191,7 @@ class TestModelAccuracy:
         sheets_writer = GoogleSheetsWriter(sheet_name=self.sheet_name)
         sheets_writer.write_to_sheets(new_line_data)
         
-    # TODO: As below, remove positional arguments and only use keyword arguments
+    # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
         accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
         first_prompt_input, first_prompt_output = self.get_first_prompt_input_and_output()
