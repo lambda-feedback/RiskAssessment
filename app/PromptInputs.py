@@ -1,4 +1,4 @@
-# TODO: Decide whether to remove the get_question method from the PromptInput class.
+
 
 try:
     from RegexPatternMatcher import RegexPatternMatcher
@@ -36,7 +36,8 @@ class PromptInput:
         or reduces the harm caused by the hazard after it has occurred.''' 
 
         self.pattern_matching_method = 'check_string_for_true_or_false'
-        self.correct_matched_patterns = [True]
+        self.candidate_labels = [True, False]
+        self.labels_indicating_correct_input = [True]
 
     def get_field_checked(self):
         pass
@@ -110,8 +111,7 @@ class HowItHarmsInContext(PromptInput):
     def get_field_checked(self):
         return 'Hazard & How It Harms'
     
-    # TODO: Update this prompt in the main repo
-    # TODO: Scope for adding a 'Add more detail' output.
+    # TODO: Scope for adding a few shot example with an 'Add more detail' output.
 
     def generate_prompt_without_few_shot_examples(self):
         return f'''
@@ -249,7 +249,8 @@ class Prevention(PromptInput):
         self.who_it_harms = who_it_harms
 
         self.pattern_matching_method = 'check_string_for_prevention_mitigation_or_neither'
-        self.correct_matched_patterns = ['prevention', 'both']
+        self.candidate_labels = ['prevention', 'mitigation', 'neither', 'both']
+        self.labels_indicating_correct_input = ['prevention', 'both']
 
     def get_field_checked(self):
         return 'Prevention'
@@ -388,6 +389,7 @@ class Prevention(PromptInput):
         # TODO: There are 4 mitigations, and 1 prevention!
 
         all_few_shot_examples = """
+        Input:
         Follow these instructions:
         1. In one sentence, describe the hazard: 'Ink spillage' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Serious eye damage'
@@ -408,7 +410,8 @@ class Prevention(PromptInput):
         Mitigation Explanation: If ink has been spilled onto a student's face, 'first aid' will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred; as it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
         Answer: Mitigation.
 
-        Follow these instructions:
+        Follow these
+        Input: instructions:
         1. In one sentence, describe the hazard: 'Water being spilt on the floor' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Injuries caused by possible slipping on wet floor'
         and who the hazard harms: 'Students'.
@@ -427,7 +430,8 @@ class Prevention(PromptInput):
         Mitigation Explanation: If water has been spilled on the floor, 'not moving the water tank when it is full' does not remove or reduce the harm caused by the hazard event, as the water is already spilled and poses a slipping hazard; as it does not reduce the harm caused by the hazard event, it is not a mitigation measure.
         Answer: Prevention.
 
-        Follow these instructions:
+        Follow these
+        Input: instructions:
         1. In one sentence, describe the hazard: 'Loud noise' during the
         activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Loud noise from instrument can cause hearing damage.'
         and who the hazard harms: 'Everyone present'.
@@ -446,7 +450,8 @@ class Prevention(PromptInput):
         Mitigation Explanation: If the hazard event occurs and the trombone produces a loud noise, 'keeping a space between the player and the audience' will reduce the noise heard by the audience, hence reducing the severity of the hearing damage caused by the loud noise; as it reduces the harm caused by the hazard event, it is a mitigation measure.
         Answer: Mitigation.
 
-        Follow these instructions:
+        Follow these
+        Input: instructions:
         1. In one sentence, describe the hazard: 'Syringes with sharp needles' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Sharp needles can pierce the skin and cause bleeding'
         and who the hazard harms: 'Students'.
@@ -465,7 +470,8 @@ class Prevention(PromptInput):
         Mitigation Explanation: If a sharp syringe needle is directed towards a student, 'wearing a lab coat and PPE' will reduce the harm caused by the sharp needle as it is unlikely to pierce through the lab coat and PPE; as it reduces the harm caused by the hazard event, it is a mitigation measure.
         Answer: Mitigation.
 
-        Follow these instructions:
+        Follow these
+        Input: instructions:
         1. In one sentence, describe the hazard: 'Water from instrument' during the
         activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Condensation formed in instrument could spread germs if released'
         and who the hazard harms: 'Audience'.
@@ -483,7 +489,6 @@ class Prevention(PromptInput):
         Prevention Explanation: 'Keeping a space between the player and the audience' does not reduce the likelihood of water condensing in the instrument or being released; as it does not reduce the likelihood of the hazard event, it is not a prevention measure.
         Mitigation Explanation: If water from the instrument is released, 'keeping a space between the player and the audience' will mean that fewer germs reach the audience members so will reduce the harm caused by the spread of germs; as it reduces the harm caused by the hazard event, it is a mitigation measure.
         Answer: Mitigation.
-        
         """
 
         return f'''
@@ -530,7 +535,8 @@ class Mitigation(PromptInput):
         self.who_it_harms = who_it_harms
 
         self.pattern_matching_method = 'check_string_for_prevention_mitigation_or_neither'
-        self.correct_matched_patterns = ['mitigation', 'both']
+        self.candidate_labels = ['prevention', 'mitigation', 'neither', 'both']
+        self.labels_indicating_correct_input = ['mitigation', 'both']
 
     def get_field_checked(self):
         return 'Mitigation'

@@ -1,10 +1,4 @@
-# Low hanging fruit:
-# TODO: Improve few shot prompting examples so they don't parrot back input prompt
-# TODO: Try using chain of thought prompt engineering for the mitigation prompt
-# TODO: Try using Llama inference endpoint
-# TODO: Try using Llama inference API but specify the number of tokens you want to receive
-# TODO: Update question description in lambda feedback making it clear that 
-# only one mitigation, one prevention and one 'how it harms' is specified
+
 
 # Add option in RiskAssessment to specify whether prevention is misclassified as mitigation, 
 # is not a suitable prevention, or mitigation is misclassified as prevention, or is not a suitable mitigation
@@ -85,65 +79,116 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
     
     else:
         LLM = OpenAILLM()
-        fields_checked = RA.get_list_of_fields_checked()
+
+        feedback_for_incorrect_answers = ''
+
+        feedback_for_correct_answers = ''
+
         prompt_input_objects = RA.get_list_of_prompt_input_objects()
-        prompts = RA.get_list_of_prompts()
-        prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
-        regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
-        shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
-        is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
-        booleans_indicating_which_prompts_need_feedback = RA.get_booleans_indicating_which_prompts_need_feedback(regex_matches)
 
-        feedback = ''' 
-        # Feedback for incorrect inputs
-        '''
-        full_feedback = '''
-        # Full Feedback
-        '''
-        
-        n_prompts = len(prompts)
+        for prompt_input_object in prompt_input_objects:
+            prompt_output, pattern, shortform_feedback = RA.get_prompt_output_pattern_matched_and_short_form_feedback(prompt_input_object, LLM)
+            
+            field = prompt_input_object.get_field_checked()
 
-        most_pertinent_feedback_already_shown = False
+            longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output)
 
-        for i in range(n_prompts):
-            field = fields_checked[i]
-            shortform_feedback = shortform_feedbacks[i]
             definitions_to_look_at = field
-            longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i])
- 
+
             if field == 'Prevention':
-                if regex_matches[i] == 'mitigation':
-                    longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Mitigation Explanation',lookahead_assertion='Answer')
+                if pattern == 'mitigation':
+                    longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation',lookahead_assertion='Answer')
                     definitions_to_look_at = 'Prevention and Mitigation'
             if field == 'Mitigation':
-                if regex_matches[i] == 'prevention':
-                    longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
+                if pattern == 'prevention':
+                    longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
                     definitions_to_look_at = 'Prevention and Mitigation'
-
+            
             feedback_header_to_add = f''' 
-            ## Feedback for Input{"s" if field == "Hazard & How it harms" else ""}: {fields_checked[i]}\n
+            ## Feedback for Input: {field}\n
             '''
+
             feedback_to_add = f'''
             - **Feedback**: {shortform_feedback}\n
             - **Explanation**: {longform_feedback}\n'''
             
-            if booleans_indicating_which_prompts_need_feedback[i] == True:
+            if pattern in prompt_input_object.labels_indicating_correct_input:
+                feedback_for_correct_answers += feedback_header_to_add
+                feedback_for_correct_answers += feedback_to_add + '\n\n'
+            
+            else:
                 feedback_to_add += f'''- **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.'''
-            
-            feedback_to_add += '\n\n'
-            
-            if booleans_indicating_which_prompts_need_feedback[i] == True and most_pertinent_feedback_already_shown == False:
-                feedback += feedback_header_to_add
 
-                feedback += feedback_to_add + '\n\n\n\n\n'
+                feedback_for_incorrect_answers += feedback_header_to_add
+                feedback_for_incorrect_answers += feedback_to_add + '\n\n\n\n\n'
 
-                most_pertinent_feedback_already_shown = True
-                
-            full_feedback += feedback_header_to_add
-            full_feedback += feedback_to_add
+                break
         
-        full_feedback += f'''
+        feedback_for_correct_answers += f'''
         - Uncontrolled risk multiplication is: {uncontrolled_risk}
         - Controlled risk multiplication is: {controlled_risk}'''
+
+        if feedback_for_incorrect_answers != '':
+            is_everything_correct = True
+        else:
+            is_everything_correct = False
+
+        # fields_checked = RA.get_list_of_fields_checked()
+        # prompt_input_objects = RA.get_list_of_prompt_input_objects()
+        # prompts = RA.get_list_of_prompts()
+        # prompt_outputs = RA.get_list_of_prompt_outputs(LLM)
+        # regex_matches = RA.get_list_of_regex_matches(prompt_outputs)
+        # shortform_feedbacks = RA.get_list_of_shortform_feedback_from_regex_matches(regex_matches)
+        # is_everything_correct = RA.are_all_prompt_outputs_correct(prompt_outputs) and RA.are_all_multiplications_correct()
+        # booleans_indicating_which_prompts_need_feedback = RA.get_booleans_indicating_which_prompts_need_feedback(regex_matches)
+
+        # feedback = ''' 
+        # # Feedback for incorrect inputs
+        # '''
+        # full_feedback = '''
+        # # Full Feedback
+        # '''
         
-        return Result(is_correct=is_everything_correct, feedback=feedback + full_feedback)
+        # n_prompts = len(prompts)
+
+        # most_pertinent_feedback_already_shown = False
+
+        # for i in range(n_prompts):
+        #     field = fields_checked[i]
+        #     shortform_feedback = shortform_feedbacks[i]
+        #     definitions_to_look_at = field
+        #     longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i])
+ 
+        #     if field == 'Prevention':
+        #         if regex_matches[i] == 'mitigation':
+        #             longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Mitigation Explanation',lookahead_assertion='Answer')
+        #             definitions_to_look_at = 'Prevention and Mitigation'
+        #     if field == 'Mitigation':
+        #         if regex_matches[i] == 'prevention':
+        #             longform_feedback = prompt_input_objects[i].get_longform_feedback(prompt_output=prompt_outputs[i], pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
+        #             definitions_to_look_at = 'Prevention and Mitigation'
+
+        #     feedback_header_to_add = f''' 
+        #     ## Feedback for Input{"s" if field == "Hazard & How it harms" else ""}: {fields_checked[i]}\n
+        #     '''
+        #     feedback_to_add = f'''
+        #     - **Feedback**: {shortform_feedback}\n
+        #     - **Explanation**: {longform_feedback}\n'''
+            
+        #     if booleans_indicating_which_prompts_need_feedback[i] == True:
+        #         feedback_to_add += f'''- **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.'''
+            
+        #     feedback_to_add += '\n\n'
+            
+        #     if booleans_indicating_which_prompts_need_feedback[i] == True and most_pertinent_feedback_already_shown == False:
+        #         feedback += feedback_header_to_add
+
+        #         feedback += feedback_to_add + '\n\n\n\n\n'
+
+        #         most_pertinent_feedback_already_shown = True
+                
+        #     full_feedback += feedback_header_to_add
+        #     full_feedback += feedback_to_add
+        
+
+        return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + feedback_for_correct_answers)
