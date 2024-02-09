@@ -13,6 +13,8 @@ class RiskAssessment:
     def __init__(self, activity, hazard, who_it_harms, how_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
+                 prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
+                 prevention_first_aid_expected_output, mitigation_first_aid_expected_output,
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
@@ -26,6 +28,12 @@ class RiskAssessment:
         self.controlled_likelihood = controlled_likelihood
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
+
+        self.prevention_protected_clothing_expected_output = prevention_protected_clothing_expected_output
+        self.mitigation_protected_clothing_expected_output = mitigation_protected_clothing_expected_output
+
+        self.prevention_first_aid_expected_output = prevention_first_aid_expected_output
+        self.mitigation_first_aid_expected_output = mitigation_first_aid_expected_output
 
         self.prevention_prompt_expected_output = prevention_prompt_expected_output
         self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
@@ -198,8 +206,8 @@ class RiskAssessment:
                 self.get_who_it_harms_in_context_input(),
                 # self.get_protective_clothing_input(),
                 # self.get_first_aid_input(),
-                self.get_prevention_input(),
-                self.get_mitigation_input()
+                # self.get_prevention_input(),
+                # self.get_mitigation_input()
                 ]
 
     def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller]):

@@ -24,13 +24,12 @@ class TestModelAccuracy:
         self.sheet_name = sheet_name
         self.test_description = test_description
 
-    def get_prompt_input_and_output(self, input_and_expected_output):
+    def get_prompt_output(self, input_and_expected_output):
         input = input_and_expected_output.input
 
-        prompt_input = self.LLM.get_prompt_input(prompt_input=input)
-        prompt_output = self.LLM.get_model_output(prompt_input=input.generate_prompt())
+        prompt_output = self.LLM.get_model_output(prompt=input.generate_prompt())
         
-        return prompt_input, prompt_output
+        return prompt_output
 
     def convert_list_of_lists_to_string(self, list_of_lists):
         # Convert each sublist to a string with newline
@@ -66,9 +65,8 @@ class TestModelAccuracy:
             for i in range(len(self.list_of_input_and_expected_outputs)):
                 input = self.list_of_input_and_expected_outputs[i].input
 
-                prompt_input, prompt_output = self.get_prompt_input_and_output(self.list_of_input_and_expected_outputs[i])
+                prompt_output = self.get_prompt_output(self.list_of_input_and_expected_outputs[i])
                 
-
                 pattern_matched = pattern_matching_method(prompt_output)
                 expected_output = self.list_of_input_and_expected_outputs[i].expected_output
 
@@ -86,22 +84,9 @@ class TestModelAccuracy:
                 if pattern_matched == expected_output:
                     count_correct += 1
 
-                    # if pattern_matching_method_string == "check_string_for_true_or_false":
-                    #     if pattern_matched == True:
-                    #         count_true_positives += 1
-                    #     else:
-                    #         count_true_negatives += 1
-
                     prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
-                
-                else:
-                    # if pattern_matching_method_string == "check_string_for_true_or_false":
-                    #     if pattern_matched == True:
-                    #         count_false_positives += 1
-                    #     else:  
-                    #         count_false_negatives += 1
-                    
 
+                else:
                     prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
                 
                 print(count_correct)
@@ -135,24 +120,10 @@ class TestModelAccuracy:
     
     def get_first_prompt_input_and_output(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
-        first_prompt_input = self.LLM.get_prompt_input(prompt_input=first_input)
-        first_prompt_output = self.LLM.get_model_output(prompt_input=first_input.generate_prompt())
+        first_prompt_input = first_input.generate_prompt()
+        first_prompt_output = self.LLM.get_model_output(prompt=first_prompt_input)
 
         return first_prompt_input, first_prompt_output
-    
-    def total_cost_of_calling_LLM_API(self):
-        GPT_cost_calculator = GPTCostCalculator()
-        
-        if self.LLM_name == 'gpt-3.5-turbo':
-            total_cost_of_calling_LLM_API = 0
-
-            for input_and_expected_output in self.list_of_input_and_expected_outputs:
-                prompt_input, prompt_output = self.get_prompt_input_and_output(input_and_expected_output)
-                total_cost_of_calling_LLM_API = total_cost_of_calling_LLM_API + GPT_cost_calculator.calculate_cost(prompt_input=prompt_input, prompt_output=prompt_output)
-            
-            return total_cost_of_calling_LLM_API
-        else:
-            return 0
     
     def save_test_results(self, 
                           accuracy, 
@@ -171,8 +142,6 @@ class TestModelAccuracy:
             model_parameters = ''
         
         num_examples = len(self.list_of_input_and_expected_outputs)
-
-        # total_cost_of_calling_LLM_API = self.total_cost_of_calling_LLM_API()
 
         new_line_data = [self.test_description, 
                          self.LLM_name, 
