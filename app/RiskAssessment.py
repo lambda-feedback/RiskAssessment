@@ -122,6 +122,34 @@ class RiskAssessment:
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
                             activity=self.activity)
     
+    def get_prevention_protective_clothing_input(self):
+        return ProtectiveClothing(activity=self.activity,
+                                  hazard=self.hazard,
+                                  how_it_harms=self.how_it_harms,
+                                  who_it_harms=self.who_it_harms,
+                                  control_measure=self.prevention)
+    
+    def get_mitigation_protective_clothing_input(self):
+        return ProtectiveClothing(activity=self.activity,
+                                  hazard=self.hazard,
+                                  how_it_harms=self.how_it_harms,
+                                  who_it_harms=self.who_it_harms,
+                                  control_measure=self.mitigation)
+    
+    def get_prevention_first_aid_input(self):
+        return FirstAid(activity=self.activity,
+                        hazard=self.hazard,
+                        how_it_harms=self.how_it_harms,
+                        who_it_harms=self.who_it_harms,
+                        control_measure=self.prevention)
+    
+    def get_mitigation_first_aid_input(self):
+        return FirstAid(activity=self.activity,
+                        hazard=self.hazard,
+                        how_it_harms=self.how_it_harms,
+                        who_it_harms=self.who_it_harms,
+                        control_measure=self.mitigation)
+    
     def get_prevention_input(self):
         return Prevention(prevention=self.prevention,
                           activity=self.activity,
@@ -135,6 +163,8 @@ class RiskAssessment:
                           hazard=self.hazard,
                           how_it_harms=self.how_it_harms,
                           who_it_harms=self.who_it_harms)
+
+
     
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
@@ -162,15 +192,17 @@ class RiskAssessment:
     
     # TODO: Add ability to see prompt output percentages - might be possible for LLMs other than GPT-3
 
-    def get_list_of_prompt_input_objects(self):
+    def get_list_of_prompt_input_objects_for_first_3_prompts(self):
         return [self.get_activity_input(),
                 self.get_how_it_harms_in_context_input(),
                 self.get_who_it_harms_in_context_input(),
+                # self.get_protective_clothing_input(),
+                # self.get_first_aid_input(),
                 self.get_prevention_input(),
                 self.get_mitigation_input()
                 ]
 
-    def get_prompt_output_pattern_matched_and_short_form_feedback(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller]):
+    def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller]):
         regex_pattern_matcher = RegexPatternMatcher()
         
         prompt_output = LLM_caller.get_model_output(prompt_input_object.generate_prompt())
@@ -178,16 +210,17 @@ class RiskAssessment:
         
         pattern_matched = pattern_matching_method(prompt_output)
 
+        return prompt_output, pattern_matched
+    
+    def get_shortform_feedback_from_regex_match(self, prompt_input_object: Type[PromptInput], pattern_matched):
+        
         shortform_feedback_object = prompt_input_object.get_shortform_feedback()
         if pattern_matched in prompt_input_object.labels_indicating_correct_input:
-            shortform_feedback = shortform_feedback_object.positive_feedback
+            return shortform_feedback_object.positive_feedback
         else:
-            shortform_feedback = shortform_feedback_object.positive_feedback
-
-        return prompt_output, pattern_matched, shortform_feedback
+            return shortform_feedback_object.negative_feedback
 
 
-    
     # def get_list_of_fields_checked(self):
     #     fields_checked = []
         
