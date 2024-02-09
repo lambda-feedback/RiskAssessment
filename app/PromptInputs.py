@@ -297,7 +297,7 @@ class FirstAid(PromptInput):
         1. In one sentence, describe the hazard: "{self.hazard}" during the
         activity: "{self.activity}" given how the hazard harms: "{self.how_it_harms}"
         and who the hazard harms: "{self.who_it_harms}".
-        2. First aid is the initial treatment or assistance given to someone who has been harmed. If "{control_measure}" is an example of providing first aid for the hazard: "{self.hazard}", answer True, else answer False.
+        2. First aid is the initial treatment or assistance given to someone who has been harmed. If "{self.control_measure}" is an example of providing first aid for the hazard: "{self.hazard}", answer True, else answer False.
         3. Explain whether "{self.control_measure}" reduces the harm caused by the hazard after it has occurred.
         4. If "{self.control_measure}" reduces the harm caused by the hazard after it has occurred, answer True, else answer False.
         5. If both previous answers are True, answer True, else answer False.'''
