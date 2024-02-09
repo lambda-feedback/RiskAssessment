@@ -80,15 +80,17 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
     else:
         LLM = OpenAILLM()
 
-        feedback_for_incorrect_answers = ''
+        feedback_for_incorrect_answers = '# Feedback for Incorrect Answers\n'
+        feedback_for_correct_answers = '# Feedback for Correct Answers\n'
 
-        feedback_for_correct_answers = ''
+        is_everything_correct = True
 
-        prompt_input_objects = RA.get_list_of_prompt_input_objects()
+        prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
 
         for prompt_input_object in prompt_input_objects:
-            prompt_output, pattern, shortform_feedback = RA.get_prompt_output_pattern_matched_and_short_form_feedback(prompt_input_object, LLM)
-            
+            prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
+            shortform_feedback = prompt_input_object.get_shortform_feedback_from_regex_match(pattern)
+
             field = prompt_input_object.get_field_checked()
 
             longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output)
@@ -117,21 +119,23 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 feedback_for_correct_answers += feedback_to_add + '\n\n'
             
             else:
+                is_everything_correct = False
                 feedback_to_add += f'''- **Recommendation**: Please look at the definition of the {definitions_to_look_at} input field{'s' if definitions_to_look_at in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.'''
 
                 feedback_for_incorrect_answers += feedback_header_to_add
                 feedback_for_incorrect_answers += feedback_to_add + '\n\n\n\n\n'
 
                 break
-        
+
         feedback_for_correct_answers += f'''
         - Uncontrolled risk multiplication is: {uncontrolled_risk}
         - Controlled risk multiplication is: {controlled_risk}'''
 
-        if feedback_for_incorrect_answers != '':
-            is_everything_correct = True
-        else:
-            is_everything_correct = False
+        # if feedback_for_incorrect_answers != '':
+        #     prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
+        #     prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_clothing_prompt_input, LLM)
+        #     if prevention_protective_clothing_pattern == True:
+
 
         # fields_checked = RA.get_list_of_fields_checked()
         # prompt_input_objects = RA.get_list_of_prompt_input_objects()

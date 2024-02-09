@@ -81,17 +81,6 @@ class Activity(PromptInput):
         Description: <your description>
         Comparison: <your comparison>
         Answer: <your answer>'''
-
-## Prompt without knowledge generation
-    # def generate_prompt(self):
-    #     return f'''
-    #     An 'activity' is defined as """{self.activity_definition}""".
-
-    #     Follow these instructions:
-    #     1. If "{self.activity}" is an activity, answer True, else answer False. 
-        
-    #     Use the following output format:
-    #     Answer: <your answer>'''
     
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.activity}' is an activity.",
@@ -221,15 +210,6 @@ class WhoItHarmsInContext(PromptInput):
         Description: <your description>
         Explanation: your_explanation
         Answer: <your answer>'''
-
-## Prompt without knowledge generation
-    # def generate_prompt(self):
-    #     return f'''Follow these instructions:
-    #     1. If 'who it harms': '{self.who_it_harms}' is harmed by this hazard: '{self.hazard}' during the 
-    #     activity: '{self.activity}' given how it harms: '{self.how_it_harms}', answer True, else answer False.
-
-    #     Your answer should be in the format:
-    #     Answer: <your answer>'''
     
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' could take part in the activity: '{self.activity}'.",
@@ -238,7 +218,123 @@ class WhoItHarmsInContext(PromptInput):
     def get_longform_feedback(self, prompt_output):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Explanation', 'Answer')
+
+class ProtectiveClothing(PromptInput):
+    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
+        super().__init__()
+
+        self.activity = activity
+        self.hazard = hazard
+        self.who_it_harms = who_it_harms
+        self.how_it_harms = how_it_harms
+        self.control_measure = control_measure
+
+        self.labels_indicating_correct_input = [False]
+
+    def get_field_checked(self):
+        return 'Prevention and Mitigation'
     
+    def generate_prompt_without_few_shot_examples(self):
+        return f'''Follow these instructions:
+        Follow these instructions:
+        1. In one sentence, describe the hazard: "{self.hazard}" during the
+        activity: "{self.activity}" given how the hazard harms: "{self.how_it_harms}"
+        and who the hazard harms: "{self.who_it_harms}".
+        2. If "{self.control_measure}" is an example of providing protective clothing, answer True, else answer False.
+        3. Explain whether "{self.control_measure}" reduces the harm caused by the hazard.
+        4. If "{self.control_measure}" reduces the harm caused by the hazard, answer True, else answer False.
+        5. If both previous answers are True, answer True, else answer False.'''
+    
+    def generate_prompt(self):
+        example_of_correct_protective_clothing = '''
+        Example Input:
+        Follow these instructions:
+        1. In one sentence, describe the hazard: "Syringes with sharp needles" during the
+        activity: "Fluids laboratory" given how the hazard harms: "Sharp needles can pierce the skin and cause bleeding"
+        and who the hazard harms: "Students".
+        2. If "Wearing lab coat and PPE" is an example of providing protective clothing, answer True, else answer False.
+        3. Explain whether "Wearing lab coat and PPE" reduces the harm caused by the hazard.
+        4. If "Wearing lab coat and PPE" reduces the harm caused by the hazard, answer True, else answer False.
+        5. If both previous answers are True, answer True, else answer False.
+
+        Output:
+        Description: The hazard of "Syringes with sharp needles" during the activity "Fluids laboratory" can lead to sharp needles piercing the skin and causing bleeding to students.
+        Protective Clothing Answer: True.
+        Reduces Harm Explanation: "Wearing lab coat and PPE" provides a protective barrier between the needle and skin, thus reducing the harm caused by the hazard.
+        Reduces Harm Answer: True. 
+        Overall Answer: True.
+        '''
+
+        return f'''
+
+        {example_of_correct_protective_clothing}
+
+        {self.generate_prompt_without_few_shot_examples()}
+
+        Use the following output format:
+        Description: <your description>
+        Protective Clothing Answer: <your answer>
+        Reduces Harm Explanation: <your explanation>
+        Reduces Harm Answer: <your answer>
+        Overall Answer: <your answer>'''
+    
+class FirstAid(PromptInput):
+    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
+        super().__init__()
+
+        self.activity = activity
+        self.hazard = hazard
+        self.who_it_harms = who_it_harms
+        self.how_it_harms = how_it_harms
+        self.control_measure = control_measure
+
+    def get_field_checked(self):
+        return 'Prevention and Mitigation'
+    
+    def generate_prompt_without_few_shot_examples(self):
+        return f'''Follow these instructions:
+        Follow these instructions:
+        1. In one sentence, describe the hazard: "{self.hazard}" during the
+        activity: "{self.activity}" given how the hazard harms: "{self.how_it_harms}"
+        and who the hazard harms: "{self.who_it_harms}".
+        2. First aid is the initial treatment or assistance given to someone who has been harmed. If "{control_measure}" is an example of providing first aid for the hazard: "{self.hazard}", answer True, else answer False.
+        3. Explain whether "{self.control_measure}" reduces the harm caused by the hazard after it has occurred.
+        4. If "{self.control_measure}" reduces the harm caused by the hazard after it has occurred, answer True, else answer False.
+        5. If both previous answers are True, answer True, else answer False.'''
+    
+    def generate_prompt(self):
+        example_of_correct_protective_clothing = '''
+        Example Input:
+        Follow these instructions:
+        1. In one sentence, describe the hazard: "Ink spillage" during the
+        activity: "Fluids laboratory" given how the hazard harms: "Serious eye damage"
+        and who the hazard harms: "Students".
+        2. First aid is the initial treatment or assistance given to someone who has been harmed. If "Washing the eyes out with clean water" is an example of providing first aid for the hazard: "Ink spillage", answer True, else answer False.
+        3. Explain whether "Washing the eyes out with clean water" reduces the harm caused by the hazard after it has occurred.
+        4. If "Washing the eyes out with clean water" reduces the harm caused by the hazard after it has occurred, answer True, else answer False.
+        5. If both previous answers are True, answer True, else answer False.
+
+        Output:
+        Description: The hazard of "Ink spillage" during the activity "Fluids laboratory" can lead to serious eye damage to students.
+        First Aid Answer: True.
+        Reduces Harm Explanation: "Washing the eyes out with clean water" will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred.
+        Reduces Harm Answer: True.
+        Overall Answer: True.
+        '''
+
+        return f'''
+
+        {example_of_correct_protective_clothing}
+
+        {self.generate_prompt_without_few_shot_examples()}
+
+        Use the following output format:
+        Description: <your description>
+        Protective Clothing Answer: <your answer>
+        Reduces Harm Explanation: <your explanation>
+        Reduces Harm Answer: <your answer>
+        Overall Answer: <your answer>'''
+
 class Prevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
@@ -268,6 +364,7 @@ class Prevention(PromptInput):
         # 4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
         # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
         # prevention measure and a mitigation measure, answer 'both'.'''
+
         return f'''Follow these instructions:
         1. In one sentence, describe the hazard: '{self.hazard}' during the 
         activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
@@ -515,7 +612,7 @@ class Prevention(PromptInput):
         # Mitigation Explanation: <your mitigation explanation>
         # Answer: <your answer>'''
     
-            # How it Harms Explanation: <your how it harms explanation>
+        # How it Harms Explanation: <your how it harms explanation>
     
     def get_shortform_feedback(self):
         return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'",
@@ -663,3 +760,4 @@ class Mitigation(PromptInput):
     def get_longform_feedback(self, prompt_output, pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer'):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
+    
