@@ -213,6 +213,7 @@ class RiskAssessment:
         return prompt_output, pattern_matched
     
     def get_shortform_feedback_from_regex_match(self, prompt_input_object: Type[PromptInput], pattern_matched):
+        
         shortform_feedback_object = prompt_input_object.get_shortform_feedback()
         if pattern_matched in prompt_input_object.labels_indicating_correct_input:
             return shortform_feedback_object.positive_feedback

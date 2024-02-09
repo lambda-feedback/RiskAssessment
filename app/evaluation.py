@@ -89,7 +89,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
         for prompt_input_object in prompt_input_objects:
             prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
-            shortform_feedback = prompt_input_object.get_shortform_feedback_from_regex_match(pattern)
+            shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
 
             field = prompt_input_object.get_field_checked()
 
