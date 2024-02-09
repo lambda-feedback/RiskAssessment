@@ -5,7 +5,7 @@ class RegexPatternMatcher:
         pass
     
     def check_string_for_true_or_false(self, string):
-        pattern = re.compile(r"(true|false)", re.IGNORECASE)
+        pattern = re.compile(r"Overall Answer: (true|false)", re.IGNORECASE)
         match = re.search(pattern, string)
         if match:
             return match.group(1).lower() == "true"
