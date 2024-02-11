@@ -1,7 +1,7 @@
 from example_preventions import correct_prevention_examples_list
 from example_mitigations import correct_mitigation_examples_list
 
-from ExamplesGenerator import ExamplesGenerator, InputAndExpectedOutputGenerator
+from ExamplesGenerator import ExamplesGenerator, InputAndExpectedOutputForSinglePromptGenerator
 from TestModelAccuracy import TestModelAccuracy
 from PromptInputs import PreventionClassification
 from LLMCaller import OpenAILLM

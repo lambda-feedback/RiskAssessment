@@ -4,10 +4,10 @@ from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
 from example_risk_assessments import example_risk_assessments_for_protective_clothing_and_first_aid
 
-from ExamplesGenerator import RiskAssessmentExamplesGenerator
+from ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 
 if __name__ == '__main__':
-    examples_generator = RiskAssessmentExamplesGenerator(risk_assessments=example_risk_assessments_for_protective_clothing_and_first_aid,
+    examples_generator = RiskAssessmentExamplesGeneratorForSinglePrompt(risk_assessments=example_risk_assessments_for_protective_clothing_and_first_aid,
                                                          ground_truth_parameter='mitigation_protected_clothing_expected_output',
                                                         method_to_get_prompt_input='get_mitigation_protective_clothing_input')
     

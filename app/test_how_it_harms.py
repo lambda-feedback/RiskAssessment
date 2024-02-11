@@ -2,7 +2,7 @@ from CombineAndFlattenLists import CombineAndFlattenListsOfPromptInputs
 from PromptInputs import HowItHarms
 from LLMCaller import OpenAILLM
 from TestModelAccuracy import TestModelAccuracy
-from ExamplesGenerator import InputAndExpectedOutputGenerator
+from ExamplesGenerator import InputAndExpectedOutputForSinglePromptGenerator
 
 ### CORRECT EXAMPLES OF 'HOW IT HARMS' ###
 human_health = [
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     
     incorrect_examples_list = combine_and_flatten.create_prompt_input_objects(generic_or_vague)
 
-    examples_generator = InputAndExpectedOutputGenerator(correct_examples_list=correct_examples_list,
+    examples_generator = InputAndExpectedOutputForSinglePromptGenerator(correct_examples_list=correct_examples_list,
                                                          incorrect_examples_list=incorrect_examples_list)
     
     who_it_harms_classification_examples = examples_generator.get_input_and_expected_output_list()

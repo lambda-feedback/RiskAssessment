@@ -3,16 +3,10 @@
 # Add option in RiskAssessment to specify whether prevention is misclassified as mitigation, 
 # is not a suitable prevention, or mitigation is misclassified as prevention, or is not a suitable mitigation
 
+# TODO: Functions can make this code shorter.
+ 
 from typing import Any, TypedDict
 import numpy as np
-
-import openai
-import requests
-
-from typing import Type
-
-import os
-from dotenv import load_dotenv
 
 try:
     from .PromptInputs import *
@@ -122,7 +116,6 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
                 break
         
-
         # PREVENTION CHECKS
         feedback_header = f''' ## Feedback for Input: Prevention'''
 

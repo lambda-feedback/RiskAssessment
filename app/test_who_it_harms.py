@@ -1,4 +1,4 @@
-from ExamplesGenerator import InputAndExpectedOutputGenerator
+from ExamplesGenerator import InputAndExpectedOutputForSinglePromptGenerator
 from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
 from PromptInputs import PromptInput, WhoItHarms
@@ -146,7 +146,7 @@ if __name__ == '__main__':
                                                                             # unspecified_entities
                                                                             )
 
-    examples_generator = InputAndExpectedOutputGenerator(correct_examples_list=correct_examples_list,
+    examples_generator = InputAndExpectedOutputForSinglePromptGenerator(correct_examples_list=correct_examples_list,
                                                          incorrect_examples_list=incorrect_examples_list)
     
     who_it_harms_classification_examples = examples_generator.get_input_and_expected_output_list()

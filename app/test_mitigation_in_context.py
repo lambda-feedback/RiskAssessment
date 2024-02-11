@@ -5,11 +5,11 @@ from LLMCaller import OpenAILLM
 
 from example_risk_assessments import example_risk_assessments
 from example_mitigations import correct_mitigation_examples_list, MitigationExamplesGenerator
-from ExamplesGenerator import RiskAssessmentExamplesGenerator
+from ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 
 if __name__ == '__main__':
     # examples_generator = MitigationExamplesGenerator(correct_examples_list=correct_mitigation_examples_list)
-    examples_generator = RiskAssessmentExamplesGenerator(risk_assessments=example_risk_assessments,
+    examples_generator = RiskAssessmentExamplesGeneratorForSinglePrompt(risk_assessments=example_risk_assessments,
                                                          ground_truth_parameter='mitigation_prompt_expected_output',
                                                         method_to_get_prompt_input='get_mitigation_input')
     
