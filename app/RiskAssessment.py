@@ -38,6 +38,14 @@ class RiskAssessment:
         self.prevention_prompt_expected_output = prevention_prompt_expected_output
         self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
 
+    def to_string(self):
+        class_name = self.__class__.__name__
+        if hasattr(self, '__dict__'):
+            attributes = ', '.join([f"{key}={value}" for key, value in self.__dict__.items()])
+            return f"{class_name}({attributes})"
+        else:
+            return f"{class_name}()"
+
     def get_word_fields(self):
         return ['activity',
                 'hazard',

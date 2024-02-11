@@ -4,9 +4,8 @@ import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
-from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
-from GPTCostCalculator import GPTCostCalculator
-from InputAndExpectedOutput import InputAndExpectedOutput
+from LLMCaller import LLMCaller
+from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
 from GoogleSheetsWriter import GoogleSheetsWriter
 from RegexPatternMatcher import RegexPatternMatcher
 
@@ -14,7 +13,7 @@ class TestModelAccuracy:
     def __init__(self, 
                 LLM: LLMCaller,
                 LLM_name: str,
-                list_of_input_and_expected_outputs: list[InputAndExpectedOutput],
+                list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
                 sheet_name: str,
                 test_description: str):
         
@@ -24,12 +23,81 @@ class TestModelAccuracy:
         self.sheet_name = sheet_name
         self.test_description = test_description
 
-    def get_prompt_output(self, input_and_expected_output):
-        input = input_and_expected_output.input
-
-        prompt_output = self.LLM.get_model_output(prompt=input.generate_prompt())
+    def get_number_of_examples(self):
+        return len(self.list_of_input_and_expected_outputs)
+    
+    def get_first_prompt_input_object(self):
         
-        return prompt_output
+        return self.list_of_input_and_expected_outputs[0].input
+
+    def get_first_prompt_input(self):
+        first_prompt_input_object = self.get_first_prompt_input_object()
+        first_prompt_input = first_prompt_input_object.generate_prompt()
+        return first_prompt_input
+    
+    def get_classes(self):
+        first_prompt_input_object = self.get_first_prompt_input_object()
+
+        classes = first_prompt_input_object.candidate_labels
+        return classes
+    
+    def update_confusion_matrix(self, confusion_matrix, classes, pattern_matched, expected_output):
+        pattern_matched_index_in_class_list = classes.index(pattern_matched)
+        expected_output_index_in_class_list = classes.index(expected_output)
+        confusion_matrix[pattern_matched_index_in_class_list, expected_output_index_in_class_list] += 1
+
+        return confusion_matrix
+    
+    def generate_confusion_matrix_string(self, confusion_matrix, classes):
+        classes_as_strings = [str(e) for e in classes]
+        confusion_matrix_df = pd.DataFrame(confusion_matrix, index=classes_as_strings, columns=classes_as_strings)
+
+        confusion_matrix_df_values = confusion_matrix_df.values
+
+        confusion_matrix_df_column_titles = confusion_matrix_df.columns
+        column_titles_with_blank_space = confusion_matrix_df_column_titles.insert(0, "")
+
+        confusion_matrix_with_column_titles = np.vstack((confusion_matrix_df_column_titles, confusion_matrix_df_values)).tolist()
+
+        for i in range(len(confusion_matrix_with_column_titles)):
+            confusion_matrix_with_column_titles[i].insert(0, column_titles_with_blank_space[i])
+
+        confusion_matrix_string = tabulate(confusion_matrix_with_column_titles, headers='firstrow', tablefmt='grid')
+
+        return confusion_matrix_string
+
+    def update_output_string(self, output_string, i, pattern_matched, expected_output):
+        result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
+                'pattern_matched': pattern_matched, 
+                'expected_output': expected_output}
+
+        output_string += f'{i + 1}: {str(result_dict)}\n\n'
+
+        return output_string
+
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        expected_output = self.list_of_input_and_expected_outputs[i].expected_output
+        input = self.list_of_input_and_expected_outputs[i].input
+
+        pattern_matching_method_string = input.pattern_matching_method
+        regex_pattern_matcher = RegexPatternMatcher()
+        pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
+    
+        prompt_output = self.get_prompt_output(self.list_of_input_and_expected_outputs[i])
+        pattern_matched = pattern_matching_method(prompt_output)
+        
+        return expected_output, pattern_matched, prompt_output
+    
+    def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, i, count_correct):
+        if pattern_matched == expected_output:
+            count_correct += 1
+
+            prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+
+        else:
+            prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+
+        return prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct
 
     def convert_list_of_lists_to_string(self, list_of_lists):
         # Convert each sublist to a string with newline
@@ -41,89 +109,49 @@ class TestModelAccuracy:
     def get_model_accuracy_and_model_outputs(self):
         print('Counting correct responses...')
         count_correct = 0
-        count_true_positives = 0
-        count_false_positives = 0
-        count_false_negatives = 0
-        count_true_negatives = 0
-
+        
         output_string = ''
         prompt_outputs_for_correct_responses = ''
         prompt_outputs_for_incorrect_responses = ''
 
-        first_prompt_input = self.list_of_input_and_expected_outputs[0].input
-
-        pattern_matching_method_string = first_prompt_input.pattern_matching_method
-        regex_pattern_matcher = RegexPatternMatcher()
-        pattern_matching_method = getattr(regex_pattern_matcher, first_prompt_input.pattern_matching_method)
-
-        classes = first_prompt_input.candidate_labels
+        classes = self.get_classes()
         n_classes = len(classes)
 
         confusion_matrix = np.zeros((n_classes, n_classes))
 
-        if hasattr(regex_pattern_matcher, pattern_matching_method_string) and callable(pattern_matching_method):
-            for i in range(len(self.list_of_input_and_expected_outputs)):
-                input = self.list_of_input_and_expected_outputs[i].input
+        n_examples = self.get_number_of_examples()
 
-                prompt_output = self.get_prompt_output(self.list_of_input_and_expected_outputs[i])
-                
-                pattern_matched = pattern_matching_method(prompt_output)
-                expected_output = self.list_of_input_and_expected_outputs[i].expected_output
+        for i in range(n_examples):
 
-                pattern_matched_index_in_class_list = classes.index(pattern_matched)
-                expected_output_index_in_class_list = classes.index(expected_output)
+            expected_output, pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(i)
 
-                confusion_matrix[pattern_matched_index_in_class_list, expected_output_index_in_class_list] += 1
+            confusion_matrix = self.update_confusion_matrix(confusion_matrix, classes, pattern_matched, expected_output)
 
-                result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
-                                'pattern_matched': pattern_matched, 
-                                'expected_output': expected_output}
-                
-                output_string += f'{i + 1}: {str(result_dict)}\n\n'
+            output_string = self.update_output_string(output_string, i, pattern_matched, expected_output)
 
-                if pattern_matched == expected_output:
-                    count_correct += 1
+            prompt_outputs_for_correct_responses, 
+            prompt_outputs_for_incorrect_responses, 
+            prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct = self.update_prompt_output_strings(prompt_output, 
+                                                                expected_output, 
+                                                                pattern_matched, 
+                                                                prompt_outputs_for_correct_responses, 
+                                                                prompt_outputs_for_incorrect_responses, 
+                                                                i, 
+                                                                count_correct)
+            
+            print(count_correct)
 
-                    prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+        accuracy = round(count_correct / n_examples * 100, 2)
 
-                else:
-                    prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
-                
-                print(count_correct)
-
-        accuracy = round(count_correct / len(self.list_of_input_and_expected_outputs) * 100, 2)
-
-        # if pattern_matching_method_string == "check_string_for_true_or_false":
-        #     confusion_matrix = self.convert_list_of_lists_to_string([[count_true_positives, count_false_negatives], [count_false_positives, count_true_negatives]])
-        # else:
-        #     confusion_matrix = f'Confusion matrix not yet created for multiclass classification\nNumber correct = {count_correct}'
-
-        classes_as_strings = [str(e) for e in classes]
-        confusion_matrix_df = pd.DataFrame(confusion_matrix, index=classes_as_strings, columns=classes_as_strings)
-        # Using .values attribute to get NumPy array
-        confusion_matrix_df_values = confusion_matrix_df.values
-
-        # Get column titles
-        confusion_matrix_df_column_titles = confusion_matrix_df.columns
-        column_titles_with_blank_space = confusion_matrix_df_column_titles.insert(0, "")
-
-        # Convert NumPy array to Python list while retaining column titles
-        confusion_matrix_with_column_titles = np.vstack((confusion_matrix_df_column_titles, confusion_matrix_df_values)).tolist()
-
-        # Insert column names at the start of each row
-        for i in range(len(confusion_matrix_with_column_titles)):
-            confusion_matrix_with_column_titles[i].insert(0, column_titles_with_blank_space[i])
-
-        confusion_matrix = tabulate(confusion_matrix_with_column_titles, headers='firstrow', tablefmt='grid')
+        confusion_matrix_string = self.generate_confusion_matrix_string(confusion_matrix, classes)
         
-        return accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
+        return accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
     
-    def get_first_prompt_input_and_output(self):
+    def get_first_prompt_input(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
         first_prompt_input = first_input.generate_prompt()
-        first_prompt_output = self.LLM.get_model_output(prompt=first_prompt_input)
 
-        return first_prompt_input, first_prompt_output
+        return first_prompt_input
     
     def save_test_results(self, 
                           accuracy, 
@@ -131,8 +159,7 @@ class TestModelAccuracy:
                           output_string, 
                           prompt_outputs_for_correct_responses,
                           prompt_outputs_for_incorrect_responses,
-                          first_prompt_input,
-                          first_prompt_output):
+                          first_prompt_input):
 
         datetime_now = datetime.now().strftime("%d-%m_%H-%M")
 
@@ -141,7 +168,7 @@ class TestModelAccuracy:
         else:
             model_parameters = ''
         
-        num_examples = len(self.list_of_input_and_expected_outputs)
+        num_examples = self.get_number_of_examples()
 
         new_line_data = [self.test_description, 
                          self.LLM_name, 
@@ -153,7 +180,6 @@ class TestModelAccuracy:
                             confusion_matrix,
                             output_string,
                             first_prompt_input,
-                            first_prompt_output,
                             prompt_outputs_for_correct_responses,
                             prompt_outputs_for_incorrect_responses]
         
@@ -163,17 +189,186 @@ class TestModelAccuracy:
     # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
         accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
-        first_prompt_input, first_prompt_output = self.get_first_prompt_input_and_output()
+        first_prompt_input = self.get_first_prompt_input()
         self.save_test_results(accuracy=accuracy, 
                                confusion_matrix=confusion_matrix,
                                output_string=output_string, 
                                first_prompt_input=first_prompt_input,
-                               first_prompt_output=first_prompt_output,
                                prompt_outputs_for_correct_responses=prompt_outputs_for_correct_responses,
                                prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses,)
 
-class TestModelAccuracyForActivitiesWithLLAMA(TestModelAccuracy):
-    def get_regex_pattern(self, input_and_expected_output):
-        input = input_and_expected_output.input
-        activity = input.activity
-        return re.compile(r"Output: dict(input\s*=\s*\"{}\", is_activity\s*=\s*(true|false))".format(re.escape(activity)), re.IGNORECASE)
+class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        self.LLM = LLM
+        self.LLM_name = LLM_name
+        self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
+        self.sheet_name = sheet_name
+        self.test_description = test_description
+
+    # Defined in children classes below
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        pass
+
+    # Defined in children classes below
+    def get_first_prompt_input(self):
+        pass
+
+    def get_number_of_examples(self):
+        return len(self.list_of_risk_assessment_and_expected_outputs)
+
+    def get_first_prompt_input_object(self):
+        
+        return self.list_of_risk_assessment_and_expected_outputs[0].final_prompt_input
+    
+    def update_output_string(self, output_string, i, pattern_matched, expected_output):
+        result_dict = {'risk_assessment': self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment.to_string(),
+                'pattern_matched': pattern_matched, 
+                'expected_output': expected_output}
+
+        output_string += f'{i + 1}: {str(result_dict)}\n\n'
+
+        return output_string
+
+class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
+        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
+
+        prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
+        prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_clothing_prompt_input, self.LLM)
+
+        if prevention_protective_clothing_pattern == True:
+            prompt_output = f'''{prevention_protective_clothing_prompt_output} 
+            
+            'First aid prompt not run'
+            
+            'Prevention prompt not run'''
+            
+            return expected_output, 'mitigation', prompt_output
+
+        else:
+            first_aid_prompt_input = RA.get_prevention_first_aid_input()
+            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
+
+            if prevention_first_aid_pattern == True:
+                prompt_output = f'''{prevention_protective_clothing_prompt_output}
+
+                {prevention_first_aid_prompt_output}
+
+                'Prevention prompt not run'''
+
+                return expected_output, 'mitigation', prompt_output
+            
+            else:
+                prevention_prompt_input = RA.get_prevention_input()
+                prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM)
+
+                prompt_output = f'''{prevention_protective_clothing_prompt_output}
+
+                {prevention_first_aid_prompt_output}
+                
+                {prevention_prompt_output}'''
+
+                return expected_output, prevention_pattern, prompt_output
+    
+    def get_first_prompt_input(self):
+        first_risk_assessment = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+        
+        first_prevention_protective_clothing_prompt_input_object = first_risk_assessment.get_prevention_protective_clothing_input()
+        first_prevention_protective_clothing_prompt_input = first_prevention_protective_clothing_prompt_input_object.generate_prompt()
+
+        first_prevention_first_aid_prompt_input_object = first_risk_assessment.get_prevention_first_aid_input()
+        first_prevention_first_aid_prompt_input = first_prevention_first_aid_prompt_input_object.generate_prompt()
+
+        first_prevention_prompt_input_object = first_risk_assessment.get_prevention_input()
+        first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
+
+        return f'''{first_prevention_protective_clothing_prompt_input}
+                  
+                  {first_prevention_first_aid_prompt_input}
+                  
+                  {first_prevention_prompt_input}'''
+
+class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
+        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
+
+        mitigation_protective_clothing_prompt_input = RA.get_mitigation_protective_clothing_input()
+        mitigation_protective_clothing_prompt_output, mitigation_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_clothing_prompt_input, self.LLM)
+
+        if mitigation_protective_clothing_pattern == True:
+            prompt_output = f'''{mitigation_protective_clothing_prompt_output} 
+            
+            'First aid prompt not run'
+            
+            'Mitigation prompt not run'''
+            
+            return expected_output, 'mitigation', prompt_output
+
+        else:
+            first_aid_prompt_input = RA.get_mitigation_first_aid_input()
+            mitigation_first_aid_prompt_output, mitigation_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
+
+            if mitigation_first_aid_pattern == True:
+                prompt_output = f'''{mitigation_protective_clothing_prompt_output}
+
+                {mitigation_first_aid_prompt_output}
+
+                'Mitigation prompt not run'''
+
+                return expected_output, 'mitigation', prompt_output
+            
+            else:
+                mitigation_prompt_input = RA.get_mitigation_input()
+                mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, self.LLM)
+
+                prompt_output = f'''{mitigation_protective_clothing_prompt_output}
+
+                {mitigation_first_aid_prompt_output}
+                
+                {mitigation_prompt_output}'''
+
+                return expected_output, mitigation_pattern, prompt_output
+    
+    def get_first_prompt_input(self):
+        first_risk_assessment = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+        
+        first_protective_clothing_prompt_input_object = first_risk_assessment.get_mitigation_protective_clothing_input()
+        first_protective_clothing_prompt_input = first_protective_clothing_prompt_input_object.generate_prompt()
+
+        first_aid_prompt_input_object = first_risk_assessment.get_mitigation_first_aid_input()
+        first_aid_prompt_input = first_aid_prompt_input_object.generate_prompt()
+
+        first_prevention_prompt_input_object = first_risk_assessment.get_mitigation_input()
+        first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
+
+        return f'''{first_protective_clothing_prompt_input}
+                  
+                  {first_aid_prompt_input}
+                  
+                  {first_prevention_prompt_input}'''

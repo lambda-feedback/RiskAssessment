@@ -5,11 +5,11 @@ from LLMCaller import OpenAILLM
 from example_risk_assessments import example_risk_assessments
 
 from example_preventions import correct_prevention_examples_list, PreventionExamplesGenerator
-from ExamplesGenerator import RiskAssessmentExamplesGenerator
+from ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 
 if __name__ == '__main__':
     # examples_generator = PreventionExamplesGenerator(correct_examples_list=correct_prevention_examples_list)
-    examples_generator = RiskAssessmentExamplesGenerator(risk_assessments=example_risk_assessments,
+    examples_generator = RiskAssessmentExamplesGeneratorForSinglePrompt(risk_assessments=example_risk_assessments,
                                                          ground_truth_parameter='prevention_prompt_expected_output',
                                                         method_to_get_prompt_input='get_prevention_input')
     
