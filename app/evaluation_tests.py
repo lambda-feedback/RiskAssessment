@@ -39,8 +39,8 @@ class TestEvaluationFunction(unittest.TestCase):
     def test_returns_is_correct_true(self):
         response = [["Fluids laboratory"],
                     ["Water being spilt on the floor"],
-                    ["Students"],
                     ["Injuries caused by possible slipping on wet floor"],
+                    ["Students"],
                     ["4"],
                     ["1"],
                     ["4"],
