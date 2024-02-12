@@ -79,8 +79,8 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
     else:
         LLM = OpenAILLM()
 
-        feedback_for_incorrect_answers = '# Feedback for Incorrect Answers\n'
-        feedback_for_correct_answers = '# Feedback for Correct Answers\n'
+        feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
+        feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
 
         is_everything_correct = True
 
@@ -108,8 +108,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
             
             else:
                 is_everything_correct = False
+                recommendation = prompt_input_object.get_recommendation()
 
-                feedback_to_add += f'''\n\n\n\n##### Recommendation: Please look at the definition of the {field} input field{'s' if field in ['Hazard & How it harms', 'Prevention and Mitigation'] else ''} and the example risk assessment for assistance.\n\n\n\n'''
+                feedback_to_add += f'''\n\n\n\n##### Recommendation: {recommendation}'''
 
                 feedback_for_incorrect_answers += feedback_header_to_add
                 feedback_for_incorrect_answers += feedback_to_add
@@ -127,12 +128,13 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
             if prevention_protective_clothing_pattern == True:
                 shortform_feedback = prevention_protective_clothing_prompt_input.get_shortform_feedback()
                 longform_feedback = prevention_protective_clothing_prompt_input.get_longform_feedback()
+                recommendation = prevention_protective_clothing_prompt_input.get_recommendation()
 
                 feedback_for_incorrect_answers += f'''
                 {feedback_header}
                 \n\n\n\n##### Feedback: {shortform_feedback.negative_feedback}\n\n\n\n
                 \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                \n\n\n\n##### Recommendation: Please look at the definition of a Prevention and Mitigation for assistance.\n\n\n\n'''
+                \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
 
                 is_everything_correct = False
             
@@ -145,12 +147,13 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 if prevention_first_aid_pattern == True:
                     shortform_feedback = prevention_first_aid_prompt_input.get_shortform_feedback()
                     longform_feedback = prevention_first_aid_prompt_input.get_longform_feedback()
+                    recommendation = prevention_first_aid_prompt_input.get_recommendation()
 
                     feedback_for_incorrect_answers += f'''
                     {feedback_header}
                     \n\n\n\n##### Feedback: {shortform_feedback.negative_feedback}\n\n\n\n
                     \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                    \n\n\n\n##### Recommendation: Please look at the definition of a Prevention and Mitigation for assistance.\n\n\n\n'''
+                    \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
 
                     is_everything_correct = False
                 
@@ -163,23 +166,33 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     shortform_feedback_object = prevention_prompt_input.get_shortform_feedback()
                     longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prevention_prompt_output)
 
-                    if prevention_pattern == 'mitigation':
-                        longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation',lookahead_assertion='Answer')
-
-                    if prevention_pattern == 'mitigation' or prevention_pattern == 'neither':
-                        feedback_for_incorrect_answers += f'''
-                        {feedback_header}
-                        \n\n\n\n##### Feedback: {shortform_feedback_object.negative_feedback}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: Please look at the definition of a Prevention {'and Mitigation' if prevention_pattern == 'mitigation' else ''} for assistance.\n\n\n\n'''
-
-                        is_everything_correct = False
-                    
                     if prevention_pattern == 'prevention' or prevention_pattern == 'both':
                         feedback_for_correct_answers += f'''
                         {feedback_header}
                         \n\n\n\n##### Feedback: {shortform_feedback_object.positive_feedback}\n\n\n\n
                         \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+
+                    if prevention_pattern == 'neither':
+                        recommendation = prevention_prompt_input.get_recommendation(recommendation_type='neither')
+                        feedback_for_incorrect_answers += f'''
+                        {feedback_header}
+                        \n\n\n\n##### Feedback: {shortform_feedback_object.neither}\n\n\n\n
+                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+
+                        is_everything_correct = False
+
+                    if prevention_pattern == 'mitigation':
+                        longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer')
+                        recommendation = prevention_prompt_input.get_recommendation(recommendation_type='misclassification')
+
+                        feedback_for_incorrect_answers += f'''
+                        {feedback_header}
+                        \n\n\n\n##### Feedback: {shortform_feedback_object.misclassification}\n\n\n\n
+                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+
+                        is_everything_correct = False
 
         # MITIGATION CHECKS
             feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
@@ -218,26 +231,40 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 else:
                     mitigation_prompt_input = RA.get_mitigation_input()
                     mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, LLM)
-                    
+
+                    shortform_feedback = mitigation_prompt_input.get_shortform_feedback()
+                    longform_feedback = mitigation_prompt_input.get_longform_feedback()
+
                     if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
                         feedback_for_correct_answers += f'''
                         {feedback_header}
                         \n\n\n\n##### Feedback: {shortform_feedback.positive_feedback}\n\n\n\n
                         \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                    
+                    if mitigation_pattern == 'neither':
+                        recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='neither')
+
+                        feedback_for_incorrect_answers += f'''
+                        {feedback_header}
+                        \n\n\n\n##### Feedback: {shortform_feedback.neither}\n\n\n\n
+                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+
+                        is_everything_correct = False
 
                     if mitigation_pattern == 'prevention':
                         longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
-                    
-                    if mitigation_pattern == 'prevention' or mitigation_pattern == 'neither':
+                        recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='misclassification')
+
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {shortform_feedback.negative_feedback}\n\n\n\n
+                        \n\n\n\n##### Feedback: {shortform_feedback.misclassification}\n\n\n\n
                         \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: Please look at the definition of a Mitigation {'and Prevention' if mitigation_pattern == 'prevention' else ''} for assistance.\n\n\n\n'''
-
+                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                        
                         is_everything_correct = False
-        
-        if feedback_for_incorrect_answers == '# Feedback for Incorrect Answers\n':
+
+        if is_everything_correct == True:
             feedback_for_incorrect_answers = '# Congratulations! All your answers are correct!'
 
         feedback_for_correct_answers += f'''
