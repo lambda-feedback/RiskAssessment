@@ -10,7 +10,7 @@ except ImportError:
     from RegexPatternMatcher import RegexPatternMatcher
 
 class RiskAssessment:
-    def __init__(self, activity, hazard, who_it_harms, how_it_harms,
+    def __init__(self, activity, hazard, hazard_event, how_it_harms, who_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
                  prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
@@ -18,8 +18,9 @@ class RiskAssessment:
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
-        self.who_it_harms = who_it_harms
+        self.hazard_event = hazard_event
         self.how_it_harms = how_it_harms
+        self.who_it_harms = who_it_harms
         self.uncontrolled_likelihood = uncontrolled_likelihood
         self.uncontrolled_severity = uncontrolled_severity
         self.uncontrolled_risk = uncontrolled_risk
@@ -129,6 +130,21 @@ class RiskAssessment:
     def get_activity_input(self):
         return Activity(activity=self.activity)
     
+    def activity_field_classification_input(self):
+        return InputFieldClassification(input=self.activity, field_name='activity')
+    
+    def hazard_field_classification_input(self):
+        return InputFieldClassification(input=self.hazard, field_name='hazard')
+    
+    def hazard_event_field_classification_input(self):
+        return InputFieldClassification(input=self.hazard_event, field_name='hazard_event')
+    
+    def how_it_harms_field_classification_input(self):
+        return InputFieldClassification(input=self.how_it_harms, field_name='how_it_harms')
+    
+    def who_it_harms_field_classification_input(self):
+        return InputFieldClassification(input=self.who_it_harms, field_name='who_it_harms')
+
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
                           activity=self.activity,
@@ -208,6 +224,13 @@ class RiskAssessment:
     
     # TODO: Add ability to see prompt output percentages - might be possible for LLMs other than GPT-3
 
+    def get_list_of_input_field_classification_prompt_input_objects(self):
+        return [self.activity_field_classification_input(),
+                self.hazard_field_classification_input(),
+                self.hazard_event_field_classification_input(),
+                self.how_it_harms_field_classification_input(),
+                self.who_it_harms_field_classification_input()]
+
     def get_list_of_prompt_input_objects_for_first_3_prompts(self):
         return [self.get_activity_input(),
                 self.get_how_it_harms_in_context_input(),
@@ -234,82 +257,6 @@ class RiskAssessment:
             return prompt_input_object.get_shortform_feedback(feedback_type='positive')
         else:
             return prompt_input_object.get_shortform_feedback(feedback_type='positive')
-
-
-    # def get_list_of_fields_checked(self):
-    #     fields_checked = []
-        
-    #     for prompt_input_object in self.get_list_of_prompt_input_objects():
-    #         fields_checked.append(prompt_input_object.get_field_checked())
-
-    #     return fields_checked
-    
-    # def get_list_of_prompts(self):
-    #     prompts = []
-
-    #     for prompt_input_object in self.get_list_of_prompt_input_objects():
-    #         prompts.append(prompt_input_object.generate_prompt())
-
-    #     return prompts
-    
-    # def get_list_of_prompt_outputs(self, LLM_caller: Type[LLMCaller]):
-    #     prompt_outputs = []
-
-    #     for prompt_input_object in self.get_list_of_prompt_input_objects():
-    #         prompt_outputs.append(LLM_caller.get_model_output(prompt_input_object.generate_prompt()))
-        
-    #     return prompt_outputs
-    
-    # def get_list_of_regex_matches(self, prompt_outputs):
-    #     regex_pattern_matcher = RegexPatternMatcher()
-
-    #     regex_matches = []
-
-    #     prompt_inputs = self.get_list_of_prompt_input_objects()
-
-    #     for i in range(len(prompt_inputs)):
-    #         pattern_matching_method = getattr(regex_pattern_matcher, prompt_inputs[i].pattern_matching_method)
-
-    #         regex_match = pattern_matching_method(prompt_outputs[i])
-    #         regex_matches.append(regex_match)
-        
-    #     return regex_matches
-    
-    # def get_list_of_shortform_feedback_objects(self):
-    #     shortform_feedback_objects = []
-
-    #     for prompt_input_object in self.get_list_of_prompt_input_objects():
-    #         shortform_feedback_objects.append(prompt_input_object.get_shortform_feedback())
-
-    #     return shortform_feedback_objects
-
-    # def get_list_of_shortform_feedback_from_regex_matches(self, regex_matches):
-    #     list_of_shortform_feedback = []
-
-    #     prompt_inputs = self.get_list_of_prompt_input_objects()
-
-    #     shortform_feedback_objects = self.get_list_of_shortform_feedback_objects()
-
-    #     for i in range(len(regex_matches)):
-    #         if regex_matches[i] in prompt_inputs[i].labels_indicating_correct_input:
-    #             list_of_shortform_feedback.append(shortform_feedback_objects[i].positive_feedback)
-    #         else:
-    #             list_of_shortform_feedback.append(shortform_feedback_objects[i].negative_feedback)
-            
-    #     return list_of_shortform_feedback
-    
-    # def get_booleans_indicating_which_prompts_need_feedback(self, regex_matches):
-    #     booleans_indicating_which_prompts_need_feedback = []
-
-    #     prompt_inputs = self.get_list_of_prompt_input_objects()
-
-    #     for i in range(len(regex_matches)):
-    #         if regex_matches[i] in prompt_inputs[i].labels_indicating_correct_input:
-    #             booleans_indicating_which_prompts_need_feedback.append(False)
-    #         else:
-    #             booleans_indicating_which_prompts_need_feedback.append(True)
-            
-    #     return booleans_indicating_which_prompts_need_feedback
     
     def are_all_multiplications_correct(self)->bool:
         return self.check_uncontrolled_risk() == 'correct' and self.check_controlled_risk() == 'correct'

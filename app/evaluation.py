@@ -51,9 +51,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
     to output the evaluation response.
     """
 
-    activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
+    activity, hazard, hazard_event, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
-    RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
+    RA = RiskAssessment(activity=activity, hazard=hazard, hazard_event=hazard_event, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
@@ -84,43 +84,66 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
         is_everything_correct = True
 
-        first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
+        input_field_classification_prompt_inputs = RA.get_list_of_input_field_classification_prompt_input_objects()
 
-        for prompt_input_object in first_3_prompt_input_objects:
+        for prompt_input_object in input_field_classification_prompt_inputs:
             prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
-            shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
 
-            field = prompt_input_object.get_field_checked()
-
-            longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output)
-            
-            feedback_header_to_add = f''' 
-            \n\n\n## Feedback for Input: {field}\n\n\n
-            '''
-
-            feedback_to_add = f'''
-            \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-            \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
-            
-            if pattern in prompt_input_object.labels_indicating_correct_input:
-                feedback_for_correct_answers += feedback_header_to_add
-                feedback_for_correct_answers += feedback_to_add + '\n\n'
-            
-            else:
+            if pattern not in prompt_input_object.get_correct_labels():
                 is_everything_correct = False
-                recommendation = prompt_input_object.get_recommendation()
 
-                feedback_to_add += f'''\n\n\n\n##### Recommendation: {recommendation}'''
+                shortform_feedback = prompt_input_object.get_shortform_feedback(pattern_matched=pattern)
+
+                feedback_header_to_add = f''' 
+                \n\n\n## Feedback for Input: {prompt_input_object.field_name}\n\n\n
+                '''
+
+                feedback_to_add = f'''
+                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n'''
 
                 feedback_for_incorrect_answers += feedback_header_to_add
                 feedback_for_incorrect_answers += feedback_to_add
 
                 break
         
-        # PREVENTION CHECKS
-        feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
-
         if is_everything_correct == True:
+            first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
+
+            for prompt_input_object in first_3_prompt_input_objects:
+                prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
+                shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
+
+                field = prompt_input_object.get_field_checked()
+
+                longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output)
+                
+                feedback_header_to_add = f''' 
+                \n\n\n## Feedback for Input: {field}\n\n\n
+                '''
+
+                feedback_to_add = f'''
+                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
+                \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                
+                if pattern in prompt_input_object.labels_indicating_correct_input:
+                    feedback_for_correct_answers += feedback_header_to_add
+                    feedback_for_correct_answers += feedback_to_add + '\n\n'
+                
+                else:
+                    is_everything_correct = False
+                    recommendation = prompt_input_object.get_recommendation()
+
+                    feedback_to_add += f'''\n\n\n\n##### Recommendation: {recommendation}'''
+
+                    feedback_for_incorrect_answers += feedback_header_to_add
+                    feedback_for_incorrect_answers += feedback_to_add
+
+                    break
+        
+        # PREVENTION CHECKS
+        if is_everything_correct == True:
+            feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
+
             prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
             prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_clothing_prompt_input, LLM)
             
@@ -266,7 +289,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
             feedback_for_incorrect_answers = '# Congratulations! All your answers are correct!'
 
         feedback_for_correct_answers += f'''
-        \n\n\n## Feedback for Risk Multiplications {field}\n\n\n\n
+        \n\n\n## Feedback for Risk Multiplications\n\n\n\n
         \n\n\n\n##### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
         \n\n\n\n##### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
 

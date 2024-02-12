@@ -86,6 +86,9 @@ class TestModelAccuracy:
         prompt_output = self.LLM.get_model_output(input.generate_prompt())
 
         pattern_matched = pattern_matching_method(prompt_output)
+
+        print(pattern_matched)
+        print(expected_output)
         
         return expected_output, pattern_matched, prompt_output
     
