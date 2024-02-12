@@ -83,7 +83,7 @@ class Activity(PromptInput):
         if feedback_type == 'negative':
             return f"Incorrect. '{self.activity}' is not an activity."
     
-    def get_longform_feedback(self, prompt_output):
+    def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Comparison', 'Overall Answer')
 
@@ -159,7 +159,7 @@ class HowItHarmsInContext(PromptInput):
         if feedback_type == 'negative':
             return f"Incorrect. '{self.how_it_harms}' is not a way that the hazard: '{self.hazard}' causes harm."
     
-    def get_longform_feedback(self, prompt_output):
+    def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
 
@@ -222,7 +222,7 @@ class WhoItHarmsInContext(PromptInput):
         if feedback_type == 'negative':
             return f"Incorrect. '{self.who_it_harms}' could not take part in the activity: '{self.activity}'."
 
-    def get_longform_feedback(self, prompt_output):
+    def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
     
@@ -294,7 +294,7 @@ class ProtectiveClothing(PromptInput):
         if feedback_type == 'negative':
             return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
     
-    def get_longform_feedback(self):
+    def get_longform_feedback(self, prompt_output=''):
         return f"{self.control_measure} is an example of wearing protective clothing, which reduces the harm caused by the hazard event so is therefore a mitigation measure."
     
     # TODO: When you have hazard event input, can include below
@@ -368,7 +368,7 @@ class FirstAid(PromptInput):
         if feedback_type == 'negative':
             return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
     
-    def get_longform_feedback(self):
+    def get_longform_feedback(self, prompt_output=''):
         return f"""{self.control_measure} is an example of a first aid measure, which reduces the harm caused by the hazard event after it has occurred; it is therefore a mitigation measure."""
 
     # TODO: When you have hazard event input, can include in feedback.
@@ -665,7 +665,7 @@ class Prevention(PromptInput):
         if feedback_type == 'misclassification':
             return f"Incorrect. '{self.prevention}' is actually a mitigation measure for the hazard: '{self.hazard}'."
     
-    def get_longform_feedback(self, prompt_output, pattern_to_search_for='Prevention Explanation', lookahead_assertion='Mitigation'):
+    def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Prevention Explanation', lookahead_assertion='Mitigation'):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
 
@@ -818,7 +818,7 @@ class Mitigation(PromptInput):
         if feedback_type == 'misclassification':
             return f"Incorrect. '{self.mitigation}' is actually a prevention measure for the hazard: '{self.hazard}'."
     
-    def get_longform_feedback(self, prompt_output, pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer'):
+    def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer'):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
     
