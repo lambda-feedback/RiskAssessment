@@ -22,6 +22,10 @@ RA_empty_input = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_mitigation_wrong_type = RiskAssessment(
@@ -39,6 +43,10 @@ RA_mitigation_wrong_type = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_controlled_likelihood_wrong_type = RiskAssessment(
@@ -56,6 +64,10 @@ RA_controlled_likelihood_wrong_type = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_incorrect_prevention_and_mitigation = RiskAssessment(
@@ -73,6 +85,10 @@ RA_incorrect_prevention_and_mitigation = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='neither',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_1 = RiskAssessment(
@@ -90,6 +106,10 @@ RA_1 = RiskAssessment(
     controlled_risk="2",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_2_hearing_damage = RiskAssessment(
@@ -107,6 +127,10 @@ RA_2_hearing_damage = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='prevention', 
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False
 )
 
 RA_2_mitigation_prevention_switched = RiskAssessment(
@@ -124,6 +148,10 @@ RA_2_mitigation_prevention_switched = RiskAssessment(
     controlled_risk="1",
     prevention_prompt_expected_output='mitigation', 
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False
 )
 
 # RA_3_water_from_instrument = RiskAssessment(
@@ -177,6 +205,10 @@ RA_4 = RiskAssessment(
     controlled_risk="3",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=True,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=True,
 )
 
 # RA_4_with_first_aid = RiskAssessment(
@@ -212,6 +244,10 @@ RA_4_with_incorrect_how_it_harms = RiskAssessment(
     controlled_risk="3",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=True,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=True,
 )
 
 RA_5 = RiskAssessment(
@@ -229,6 +265,10 @@ RA_5 = RiskAssessment(
     controlled_risk="6",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=True,
 )
 
 RA_5_mitigation_prevention_switched = RiskAssessment(
@@ -246,6 +286,10 @@ RA_5_mitigation_prevention_switched = RiskAssessment(
     controlled_risk="6",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=True,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_6 = RiskAssessment(
@@ -263,6 +307,10 @@ RA_6 = RiskAssessment(
     controlled_risk="2",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_7_water_tank = RiskAssessment(
@@ -281,6 +329,10 @@ RA_7_water_tank = RiskAssessment(
     controlled_risk="4",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=True,
 )
 
 RA_7_water_tank_mitigation_prevention_switched = RiskAssessment(
@@ -299,42 +351,54 @@ RA_7_water_tank_mitigation_prevention_switched = RiskAssessment(
     controlled_risk="4",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=True,
+    mitigation_first_aid_expected_output=False,
 )
 
 
-# RA_8_syringe_needle = RiskAssessment(
-#     activity="Fluids laboratory",
-#     hazard="Syringes with sharp needles",
-#     who_it_harms="Students",
-#     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
-#     uncontrolled_likelihood="3",
-#     uncontrolled_severity="3",
-#     uncontrolled_risk="9",
-#     prevention="Point needle away from yourself and others",
-#     mitigation="Wear lab coat and PPE", # This is both prevention and mitigation
-#     controlled_likelihood="2",
-#     controlled_severity="1",
-#     controlled_risk="2",
-#     prevention_prompt_expected_output='prevention',
-#     mitigation_prompt_expected_output='mitigation',
-# )
+RA_8_syringe_needle = RiskAssessment(
+    activity="Fluids laboratory",
+    hazard="Syringes with sharp needles",
+    who_it_harms="Students",
+    how_it_harms="Sharp needles can pierce the skin and cause bleeding",
+    uncontrolled_likelihood="3",
+    uncontrolled_severity="3",
+    uncontrolled_risk="9",
+    prevention="Point needle away from yourself and others",
+    mitigation="Wear lab coat and PPE", # This is both prevention and mitigation
+    controlled_likelihood="2",
+    controlled_severity="1",
+    controlled_risk="2",
+    prevention_prompt_expected_output='prevention',
+    mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=True,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
+)
 
-# RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessment(
-#     activity="Fluids laboratory",
-#     hazard="Syringes with sharp needles",
-#     who_it_harms="Students",
-#     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
-#     uncontrolled_likelihood="3",
-#     uncontrolled_severity="3",
-#     uncontrolled_risk="9",
-#     mitigation="Point needle away from yourself and others",
-#     prevention="Wear lab coat and PPE", # This is both prevention and mitigation
-#     controlled_likelihood="2",
-#     controlled_severity="1",
-#     controlled_risk="2",
-#     prevention_prompt_expected_output='mitigation',
-#     mitigation_prompt_expected_output='prevention',
-# )
+RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessment(
+    activity="Fluids laboratory",
+    hazard="Syringes with sharp needles",
+    who_it_harms="Students",
+    how_it_harms="Sharp needles can pierce the skin and cause bleeding",
+    uncontrolled_likelihood="3",
+    uncontrolled_severity="3",
+    uncontrolled_risk="9",
+    mitigation="Point needle away from yourself and others",
+    prevention="Wear lab coat and PPE", # This is both prevention and mitigation
+    controlled_likelihood="2",
+    controlled_severity="1",
+    controlled_risk="2",
+    prevention_prompt_expected_output='mitigation',
+    mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=True,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
+)
 
 # RA_9 = RiskAssessment(
 #     activity="Fluids laboratory",
@@ -402,6 +466,10 @@ RA_14 = RiskAssessment(
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_15 = RiskAssessment(
@@ -419,6 +487,10 @@ RA_15 = RiskAssessment(
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=True,
 )
 
 RA_15_mitigation_prevention_switched = RiskAssessment(
@@ -436,6 +508,10 @@ RA_15_mitigation_prevention_switched = RiskAssessment(
     controlled_risk='1',
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=True,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_17 = RiskAssessment(
@@ -453,6 +529,10 @@ RA_17 = RiskAssessment(
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_18 = RiskAssessment(
@@ -470,6 +550,10 @@ RA_18 = RiskAssessment(
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='prevention', # it is both mitigation and prevention
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_19 = RiskAssessment(
@@ -487,9 +571,13 @@ RA_19 = RiskAssessment(
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
 )
 
-RA_20 = RiskAssessment(
+RA_zip_tie = RiskAssessment(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Cut Zip tie flies and hits audience member',
     who_it_harms='Audience',
@@ -504,6 +592,10 @@ RA_20 = RiskAssessment(
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='prevention', # Another prevention measure as it reduces the likelihood of the zip tie hitting an audience member
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_23 = RiskAssessment(
@@ -521,6 +613,10 @@ RA_23 = RiskAssessment(
     controlled_risk='2',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output='',
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output='',
 )
 
 RA_mucking_out_horse = RiskAssessment(
@@ -537,7 +633,11 @@ RA_mucking_out_horse = RiskAssessment(
     controlled_severity='1',
     controlled_risk='1',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='mitigation'
+    mitigation_prompt_expected_output='mitigation',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=True,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
 )
 
 RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessment(
@@ -554,9 +654,12 @@ RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessment(
     controlled_severity='1',
     controlled_risk='1',
     prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention'
+    mitigation_prompt_expected_output='prevention',
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=True,
+    mitigation_first_aid_expected_output=False,
 )
-
 
 example_risk_assessments = [
     # Commented out ones which are difficult to classify
@@ -570,7 +673,7 @@ example_risk_assessments = [
 
     RA_1, RA_2_hearing_damage, 
     RA_4, RA_5, RA_6, RA_7_water_tank, 
-    RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
+    RA_14, RA_15, RA_17, RA_18, RA_19, RA_zip_tie,
     RA_23,
     RA_incorrect_prevention_and_mitigation, RA_2_mitigation_prevention_switched,
    
