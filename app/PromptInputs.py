@@ -82,9 +82,11 @@ class Activity(PromptInput):
         Comparison: <your comparison>
         Overall Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.activity}' is an activity.",
-                                 negative_feedback=f"Incorrect. '{self.activity}' is not an activity.")
+    def get_shortform_feedback(self, feedback_type):
+        if feedback_type == 'positive':
+            return f"Correct! '{self.activity}' is an activity."
+        if feedback_type == 'negative':
+            return f"Incorrect. '{self.activity}' is not an activity."
     
     def get_longform_feedback(self, prompt_output):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -156,9 +158,11 @@ class HowItHarmsInContext(PromptInput):
         Explanation: <your Explanation>
         Overall Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.how_it_harms}' is a way that the hazard: '{self.hazard}' causes harm.",
-        negative_feedback=f"Incorrect. '{self.how_it_harms}' is not a way that the hazard: '{self.hazard}' causes harm.")
+    def get_shortform_feedback(self, feedback_type):
+        if feedback_type == 'positive':
+            return f"Correct! '{self.how_it_harms}' is a way that the hazard: '{self.hazard}' causes harm."
+        if feedback_type == 'negative':
+            return f"Incorrect. '{self.how_it_harms}' is not a way that the hazard: '{self.hazard}' causes harm."
     
     def get_longform_feedback(self, prompt_output):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -217,9 +221,11 @@ class WhoItHarmsInContext(PromptInput):
         Explanation: your_explanation
         Overall Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.who_it_harms}' could take part in the activity: '{self.activity}'.",
-        negative_feedback=f"Incorrect. '{self.who_it_harms}' could not take part in the activity: '{self.activity}'.")
+    def get_shortform_feedback(self, feedback_type):
+        if feedback_type == 'positive':
+            return f"Correct! '{self.who_it_harms}' could take part in the activity: '{self.activity}'."
+        if feedback_type == 'negative':
+            return f"Incorrect. '{self.who_it_harms}' could not take part in the activity: '{self.activity}'."
 
     def get_longform_feedback(self, prompt_output):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -286,10 +292,12 @@ class ProtectiveClothing(PromptInput):
         Reduces Harm Answer: <your answer>
         Overall Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
+    def get_shortform_feedback(self, feedback_type):
         # Feedback is only given when a mitigation is written in prevention input.
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.control_measure}' is an example of a mitigation measure",
-                                 negative_feedback=f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure.")
+        if feedback_type == 'positive':
+            return f"Correct! '{self.control_measure}' is an example of a mitigation measure"
+        if feedback_type == 'negative':
+            return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
     
     def get_longform_feedback(self):
         return f"{self.control_measure} is an example of wearing protective clothing, which reduces the harm caused by the hazard event so is therefore a mitigation measure."
@@ -357,10 +365,13 @@ class FirstAid(PromptInput):
         Reduces Harm Answer: <your answer>
         Overall Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
+    def get_shortform_feedback(self, feedback_type):
         # Feedback is only given when a mitigation is written in prevention input.
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.control_measure}' is an example of a mitigation measure",
-                                 negative_feedback=f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure.")
+
+        if feedback_type == 'positive':
+            return f"Correct! '{self.control_measure}' is an example of a mitigation measure"
+        if feedback_type == 'negative':
+            return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
     
     def get_longform_feedback(self):
         return f"""{self.control_measure} is an example of a first aid measure, which reduces the harm caused by the hazard event after it has occurred; it is therefore a mitigation measure."""
@@ -651,10 +662,13 @@ class Prevention(PromptInput):
     
         # How it Harms Explanation: <your how it harms explanation>
     
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'",
-        neither=f"Incorrect. '{self.prevention}' is not a prevention measure for the hazard: '{self.hazard}'.",
-        misclassification=f"Incorrect. '{self.prevention}' is actually a mitigation measure for the hazard: '{self.hazard}'.")
+    def get_shortform_feedback(self, feedback_type):
+        if feedback_type == 'positive':
+            return f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'"
+        if feedback_type == 'neither':
+            return f"Incorrect. '{self.prevention}' is not a prevention measure for the hazard: '{self.hazard}'."
+        if feedback_type == 'misclassification':
+            return f"Incorrect. '{self.prevention}' is actually a mitigation measure for the hazard: '{self.hazard}'."
     
     def get_longform_feedback(self, prompt_output, pattern_to_search_for='Prevention Explanation', lookahead_assertion='Mitigation'):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -801,10 +815,13 @@ class Mitigation(PromptInput):
         Mitigation Explanation: <your mitigation explanation>
         Answer: <your answer>'''
     
-    def get_shortform_feedback(self):
-        return ShortformFeedback(positive_feedback=f"Correct! '{self.mitigation}' is a mitigation measure for the hazard: '{self.hazard}'.",
-        neither=f"Incorrect. '{self.mitigation}' is not a mitigation measure for the hazard: '{self.hazard}'.",
-        misclassification=f"Incorrect. '{self.mitigation}' is actually a prevention measure for the hazard: '{self.hazard}'.")
+    def get_shortform_feedback(self, feedback_type):
+        if feedback_type == 'positive':
+            return f"Correct! '{self.mitigation}' is a mitigation measure for the hazard: '{self.hazard}'."
+        if feedback_type == 'neither':
+            return f"Incorrect. '{self.mitigation}' is not a mitigation measure for the hazard: '{self.hazard}'."
+        if feedback_type == 'misclassification':
+            return f"Incorrect. '{self.mitigation}' is actually a prevention measure for the hazard: '{self.hazard}'."
     
     def get_longform_feedback(self, prompt_output, pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer'):
         regex_pattern_matcher = RegexPatternMatcher()
