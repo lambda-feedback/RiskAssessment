@@ -85,10 +85,53 @@ class Activity(PromptInput):
     
     def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Comparison', 'Overall Answer')
+        return regex_pattern_matcher.extract_section_of_prompt_output(prompt_output, 'Comparison', 'Overall Answer')
 
     def get_recommendation(self):
         return f'Enter an activity that aligns with the definition: {self.activity_definition}'
+
+class InputFieldClassification(PromptInput):
+    def __init__(self, input, field_name):
+        super().__init__()
+        self.input = input
+        self.field_name = field_name
+        self.labels_indicating_correct_input = self.get_correct_labels()
+
+        self.pattern_matching_method = 'check_string_for_type_of_input_field'
+        self.candidate_labels = ['activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', 'who_it_harms']
+    
+    def generate_prompt(self):
+        return f'''
+
+        Classify the following as either an 'activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', or 'who_it_harms':
+        Input: Playing at a Playground
+        Answer: activity
+        Input: Broken equipment
+        Answer: hazard
+        Input: Child falling off monkey bars
+        Answer: event_that_leads_to_harm
+        Input: Fractured arm
+        Answer: how_it_harms
+        Input: Children
+        Answer: who_it_harms
+
+        Classify the following as either an 'activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', or 'who_it_harms':
+        Input: {self.input}
+
+        Use the following format:
+        Answer: <your answer>'''
+    
+    def get_shortform_feedback(self, pattern_matched):
+        return f"Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}.
+        It looks more like an example of the field: {pattern_matched}."
+    
+    def get_correct_labels(self):
+        if self.field_name == 'activity':
+            return ['activity']
+        if self.field_name == 'hazard' or self.field_name == 'event_that_leads_to_harm' or self.field_name == 'how_it_harms':
+            return ['hazard', 'event_that_leads_to_harm', 'how_it_harms']
+        if self.field_name == 'who_it_harms':
+            return ['who_it_harms']
 
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
@@ -161,7 +204,7 @@ class HowItHarmsInContext(PromptInput):
     
     def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
+        return regex_pattern_matcher.extract_section_of_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
 
     def get_recommendation(self):
         return f'For the "How it harms" input, enter the type of injury or illness that the hazard event causes.'
@@ -224,7 +267,7 @@ class WhoItHarmsInContext(PromptInput):
 
     def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
+        return regex_pattern_matcher.extract_section_of_prompt_output(prompt_output, 'Explanation', 'Overall Answer')
     
     def get_recommendation(self):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
@@ -667,7 +710,7 @@ class Prevention(PromptInput):
     
     def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Prevention Explanation', lookahead_assertion='Mitigation'):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
+        return regex_pattern_matcher.extract_section_of_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
 
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):
@@ -820,7 +863,7 @@ class Mitigation(PromptInput):
     
     def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer'):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.get_explanation_from_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
+        return regex_pattern_matcher.extract_section_of_prompt_output(prompt_output, pattern_to_search_for, lookahead_assertion)
     
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):

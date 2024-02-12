@@ -12,7 +12,7 @@ try:
     from LLMCaller import *
     from PromptInputs import Activity
 except ImportError:
-    from .InputAndExpectedOutputForSinglePrompt import InputAndExpectedOutputForSinglePrompt
+    from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
     from .LLMCaller import *
     from .PromptInputs import Activity
 
