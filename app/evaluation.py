@@ -51,9 +51,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
     to output the evaluation response.
     """
 
-    activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
+    activity, hazard, hazard_event, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
-    RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
+    RA = RiskAssessment(activity=activity, hazard=hazard, hazard_event=hazard_event, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                         uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                         uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                         controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
@@ -89,10 +89,10 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
         for prompt_input_object in input_field_classification_prompt_inputs:
             prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
 
-            if pattern not in prompt_input_object.labels_indicating_correct_input:
+            if pattern not in prompt_input_object.get_correct_labels():
                 is_everything_correct = False
 
-                shortform_feedback = prompt_input_object.get_shortform_feedback(pattern_mathced=pattern)
+                shortform_feedback = prompt_input_object.get_shortform_feedback(pattern_matched=pattern)
 
                 feedback_header_to_add = f''' 
                 \n\n\n## Feedback for Input: {prompt_input_object.field_name}\n\n\n
@@ -289,7 +289,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
             feedback_for_incorrect_answers = '# Congratulations! All your answers are correct!'
 
         feedback_for_correct_answers += f'''
-        \n\n\n## Feedback for Risk Multiplications {field}\n\n\n\n
+        \n\n\n## Feedback for Risk Multiplications\n\n\n\n
         \n\n\n\n##### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
         \n\n\n\n##### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
 

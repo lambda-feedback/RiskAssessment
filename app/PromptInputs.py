@@ -95,7 +95,6 @@ class InputFieldClassification(PromptInput):
         super().__init__()
         self.input = input
         self.field_name = field_name
-        self.labels_indicating_correct_input = self.get_correct_labels()
 
         self.pattern_matching_method = 'check_string_for_type_of_input_field'
         self.candidate_labels = ['activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', 'who_it_harms']
@@ -122,13 +121,13 @@ class InputFieldClassification(PromptInput):
         Answer: <your answer>'''
     
     def get_shortform_feedback(self, pattern_matched):
-        return f"Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}.
-        It looks more like an example of the field: {pattern_matched}."
+        return f"""Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}.
+        It looks more like an example of the field: {pattern_matched}."""
     
     def get_correct_labels(self):
         if self.field_name == 'activity':
             return ['activity']
-        if self.field_name == 'hazard' or self.field_name == 'event_that_leads_to_harm' or self.field_name == 'how_it_harms':
+        if self.field_name == 'hazard' or self.field_name == 'hazard_event' or self.field_name == 'how_it_harms':
             return ['hazard', 'event_that_leads_to_harm', 'how_it_harms']
         if self.field_name == 'who_it_harms':
             return ['who_it_harms']

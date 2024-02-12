@@ -6,13 +6,13 @@ import unittest
 
 try:
     from .evaluation import Params, evaluation_function
-    from .example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
+    from .example_risk_assessments_hazard_event import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
     from .RegexPatternMatcher import RegexPatternMatcher
 except:
     from evaluation import Params, evaluation_function
-    from example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
+    from example_risk_assessments_hazard_event import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from PromptInputs import Activity
     from RegexPatternMatcher import RegexPatternMatcher
@@ -36,10 +36,35 @@ class TestEvaluationFunction(unittest.TestCase):
     as it should.
     """
 
+    def test_returns_incorrect_field(self):
+        response = [["Students"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor"],
+                    ["Impact injuries"],
+                    ["Students"],
+                    ["4"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
+                    seek medical advice without delay."""],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
+        
+        answer, params = None, None
+
+        result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+
+        self.assertEqual(result.get("is_correct"), False)
+
     def test_returns_is_correct_true(self):
         response = [["Fluids laboratory"],
                     ["Water being spilt on the floor"],
-                    ["Injuries caused by possible slipping on wet floor"],
+                    ["Slipping on the water on the floor"],
+                    ["Impact injuries"],
                     ["Students"],
                     ["4"],
                     ["1"],
