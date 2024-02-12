@@ -231,7 +231,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     mitigation_prompt_input = RA.get_mitigation_input()
                     mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, LLM)
 
-                    longform_feedback = mitigation_prompt_input.get_longform_feedback()
+                    longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output)
 
                     if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
                         feedback_for_correct_answers += f'''
