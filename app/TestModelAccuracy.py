@@ -83,7 +83,8 @@ class TestModelAccuracy:
         regex_pattern_matcher = RegexPatternMatcher()
         pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
     
-        prompt_output = self.get_prompt_output(self.list_of_input_and_expected_outputs[i])
+        prompt_output = self.LLM.get_model_output(input.generate_prompt())
+
         pattern_matched = pattern_matching_method(prompt_output)
         
         return expected_output, pattern_matched, prompt_output

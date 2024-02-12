@@ -213,26 +213,26 @@ RA_4 = RiskAssessment(
     mitigation_first_aid_expected_output=True,
 )
 
-RA_4_with_first_aid = RiskAssessment(
-    activity="Fluids laboratory",
-    hazard="Ink spillage",
-    who_it_harms="Students",
-    how_it_harms="Serious eye damage",
-    uncontrolled_likelihood="2",
-    uncontrolled_severity="3",
-    uncontrolled_risk="6",
-    prevention="Wear safety glasses", # reduces likelihood of hazard occurring
-    mitigation="First aid", # reduces severity after hazard has occurred
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='mitigation',
-    prevention_protected_clothing_expected_output=True,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
-)
+# RA_4_with_first_aid = RiskAssessment(
+#     activity="Fluids laboratory",
+#     hazard="Ink spillage",
+#     who_it_harms="Students",
+#     how_it_harms="Serious eye damage",
+#     uncontrolled_likelihood="2",
+#     uncontrolled_severity="3",
+#     uncontrolled_risk="6",
+#     prevention="Wear safety glasses", # reduces likelihood of hazard occurring
+#     mitigation="First aid", # reduces severity after hazard has occurred
+#     controlled_likelihood="1",
+#     controlled_severity="3",
+#     controlled_risk="3",
+#     prevention_prompt_expected_output='mitigation',
+#     mitigation_prompt_expected_output='mitigation',
+#     prevention_protected_clothing_expected_output=True,
+#     mitigation_protected_clothing_expected_output=False,
+#     prevention_first_aid_expected_output=False,
+#     mitigation_first_aid_expected_output=True,
+# )
 
 
 RA_4_with_incorrect_how_it_harms = RiskAssessment(
@@ -667,6 +667,27 @@ RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessment(
     mitigation_first_aid_expected_output=False,
 )
 
+RA_slitter_machine = RiskAssessment(
+            activity="Slitter machine usage",
+            hazard="Sharp blade",
+            who_it_harms="Operator",
+            how_it_harms="Cut hazard",
+            uncontrolled_likelihood="3",
+            uncontrolled_severity="5",
+            uncontrolled_risk="15",
+            prevention="Guard",
+            mitigation="Metal gloves for maintenance",
+            controlled_likelihood="1",
+            controlled_severity="2",
+            controlled_risk="2",
+            prevention_prompt_expected_output="prevention",
+            mitigation_prompt_expected_output="mitigation",
+            prevention_protected_clothing_expected_output=False,
+            mitigation_protected_clothing_expected_output=True,
+            prevention_first_aid_expected_output=False,
+            mitigation_first_aid_expected_output=False,
+        )
+
 example_risk_assessments = [
     # Commented out ones which are difficult to classify
     # RA_3_water_from_instrument, RA_3_water_from_instrument_mitiagation_prevention_switched,
@@ -674,18 +695,21 @@ example_risk_assessments = [
     # RA_9, RA_9_mitigation_prevention_switched,
 
     # Removed because basically repeats:
+    # RA_4_with_first_aid,
     # RA_13,
 
-    RA_1, RA_2_hearing_damage, 
-    RA_4, RA_5, RA_6, RA_7_water_tank,
-     RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
-    RA_23,
-    RA_incorrect_prevention_and_mitigation, RA_2_mitigation_prevention_switched,
-        RA_4_with_first_aid,
-    RA_5_mitigation_prevention_switched, RA_7_water_tank_mitigation_prevention_switched,
-    RA_15_mitigation_prevention_switched,
-    RA_mucking_out_horse]
+    # RA_1, RA_2_hearing_damage, 
+    # RA_4, RA_5, RA_6, RA_7_water_tank,
+    #  RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
+    # RA_23,
+    # RA_incorrect_prevention_and_mitigation, RA_2_mitigation_prevention_switched,
+
+    # RA_5_mitigation_prevention_switched, RA_7_water_tank_mitigation_prevention_switched,
+    # RA_15_mitigation_prevention_switched,
+    # RA_mucking_out_horse,
+    RA_slitter_machine]
 
 example_risk_assessments_for_protective_clothing_and_first_aid = [
-    RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse
+    # RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse,
+    RA_slitter_machine
 ]

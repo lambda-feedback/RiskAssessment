@@ -1,6 +1,6 @@
 from TestModelAccuracy import TestModelAccuracyForCompletePreventionPromptPipeline
 from LLMCaller import OpenAILLM
-from example_risk_assessments import example_risk_assessments
+from example_risk_assessments_copy import example_risk_assessments
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
@@ -15,7 +15,9 @@ if __name__ == '__main__':
     test_accuracy = TestModelAccuracyForCompletePreventionPromptPipeline(
         test_description="""Testing prevention input in student Fluids Lab and TPS presentation Risk Assessment examples.
                             
-                            First time testing combination of first aid, protective clothing and prevention prompts""",
+                            First time testing combination of first aid, protective clothing and prevention prompts
+                            
+                            Testing with hazard event and how it harms input more well defined.""",
                                       LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_risk_assessment_and_expected_outputs=examples,
