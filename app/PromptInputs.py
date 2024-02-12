@@ -5,11 +5,6 @@ try:
 except:
     from .RegexPatternMatcher import RegexPatternMatcher
 
-class ShortformFeedback:
-    def __init__(self, positive_feedback, negative_feedback):
-        self.positive_feedback = positive_feedback
-        self.negative_feedback = negative_feedback
-
 class PromptInput:
     def __init__(self):
         self.activity_definition = """an action or process that involves
