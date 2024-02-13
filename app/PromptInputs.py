@@ -177,8 +177,18 @@ class InputFieldClassification(PromptInput):
     #     1. Description: <your description>
     #     2. Answer: <your answer>'''
     
+    def get_input_field_from_pattern_matched(self, pattern_matched):
+        if pattern_matched == 'who':
+            return 'Who is harmed by this event'
+        if pattern_matched == 'harm caused':
+            return 'Harm caused by this event'
+        if pattern_matched == 'control measure':
+            return 'Prevention or Mitigation'
+        else:
+            return pattern_matched.capitalize()
+
     def get_shortform_feedback(self, pattern_matched):
-        return f"""Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}. It looks more like an example of the field: {pattern_matched.capitalize()}."""
+        return f"""Incorrect! '{self.input}' is not a correct input for the field: '{self.field_name}'. It looks more like an example of the field: '{self.get_input_field_from_pattern_matched(pattern_matched=pattern_matched)}'."""
 
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
