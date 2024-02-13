@@ -131,19 +131,25 @@ class RiskAssessment:
         return Activity(activity=self.activity)
     
     def activity_field_classification_input(self):
-        return InputFieldClassification(input=self.activity, field_name='activity')
+        return InputFieldClassification(input=self.activity, field_name='Activity')
     
     def hazard_field_classification_input(self):
-        return InputFieldClassification(input=self.hazard, field_name='hazard')
+        return InputFieldClassification(input=self.hazard, field_name='Hazard')
     
     def hazard_event_field_classification_input(self):
-        return InputFieldClassification(input=self.hazard_event, field_name='hazard_event')
+        return InputFieldClassification(input=self.hazard_event, field_name='Event that leads to harm')
     
     def how_it_harms_field_classification_input(self):
-        return InputFieldClassification(input=self.how_it_harms, field_name='how_it_harms')
+        return InputFieldClassification(input=self.how_it_harms, field_name='Harm caused by this event')
     
     def who_it_harms_field_classification_input(self):
-        return InputFieldClassification(input=self.who_it_harms, field_name='who_it_harms')
+        return InputFieldClassification(input=self.who_it_harms, field_name='Who is harmed by this event')
+    
+    def get_prevention_field_classification_input(self):
+        return InputFieldClassification(input=self.prevention, field_name='Prevention')
+    
+    def get_mitigation_field_classification_input(self):
+        return InputFieldClassification(input=self.mitigation, field_name='Mitigation')
 
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
@@ -195,8 +201,6 @@ class RiskAssessment:
                           hazard=self.hazard,
                           how_it_harms=self.how_it_harms,
                           who_it_harms=self.who_it_harms)
-
-
     
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
@@ -229,7 +233,9 @@ class RiskAssessment:
                 self.hazard_field_classification_input(),
                 self.hazard_event_field_classification_input(),
                 self.how_it_harms_field_classification_input(),
-                self.who_it_harms_field_classification_input()]
+                self.who_it_harms_field_classification_input(),
+                self.get_prevention_field_classification_input(),
+                self.get_mitigation_field_classification_input()]
 
     def get_list_of_prompt_input_objects_for_first_3_prompts(self):
         return [self.get_activity_input(),

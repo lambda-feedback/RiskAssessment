@@ -3,7 +3,6 @@ from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
 from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
 
-# Define categories
 categories = {
     "activity": [
         "Construction Site Work",
@@ -29,7 +28,7 @@ categories = {
         # "Unstable terrain",
         # "Broken equipment"
     ],
-    "event_that_leads_to_harm": [
+    "event that leads to harm": [
         "Worker falling from scaffolding",
         "Chef burning hand on stove",
         "Operator caught in machinery",
@@ -41,7 +40,7 @@ categories = {
         # "Hiker slipping and falling",
         # "Child falling off monkey bars"
     ],
-    "how_it_harms": [
+    "harm caused by this event": [
         "Impact injury",
         "Burn injury",
         "Crushing injury",
@@ -53,7 +52,7 @@ categories = {
         # "Sprained ankle or broken bone",
         # "Fractured arm"
     ],
-    "who_it_harms": [
+    "who is harmed by this event": [
         "Construction workers",
         "Kitchen staff",
         "Machine operators",
@@ -64,13 +63,25 @@ categories = {
         # "Construction workers, technicians",
         # "Hikers",
         # "Children"
-    ]
+    ],
+    "control measure": [
+        "Safety harness",
+        "Oven mitts",
+        "Emergency stop button",
+        # "Lifeguard supervision",
+        # "Seatbelts",
+        # "Protective gear",
+        # "Cable management",
+        # "Electrical safety measures",
+        # "Proper footwear",
+        # "Safety barriers"
+    ],
 }
 
 # Generate examples with expected outputs
 examples_with_expected_outputs = [
     InputAndExpectedOutputForSinglePrompt(
-        input=InputFieldClassification(input=item),
+        input=InputFieldClassification(input=item, field_name=''),
         expected_output=category
     )
     for category, items in categories.items()
