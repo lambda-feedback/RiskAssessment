@@ -97,40 +97,44 @@ class InputFieldClassification(PromptInput):
         self.field_name = field_name
 
         self.pattern_matching_method = 'check_string_for_type_of_input_field'
-        self.candidate_labels = ['activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', 'who_it_harms']
-    
+
+        self.candidate_labels = ['activity', 'hazard', 'event that leads to harm', 'harm caused by this event', 'who is harmed by this event', 'control measure']
+
+    def get_correct_labels(self):
+        if self.field_name == 'Activity':
+            return ['activity']
+        if self.field_name == 'Hazard' or self.field_name == 'Event that leads to harm' or self.field_name == 'Harm caused by this event':
+            return ['hazard', 'event_that_leads_to_harm', 'harm_caused']
+        if self.field_name == 'Who is harmed by this event':
+            return ['who_it_harms']
+        if self.field_name == 'Prevention' or self.field_name == 'Mitigation':
+            return ['control_measure']
+        
     def generate_prompt(self):
         return f'''
 
-        Classify the following as either an 'activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', or 'who_it_harms':
+        Classify the following as either an {', '.join(self.candidate_labels)}:
         Input: Playing at a Playground
-        Answer: activity
+        Answer: Activity
         Input: Broken equipment
-        Answer: hazard
+        Answer: Hazard
         Input: Child falling off monkey bars
-        Answer: event_that_leads_to_harm
+        Answer: Event that leads to harm
         Input: Fractured arm
-        Answer: how_it_harms
+        Answer: Harm caused by this event
         Input: Children
-        Answer: who_it_harms
+        Answer: Who is harmed by this event
+        Input: Wearing a helmet
+        Answer: Control Measure
 
-        Classify the following as either an 'activity', 'hazard', 'event_that_leads_to_harm', 'how_it_harms', or 'who_it_harms':
+        Classify the following as either an {', '.join(self.candidate_labels)}:
         Input: {self.input}
 
         Use the following format:
         Answer: <your answer>'''
     
     def get_shortform_feedback(self, pattern_matched):
-        return f"""Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}.
-        It looks more like an example of the field: {pattern_matched}."""
-    
-    def get_correct_labels(self):
-        if self.field_name == 'activity':
-            return ['activity']
-        if self.field_name == 'hazard' or self.field_name == 'hazard_event' or self.field_name == 'how_it_harms':
-            return ['hazard', 'event_that_leads_to_harm', 'how_it_harms']
-        if self.field_name == 'who_it_harms':
-            return ['who_it_harms']
+        return f"""Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}. It looks more like an example of the field: {pattern_matched.capitalize()}."""
 
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
@@ -717,9 +721,7 @@ class Prevention(PromptInput):
             return "For the prevention field, enter a control measure which reduces the likelihood of the hazard event."
         
         if recommendation_type == 'misclassification':
-            return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred.
-            On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place.
-            Please use the above definitions to ammend your prevention input."""
+            return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred. On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place. Please use the above definitions to ammend your prevention input."""
     
 class Mitigation(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
@@ -736,11 +738,6 @@ class Mitigation(PromptInput):
 
     def get_field_checked(self):
         return 'Mitigation'
-
-    def get_question(self):
-        return f'''Will the mitigation measure: '{self.mitigation}' reduce the severity of the
-        'hazard': '{self.hazard}' occurring during the 'activity': {self.activity}, given
-        given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
     
     def generate_prompt_without_few_shot_examples(self):
         # return f'''Follow these instructions:
@@ -870,6 +867,4 @@ class Mitigation(PromptInput):
             return "For the mitigation field, enter a control measure which reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred."
         
         if recommendation_type == 'misclassification':
-            return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place.
-            On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred.
-            Please use the above definitions to ammend your mitigation input."""
+            return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to ammend your mitigation input."""

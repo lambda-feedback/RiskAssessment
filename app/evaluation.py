@@ -99,7 +99,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 '''
 
                 feedback_to_add = f'''
-                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n'''
+                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n'''
 
                 feedback_for_incorrect_answers += feedback_header_to_add
                 feedback_for_incorrect_answers += feedback_to_add
@@ -122,8 +122,8 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 '''
 
                 feedback_to_add = f'''
-                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-                \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
                 
                 if pattern in prompt_input_object.labels_indicating_correct_input:
                     feedback_for_correct_answers += feedback_header_to_add
@@ -133,7 +133,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     is_everything_correct = False
                     recommendation = prompt_input_object.get_recommendation()
 
-                    feedback_to_add += f'''\n\n\n\n##### Recommendation: {recommendation}'''
+                    feedback_to_add += f'''\n\n\n\n#### Recommendation: {recommendation}'''
 
                     feedback_for_incorrect_answers += feedback_header_to_add
                     feedback_for_incorrect_answers += feedback_to_add
@@ -155,9 +155,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
                 feedback_for_incorrect_answers += f'''
                 {feedback_header}
-                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-                \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                 is_everything_correct = False
             
@@ -174,9 +174,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
                     feedback_for_incorrect_answers += f'''
                     {feedback_header}
-                    \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-                    \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                    \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                    \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                    \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                    \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                     is_everything_correct = False
                 
@@ -191,16 +191,16 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     if prevention_pattern == 'prevention' or prevention_pattern == 'both':
                         feedback_for_correct_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='positive')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='positive')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
 
                     if prevention_pattern == 'neither':
                         recommendation = prevention_prompt_input.get_recommendation(recommendation_type='neither')
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='neither')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='neither')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                         is_everything_correct = False
 
@@ -210,9 +210,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='misclassification')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback(feedback_type='misclassification')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                         is_everything_correct = False
 
@@ -229,8 +229,8 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
             if mitigation_protective_clothing_pattern == True:
                 feedback_for_correct_answers += f'''
                 {feedback_header}
-                \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-                \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
             
             # Indicating that the mitigation is not a protective clothing
             else:
@@ -245,8 +245,8 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                         
                     feedback_for_correct_answers += f'''
                     {feedback_header}
-                    \n\n\n\n##### Feedback: {shortform_feedback}\n\n\n\n
-                    \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                    \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                    \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
 
                 # Indicating that the mitigation is neither a protective clothing or an example of first aid
                 # This checks whether the inputted mitigation is a prevention or a mitigation 
@@ -259,17 +259,17 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                     if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
                         feedback_for_correct_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='positive')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='positive')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
                     
                     if mitigation_pattern == 'neither':
                         recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='neither')
 
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='neither')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='neither')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                         is_everything_correct = False
 
@@ -279,9 +279,9 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
-                        \n\n\n\n##### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='misclassification')}\n\n\n\n
-                        \n\n\n\n##### Explanation: {longform_feedback}\n\n\n\n
-                        \n\n\n\n##### Recommendation: {recommendation}\n\n\n\n'''
+                        \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback(feedback_type='misclassification')}\n\n\n\n
+                        \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                        \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
                         
                         is_everything_correct = False
 
@@ -290,7 +290,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
 
         feedback_for_correct_answers += f'''
         \n\n\n## Feedback for Risk Multiplications\n\n\n\n
-        \n\n\n\n##### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
-        \n\n\n\n##### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
+        \n\n\n\n#### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
+        \n\n\n\n#### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
 
         return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + '\n\n\n\n\n' + feedback_for_correct_answers)
