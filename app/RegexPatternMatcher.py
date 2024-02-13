@@ -21,7 +21,7 @@ class RegexPatternMatcher:
             raise Exception("Pattern not found in output prompt")
     
     def check_string_for_type_of_input_field(self, string):
-        pattern = re.compile(r"Answer: (activity|hazard|event that leads to harm|harm caused by this event|who is harmed by this event|control measure)", re.IGNORECASE)
+        pattern = re.compile(r"Answer: (activity|hazard|event that leads to harm|harm caused|who|control measure)", re.IGNORECASE)
         match = re.search(pattern, string)
         if match:
             return match.group(1).lower()

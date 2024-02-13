@@ -98,32 +98,39 @@ class InputFieldClassification(PromptInput):
 
         self.pattern_matching_method = 'check_string_for_type_of_input_field'
 
-        self.candidate_labels = ['activity', 'hazard', 'event that leads to harm', 'harm caused by this event', 'who is harmed by this event', 'control measure']
+        self.candidate_labels = ['activity', 'hazard', 'event that leads to harm', 'harm caused', 'who', 'control measure']
 
     def get_correct_labels(self):
         if self.field_name == 'Activity':
             return ['activity']
-        if self.field_name == 'Hazard' or self.field_name == 'Event that leads to harm' or self.field_name == 'Harm caused by this event':
-            return ['hazard', 'event_that_leads_to_harm', 'harm_caused']
+        if self.field_name == 'Event that leads to harm' or self.field_name == 'Harm caused by this event':
+            return ['hazard', 'event that leads to harm', 'harm caused'] # Classifying these 3 comes later
+        if self.field_name == 'Hazard':
+            return ['hazard', 'event that leads to harm', 'harm caused', 'who']
         if self.field_name == 'Who is harmed by this event':
-            return ['who_it_harms']
+            return ['who', 'hazard'] # E.g. "Reckless drivers" would be suitable for hazard or who it harms.
         if self.field_name == 'Prevention' or self.field_name == 'Mitigation':
-            return ['control_measure']
+            return ['control measure']
         
     def generate_prompt(self):
         return f'''
-
         Classify the following as either an {', '.join(self.candidate_labels)}:
+
         Input: Playing at a Playground
         Answer: Activity
+
         Input: Broken equipment
         Answer: Hazard
+        
         Input: Child falling off monkey bars
         Answer: Event that leads to harm
+
         Input: Fractured arm
-        Answer: Harm caused by this event
-        Input: Children
-        Answer: Who is harmed by this event
+        Answer: Harm caused
+
+        Input: Horse rider
+        Answer: Who
+
         Input: Wearing a helmet
         Answer: Control Measure
 
@@ -132,6 +139,43 @@ class InputFieldClassification(PromptInput):
 
         Use the following format:
         Answer: <your answer>'''
+        
+    # def generate_prompt(self):
+    #     return f'''
+    #     Follow these instructions:
+    #     1. In one sentence, describe the following: <input>
+    #     2. Classify the following as either an {', '.join(self.candidate_labels)}:
+
+    #     Input: Playing at a Playground
+    #     1. Description: "Playing at a playground" involves children engaging in physical activities.
+    #     2. Answer: Activity
+
+    #     Input: Broken equipment
+    #     1. Description: "Broken equipment" is a dangerous phenomenon that can cause injury or other health impacts.
+    #     2. Answer: Hazard
+        
+    #     Input: Child falling off monkey bars
+    #     1. Description: "Child falling off monkey bars" involves a child losing their grip on the monkey bars and falls to the ground below.
+    #     2. Answer: Event that leads to harm
+
+    #     Input: Fractured arm
+    #     1. Description: "Fractured arm" is a type of injury.
+    #     2. Answer: Harm caused
+
+    #     Input: Horse rider
+    #     1. Description: "Horse rider" is an individual who rides a horse.
+    #     2. Answer: Who
+
+    #     Input: Wearing a helmet
+    #     1. Description: "Wearing a helmet" involves placing a helmet on one's head to provide protection in the event of impact or accident.
+    #     2. Answer: Control Measure
+
+    #     Classify the following as either an {', '.join(self.candidate_labels)}:
+    #     Input: {self.input}
+
+    #     Use the following format:
+    #     1. Description: <your description>
+    #     2. Answer: <your answer>'''
     
     def get_shortform_feedback(self, pattern_matched):
         return f"""Incorrect! '{self.input}' is not a correct input for the field: {self.field_name}. It looks more like an example of the field: {pattern_matched.capitalize()}."""
