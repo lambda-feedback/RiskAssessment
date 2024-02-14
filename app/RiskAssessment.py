@@ -10,15 +10,15 @@ except ImportError:
     from RegexPatternMatcher import RegexPatternMatcher
 
 class RiskAssessment:
-    def __init__(self, activity, hazard, hazard_event, how_it_harms, who_it_harms,
+    def __init__(self, activity, hazard, how_it_harms, who_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
+                 hazard_event,
                  prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
                  prevention_first_aid_expected_output, mitigation_first_aid_expected_output,
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
-        self.hazard_event = hazard_event
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
         self.uncontrolled_likelihood = uncontrolled_likelihood
@@ -29,6 +29,8 @@ class RiskAssessment:
         self.controlled_likelihood = controlled_likelihood
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
+
+        self.hazard_event = hazard_event
 
         self.prevention_protected_clothing_expected_output = prevention_protected_clothing_expected_output
         self.mitigation_protected_clothing_expected_output = mitigation_protected_clothing_expected_output
@@ -160,47 +162,35 @@ class RiskAssessment:
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
                             activity=self.activity)
     
+    def get_injury_input(self):
+        return Injury(input=self.how_it_harms)
+    
+    def get_illness_input(self):
+        return Illness(input=self.how_it_harms)
+    
+    def get_hazard_event_input(self):
+        return HazardEvent(activity=self.activity,
+                                            hazard=self.hazard,
+                                            who_it_harms=self.who_it_harms,
+                                            how_it_harms=self.how_it_harms)
+    
     def get_prevention_protective_clothing_input(self):
-        return ProtectiveClothing(activity=self.activity,
-                                  hazard=self.hazard,
-                                  how_it_harms=self.how_it_harms,
-                                  who_it_harms=self.who_it_harms,
-                                  control_measure=self.prevention)
+        return ProtectiveClothing(control_measure=self.prevention)
     
     def get_mitigation_protective_clothing_input(self):
-        return ProtectiveClothing(activity=self.activity,
-                                  hazard=self.hazard,
-                                  how_it_harms=self.how_it_harms,
-                                  who_it_harms=self.who_it_harms,
-                                  control_measure=self.mitigation)
+        return ProtectiveClothing(control_measure=self.mitigation)
     
     def get_prevention_first_aid_input(self):
-        return FirstAid(activity=self.activity,
-                        hazard=self.hazard,
-                        how_it_harms=self.how_it_harms,
-                        who_it_harms=self.who_it_harms,
-                        control_measure=self.prevention)
+        return FirstAid(control_measure=self.prevention)
     
-    def get_mitigation_first_aid_input(self):
-        return FirstAid(activity=self.activity,
-                        hazard=self.hazard,
-                        how_it_harms=self.how_it_harms,
-                        who_it_harms=self.who_it_harms,
-                        control_measure=self.mitigation)
+    def get_mitigation_first_aid(self):
+        return FirstAid(control_measure=self.mitigation)
     
     def get_prevention_input(self):
-        return Prevention(prevention=self.prevention,
-                          activity=self.activity,
-                          hazard=self.hazard,
-                          how_it_harms=self.how_it_harms,
-                          who_it_harms=self.who_it_harms)
+        return Prevention(prevention=self.prevention)
     
     def get_mitigation_input(self):
-        return Mitigation(mitigation=self.mitigation,
-                          activity=self.activity,
-                          hazard=self.hazard,
-                          how_it_harms=self.how_it_harms,
-                          who_it_harms=self.who_it_harms)
+        return Mitigation(mitigation=self.mitigation)
     
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
@@ -247,10 +237,10 @@ class RiskAssessment:
                 # self.get_mitigation_input()
                 ]
 
-    def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller]):
+    def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller], **kwargs):
         regex_pattern_matcher = RegexPatternMatcher()
         
-        prompt_output = LLM_caller.get_model_output(prompt_input_object.generate_prompt())
+        prompt_output = LLM_caller.get_model_output(prompt_input_object.generate_prompt(**kwargs))
         pattern_matching_method = getattr(regex_pattern_matcher, prompt_input_object.pattern_matching_method)
         
         pattern_matched = pattern_matching_method(prompt_output)

@@ -1,6 +1,6 @@
 from TestModelAccuracy import TestModelAccuracyForCompletePreventionPromptPipeline
 from LLMCaller import OpenAILLM
-from example_risk_assessments_copy import example_risk_assessments
+from example_risk_assessments import example_risk_assessments
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
