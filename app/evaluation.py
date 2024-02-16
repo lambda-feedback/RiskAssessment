@@ -185,7 +185,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                         is_everything_correct = False
 
                     if prevention_pattern == 'mitigation':
-                        longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation', lookahead_assertion='Answer')
+                        longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation')
                         recommendation = prevention_prompt_input.get_recommendation(recommendation_type='misclassification')
 
                         feedback_for_incorrect_answers += f'''
@@ -254,7 +254,7 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                         is_everything_correct = False
 
                     if mitigation_pattern == 'prevention':
-                        longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation',lookahead_assertion='Mitigation')
+                        longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation')
                         recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='misclassification')
 
                         feedback_for_incorrect_answers += f'''
