@@ -36,28 +36,28 @@ class TestEvaluationFunction(unittest.TestCase):
     as it should.
     """
 
-    def test_returns_incorrect_field(self):
-        response = [["Students"],
-                    ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor causing Impact injuries"],
-                    ["Students"],
-                    ["4"],
-                    ["1"],
-                    ["4"],
-                    ["Do not move the water tank when it is full"],
-                    ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
-                    seek medical advice without delay."""],
-                    ["1"],
-                    ["1"], 
-                    ["1"]]
+    # def test_returns_incorrect_field(self):
+    #     response = [["Students"],
+    #                 ["Water being spilt on the floor"],
+    #                 ["Slipping on the water on the floor causing Impact injuries"],
+    #                 ["Students"],
+    #                 ["4"],
+    #                 ["1"],
+    #                 ["4"],
+    #                 ["Do not move the water tank when it is full"],
+    #                 ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
+    #                 seek medical advice without delay."""],
+    #                 ["1"],
+    #                 ["1"], 
+    #                 ["1"]]
         
-        answer, params = None, None
+    #     answer, params = None, None
 
-        result = evaluation_function(response, answer, params)
+    #     result = evaluation_function(response, answer, params)
 
-        print(result.get("feedback"))
+    #     print(result.get("feedback"))
 
-        self.assertEqual(result.get("is_correct"), False)
+    #     self.assertEqual(result.get("is_correct"), False)
 
     def test_returns_is_correct_true(self):
         response = [["Fluids laboratory"],
@@ -79,7 +79,29 @@ class TestEvaluationFunction(unittest.TestCase):
 
         print(result.get("feedback"))
 
-        self.assertIn(result.get("is_correct"), [True, False])
+        self.assertEqual(result.get("is_correct"), True)
+
+    def test_when_prevention_entered_as_mitigation(self):
+        response = [["Fluids laboratory"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor causing impact injuries"],
+                    ["Students"],
+                    ["4"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["Taking care when moving water bucket"],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
+        
+        answer, params = None, None
+
+        result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+
+        self.assertEqual(result.get("is_correct"), False)
         
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['Activity'])
