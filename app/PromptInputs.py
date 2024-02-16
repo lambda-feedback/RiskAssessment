@@ -5,8 +5,7 @@ except:
 
 class PromptInput:
     def __init__(self):
-        self.activity_definition = """an action or process that involves
-        physical or mental effort."""
+        self.activity_definition = """an action or process that involves physical or mental effort."""
 
         self.hazard_definition = """a dangerous phenomenon, object, human activity or condition. 
         It may cause loss of life, injury or other health impacts, property damage, loss of livelihoods 
@@ -163,16 +162,29 @@ class Activity(PromptInput):
     
     def generate_prompt(self):
         return f'''
-        An 'activity' is defined as """{self.activity_definition}""".
+        If the input is an example of an activity, answer True, else answer False.
 
-        Follow these instructions:
-        1. In one sentence, provide a description of "{self.activity}". 
-        2. In one sentence, compare this description with the provided definition of an activity. 
-        3. If "{self.activity}" is an activity, answer True, else answer False. 
-        
+        Input: Playing at a Playground
+        Answer: True
+
+        Input: Broken equipment
+        Answer: False
+
+        Input: Child falling off monkey bars
+        Answer: True
+
+        Input: Golf
+        Answer: True
+
+        Input: Chess
+        Answer: True
+
+        Input: Fluids laboratory
+        Answer: True
+
+        If "{self.activity}" is an example of an activity, answer True, else answer False.
+
         Use the following output format:
-        Description: <your description>
-        Comparison: <your comparison>
         Overall Answer: <your answer>'''
     
     def get_shortform_feedback(self, feedback_type):
