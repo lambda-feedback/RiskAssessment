@@ -13,7 +13,7 @@ class RiskAssessment:
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
-                 hazard_event,
+                 harm_caused_in_how_it_harms, hazard_event,
                  prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
                  prevention_first_aid_expected_output, mitigation_first_aid_expected_output,
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
@@ -30,6 +30,7 @@ class RiskAssessment:
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
 
+        self.harm_caused_in_how_it_harms = harm_caused_in_how_it_harms
         self.hazard_event = hazard_event
 
         self.prevention_protected_clothing_expected_output = prevention_protected_clothing_expected_output
@@ -40,6 +41,9 @@ class RiskAssessment:
 
         self.prevention_prompt_expected_output = prevention_prompt_expected_output
         self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
+
+        self.always_true = True
+        self.always_false = False
 
     def to_string(self):
         class_name = self.__class__.__name__
@@ -138,9 +142,6 @@ class RiskAssessment:
     def hazard_field_classification_input(self):
         return InputFieldClassification(input=self.hazard, field_name='Hazard')
     
-    def hazard_event_field_classification_input(self):
-        return InputFieldClassification(input=self.hazard_event, field_name='Event that leads to harm')
-    
     def how_it_harms_field_classification_input(self):
         return InputFieldClassification(input=self.how_it_harms, field_name='Harm caused by this event')
     
@@ -168,29 +169,53 @@ class RiskAssessment:
     def get_illness_input(self):
         return Illness(input=self.how_it_harms)
     
-    def get_hazard_event_input(self):
-        return HazardEvent(activity=self.activity,
-                                            hazard=self.hazard,
-                                            who_it_harms=self.who_it_harms,
-                                            how_it_harms=self.how_it_harms)
-    
     def get_prevention_protective_clothing_input(self):
-        return ProtectiveClothing(control_measure=self.prevention)
+        return ProtectiveClothing(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
     
     def get_mitigation_protective_clothing_input(self):
-        return ProtectiveClothing(control_measure=self.mitigation)
+        return ProtectiveClothing(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
     
     def get_prevention_first_aid_input(self):
-        return FirstAid(control_measure=self.prevention)
+        return FirstAid(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
     
-    def get_mitigation_first_aid(self):
-        return FirstAid(control_measure=self.mitigation)
+    def get_mitigation_first_aid_input(self):
+        return FirstAid(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
     
     def get_prevention_input(self):
-        return Prevention(prevention=self.prevention)
+        return Prevention(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            prevention=self.prevention)
     
     def get_mitigation_input(self):
-        return Mitigation(mitigation=self.mitigation)
+        return Mitigation(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            mitigation=self.mitigation)
     
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
@@ -221,7 +246,6 @@ class RiskAssessment:
     def get_list_of_input_field_classification_prompt_input_objects(self):
         return [self.activity_field_classification_input(),
                 self.hazard_field_classification_input(),
-                self.hazard_event_field_classification_input(),
                 self.how_it_harms_field_classification_input(),
                 self.who_it_harms_field_classification_input(),
                 self.get_prevention_field_classification_input(),
@@ -241,6 +265,8 @@ class RiskAssessment:
         regex_pattern_matcher = RegexPatternMatcher()
         
         prompt_output = LLM_caller.get_model_output(prompt_input_object.generate_prompt(**kwargs))
+        print(prompt_output)
+        
         pattern_matching_method = getattr(regex_pattern_matcher, prompt_input_object.pattern_matching_method)
         
         pattern_matched = pattern_matching_method(prompt_output)

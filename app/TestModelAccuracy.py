@@ -257,16 +257,16 @@ class TestIllnessAndInjuryPrompts(TestModelAccuracyForCombinationOfPrompts):
         illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
 
         if injury_pattern == False and illness_pattern == False:
-            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+            return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
         else:
             if injury_pattern != False:
-                harm_caused = injury_pattern
+                predicted_output = 'injury'
             else:
-                harm_caused = illness_pattern
+                predicted_output = 'illness'
 
-            return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+            return expected_output, predicted_output, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
 
-class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                 LLM: LLMCaller,
                 LLM_name: str,
@@ -286,69 +286,159 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
         illness_prompt_input = RA.get_illness_input()
         illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
 
-        if injury_pattern == False or illness_pattern == False:
-            return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
+        if injury_pattern == False and illness_pattern == False:
+            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+        
+        else:
+            if injury_pattern != False:
+                harm_caused = injury_pattern
+            else:
+                harm_caused = illness_pattern
+        
+            hazard_event_prompt_input = RA.get_hazard_event_input()
+            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM)
+
+            return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}\n\nHazard event prompt: {hazard_event_prompt_output}'''
+
+class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
+        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
+
+        injury_prompt_input = RA.get_injury_input()
+        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+
+        illness_prompt_input = RA.get_illness_input()
+        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+
+        if injury_pattern == False and illness_pattern == False:
+            return expected_output, 'Harm not detected', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
         else:
             if injury_pattern != False:
                 harm_caused = injury_pattern
             else:
                 harm_caused = illness_pattern
 
-            print(harm_caused)
-
             hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM, harm_caused=harm_caused)
+            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
+                                                                                                        LLM_caller=self.LLM, 
+                                                                               )
+            first_aid_prompt_input = RA.get_prevention_first_aid_input()
+            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
 
-            prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
-            prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_clothing_prompt_input, 
-                                                                                                                                            self.LLM,
-                                                                                                                                            hazard_event=hazard_event_pattern, 
-                                                                                                                                            harm_caused=harm_caused)
+            return expected_output, prevention_first_aid_pattern, prevention_first_aid_prompt_output
 
-            if prevention_protective_clothing_pattern == True:
-                prompt_output = f'''{prevention_protective_clothing_prompt_output} 
-                
-                'First aid prompt not run'
-                
+class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
+        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
+
+        # injury_prompt_input = RA.get_injury_input()
+        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+
+        # illness_prompt_input = RA.get_illness_input()
+        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+
+        # if injury_pattern == False and illness_pattern == False:
+        #     return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
+        # else:
+        #     if injury_pattern != False:
+        #         harm_caused = injury_pattern
+        #     else:
+        #         harm_caused = illness_pattern
+
+        #     hazard_event_prompt_input = RA.get_hazard_event_input()
+        #     hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
+        #                                                                                                 LLM_caller=self.LLM, 
+        #                                                                        )
+
+        prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
+        prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prevention_protective_clothing_prompt_input, 
+                                                                                                                                        LLM_caller=self.LLM,
+                                                                                                                                        
+                                                                                                                )
+        
+        if prevention_protective_clothing_pattern == True:
+            prompt_output = f'''{prevention_protective_clothing_prompt_output} 
+            
+            'First aid prompt not run'
+            
+            'Prevention prompt not run'''
+            
+            return expected_output, 'mitigation', prompt_output
+
+        else:
+            first_aid_prompt_input = RA.get_prevention_first_aid_input()
+            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
+
+            if prevention_first_aid_pattern == True:
+                prompt_output = f'''{prevention_protective_clothing_prompt_output}
+
+                {prevention_first_aid_prompt_output}
+
                 'Prevention prompt not run'''
-                
+
                 return expected_output, 'mitigation', prompt_output
-
+            
             else:
-                first_aid_prompt_input = RA.get_prevention_first_aid_input()
-                prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM, hazard_event=hazard_event_pattern, harm_caused=harm_caused)
+                prevention_prompt_input = RA.get_prevention_input()
+                prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM)
 
-                if prevention_first_aid_pattern == True:
-                    prompt_output = f'''{prevention_protective_clothing_prompt_output}
+                prompt_output = f'''{prevention_protective_clothing_prompt_output}
 
-                    {prevention_first_aid_prompt_output}
-
-                    'Prevention prompt not run'''
-
-                    return expected_output, 'mitigation', prompt_output
+                {prevention_first_aid_prompt_output}
                 
-                else:
-                    prevention_prompt_input = RA.get_prevention_input()
-                    prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM, hazard_event=hazard_event_pattern, harm_caused=harm_caused)
+                {prevention_prompt_output}'''
 
-                    prompt_output = f'''{prevention_protective_clothing_prompt_output}
-
-                    {prevention_first_aid_prompt_output}
-                    
-                    {prevention_prompt_output}'''
-
-                    return expected_output, prevention_pattern, prompt_output
+                return expected_output, prevention_pattern, prompt_output
     
     def get_first_prompt_input(self):
-        first_risk_assessment = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+        RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+
+        # injury_prompt_input = RA.get_injury_input()
+        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+
+        # illness_prompt_input = RA.get_illness_input()
+        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+
+        # if injury_pattern == False and illness_pattern == False:
+        #     harm_caused = RA.how_it_harms
+        # else:
+        #     if injury_pattern != False:
+        #         harm_caused = injury_pattern
+        #     else:
+        #         harm_caused = illness_pattern
+
+        # hazard_event_prompt_input = RA.get_hazard_event_input()
+        # hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
+        #                                                                                             LLM_caller=self.LLM, 
+        #                                                                    )
         
-        first_prevention_protective_clothing_prompt_input_object = first_risk_assessment.get_prevention_protective_clothing_input()
+        first_prevention_protective_clothing_prompt_input_object = RA.get_prevention_protective_clothing_input()
         first_prevention_protective_clothing_prompt_input = first_prevention_protective_clothing_prompt_input_object.generate_prompt()
 
-        first_prevention_first_aid_prompt_input_object = first_risk_assessment.get_prevention_first_aid_input()
+        first_prevention_first_aid_prompt_input_object = RA.get_prevention_first_aid_input()
         first_prevention_first_aid_prompt_input = first_prevention_first_aid_prompt_input_object.generate_prompt()
 
-        first_prevention_prompt_input_object = first_risk_assessment.get_prevention_input()
+        first_prevention_prompt_input_object = RA.get_prevention_input()
         first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
 
         return f'''{first_prevention_protective_clothing_prompt_input}

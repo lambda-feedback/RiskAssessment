@@ -49,6 +49,10 @@ class RegexPatternMatcher:
 
         return False
     
+    def always_return_true(self, prompt_output):
+        
+        return True
+    
     def extract_illness(self, prompt_output):
         if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness") == "False":
             return False
@@ -63,7 +67,7 @@ class RegexPatternMatcher:
             injury = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury")
             return injury
         
-    def extract_hazard_event_and_harm_caused(self, prompt_output):
+    def extract_hazard_event(self, prompt_output):
     
         hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
         
