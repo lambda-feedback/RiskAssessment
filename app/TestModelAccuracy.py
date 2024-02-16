@@ -179,10 +179,10 @@ class TestModelAccuracy:
                             accuracy, 
                             num_examples,
                             confusion_matrix,
-                            output_string,
+                            output_string[:45000],
                             first_prompt_input,
-                            prompt_outputs_for_correct_responses,
-                            prompt_outputs_for_incorrect_responses]
+                            prompt_outputs_for_correct_responses[:45000],
+                            prompt_outputs_for_incorrect_responses[:45000]]
         
         sheets_writer = GoogleSheetsWriter(sheet_name=self.sheet_name)
         sheets_writer.write_to_sheets(new_line_data)

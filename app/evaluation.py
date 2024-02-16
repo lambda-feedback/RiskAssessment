@@ -85,28 +85,6 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
         feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
 
         is_everything_correct = True
-
-        input_field_classification_prompt_inputs = RA.get_list_of_input_field_classification_prompt_input_objects()
-
-        for prompt_input_object in input_field_classification_prompt_inputs:
-            prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
-
-            if pattern not in prompt_input_object.get_correct_labels():
-                is_everything_correct = False
-
-                shortform_feedback = prompt_input_object.get_shortform_feedback(pattern_matched=pattern)
-
-                feedback_header_to_add = f''' 
-                \n\n\n## Feedback for Input: {prompt_input_object.field_name}\n\n\n
-                '''
-
-                feedback_to_add = f'''
-                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n'''
-
-                feedback_for_incorrect_answers += feedback_header_to_add
-                feedback_for_incorrect_answers += feedback_to_add
-
-                break
         
         if is_everything_correct == True:
             first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()

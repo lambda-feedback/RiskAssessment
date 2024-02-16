@@ -767,3 +767,29 @@ example_risk_assessments_for_protective_clothing_and_first_aid = [
     # RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse,
     RA_slitter_machine
 ]
+
+# Assuming you have a list of RiskAssessment objects named risk_assessments
+
+# Initialize empty sets to store unique values for each field
+unique_activities = set()
+unique_hazards = set()
+unique_how_it_harms = set()
+unique_who_it_harms = set()
+unique_control_measures = set()
+
+
+# Iterate through the list of risk assessments
+for risk_assessment in example_risk_assessments:
+    # Check and add unique values for each field that is not an empty string
+    if risk_assessment.activity != "":
+        unique_activities.add(risk_assessment.activity)
+    if risk_assessment.hazard != "":
+        unique_hazards.add(risk_assessment.hazard)
+    if risk_assessment.how_it_harms != "":
+        unique_how_it_harms.add(risk_assessment.how_it_harms)
+    if risk_assessment.who_it_harms != "":
+        unique_who_it_harms.add(risk_assessment.who_it_harms)
+    if risk_assessment.prevention != "":
+        unique_control_measures.add(risk_assessment.prevention)
+    if risk_assessment.mitigation != "":
+        unique_control_measures.add(risk_assessment.mitigation)

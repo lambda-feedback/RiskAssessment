@@ -143,7 +143,7 @@ class RiskAssessment:
         return InputFieldClassification(input=self.hazard, field_name='Hazard')
     
     def how_it_harms_field_classification_input(self):
-        return InputFieldClassification(input=self.how_it_harms, field_name='Harm caused by this event')
+        return InputFieldClassification(input=self.how_it_harms, field_name='How it harms')
     
     def who_it_harms_field_classification_input(self):
         return InputFieldClassification(input=self.who_it_harms, field_name='Who is harmed by this event')

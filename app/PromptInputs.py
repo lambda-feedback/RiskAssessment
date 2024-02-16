@@ -66,10 +66,10 @@ class InputFieldClassification(PromptInput):
     def get_correct_labels(self):
         if self.field_name == 'Activity':
             return ['activity', 'hazard', 'event that leads to harm']
-        if self.field_name == 'Event that leads to harm' or self.field_name == 'Harm caused by this event':
-            return ['hazard', 'event that leads to harm', 'harm caused'] # Classifying these 3 comes later
         if self.field_name == 'Hazard':
             return ['activity', 'hazard', 'event that leads to harm', 'harm caused', 'who']
+        if self.field_name == 'How it harms':
+            return ['hazard', 'event that leads to harm', 'harm caused'] # Classifying these 3 comes later
         if self.field_name == 'Who is harmed by this event':
             return ['who', 'hazard'] # E.g. "Reckless drivers" would be suitable for hazard or who it harms.
         if self.field_name == 'Prevention' or self.field_name == 'Mitigation':
@@ -144,7 +144,7 @@ class InputFieldClassification(PromptInput):
         if pattern_matched == 'who':
             return 'Who is harmed by this event'
         if pattern_matched == 'harm caused':
-            return 'Harm caused by this event'
+            return 'How it harms'
         if pattern_matched == 'control measure':
             return 'Prevention or Mitigation'
         else:
@@ -435,7 +435,7 @@ class Injury(PromptInput):
         self.candidate_labels = ['injury', 'illness', 'neither']
     
     def get_field_checked(self):
-        return 'Harm caused by this event'
+        return 'How it harms'
     
     def generate_prompt(self):
         return f'''
@@ -480,7 +480,7 @@ class Illness(PromptInput):
         self.pattern_matching_method = 'extract_illness'
 
     def get_field_checked(self):
-        return 'Harm caused by this event'
+        return 'How it harms'
     
     def generate_prompt(self):
         return f'''
@@ -562,7 +562,7 @@ class Illness(PromptInput):
 #         self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
     
 #     def get_field_checked(self):
-#         return 'Harm caused by this event'
+#         return 'How it harms'
     
 #     def generate_prompt(self):
 #         return f'''
