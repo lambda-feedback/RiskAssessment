@@ -195,7 +195,7 @@ class Activity(PromptInput):
     
     def get_longform_feedback(self, prompt_output=''):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, 'Comparison')
+        return ''
 
     def get_recommendation(self):
         return f'Enter an activity that aligns with the definition: {self.activity_definition}'
