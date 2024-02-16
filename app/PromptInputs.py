@@ -274,7 +274,7 @@ class HowItHarmsInContext(PromptInput):
         return regex_pattern_matcher.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, 'Explanation')
 
     def get_recommendation(self):
-        return f'For the "How it harms" input, enter the type of injury or illness that the hazard event causes.'
+        return f'For the "How it harms" input, enter how the hazard leads to harm, and the specific harm caused, e.g. an injury or illness.'
 
 class WhoItHarmsInContext(PromptInput):
     def __init__(self, who_it_harms, activity):
