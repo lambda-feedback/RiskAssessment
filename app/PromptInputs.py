@@ -752,8 +752,7 @@ class ProtectiveClothing(PromptInput):
     
     # TODO: When you have hazard event input, can include below
     def get_recommendation(self):
-        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event.
-            Wearing protective clothing does not reduce the likelihood of the hazard event so it is not a prevention measure."""
+        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event. Wearing protective clothing does not reduce the likelihood of the hazard event so it is not a prevention measure."""
     
 class FirstAid(PromptInput):
     def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
@@ -877,8 +876,7 @@ class FirstAid(PromptInput):
 
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self):
-        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event.
-        First aid is applied after the hazard event so does not reduce the likelihood of the hazard event occurring and is therefore not a prevention measure."""
+        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event. First aid is applied after the hazard event so does not reduce the likelihood of the hazard event occurring and is therefore not a prevention measure."""
 
 class Prevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
@@ -911,11 +909,11 @@ class Prevention(PromptInput):
         # prevention measure and a mitigation measure, answer 'both'.'''
 
         return f'''Follow these instructions:
-        1. In one sentence, describe the hazard event: '{self.hazard}' during the
-        activity: '{self.activity}' given how the hazard event causes harm: '{self.how_it_harms}'.
-        2. Explain whether or not '{self.prevention}' reduces the likelihood that the hazard event occurs.
+        1. In one sentence, describe the hazard: '{self.hazard}' during the
+        activity: '{self.activity}' given how the hazard causes harm: '{self.how_it_harms}'.
+        2. Explain whether or not '{self.prevention}' reduces the likelihood that the hazard occurs.
         If so, it is a prevention measure.
-        3. If the hazard event occurs, explain whether or not '{self.prevention}' removes or reduces the chance of {self.how_it_harms}.
+        3. If the hazard occurs, explain whether or not '{self.prevention}' removes or reduces the chance of {self.how_it_harms}.
         If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
@@ -1085,53 +1083,53 @@ class Prevention(PromptInput):
         all_few_shot_examples = """
         Input:
         Follow these instructions:
-        1. In one sentence, describe the hazard event: 'Ink spillage on students face' during the
-        activity: 'Fluids laboratory' given how the hazard event causes harm: 'Serious eye damage'.
-        3. Explain whether or not 'First aid' reduces the likelihood that the hazard event occurs.
+        1. In one sentence, describe the hazard: 'Ink spillage on students face' during the
+        activity: 'Fluids laboratory' given how the hazard causes harm: 'Serious eye damage'.
+        3. Explain whether or not 'First aid' reduces the likelihood that the hazard occurs.
         If so, it is a prevention measure.
-        4. Assuming the hazard event occurs, explain whether or not 'First aid' removes or reduces the chance of 'Serious eye damage'.
+        4. Assuming the hazard occurs, explain whether or not 'First aid' removes or reduces the chance of 'Serious eye damage'.
         If so, it is a mitigation measure.
         5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
         prevention measure and a mitigation measure, answer 'Both'.
 
         Output: 
-        Hazard Description: The hazard event of 'Ink spillage on student's face' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
-        Prevention Explanation: 'First aid' is a reactive measure applied after the hazard event of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard event and is not a prevention measure.
-        Mitigation Explanation: If ink has been spilled onto a student's face, 'first aid' will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred; as it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
+        Hazard Description: The hazard of 'Ink spillage on student's face' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
+        Prevention Explanation: 'First aid' is a reactive measure applied after the hazard of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard and is not a prevention measure.
+        Mitigation Explanation: If ink has been spilled onto a student's face, 'first aid' will help to wash the ink out of the eyes and reduce eye damage after the hazard has occurred; as it reduces the harm caused by the hazard, it is therefore a mitigation measure.
         Answer: Mitigation.
 
         Follow these
         Input: instructions:
-        1. In one sentence, describe the hazard event: 'Water being spilt on the floor causing students to slip' during the
+        1. In one sentence, describe the hazard: 'Water being spilt on the floor causing students to slip' during the
         activity: 'Fluids laboratory' given how the hazard harms: 'Impact injury'.
-        3. Explain whether or not 'Do not move the water tank when it is full' reduces the likelihood that the hazard event occurs.
+        3. Explain whether or not 'Do not move the water tank when it is full' reduces the likelihood that the hazard occurs.
         If so, it is a prevention measure.
-        4. Assuming the hazard event occurs, explain whether or not 'Do not move the water tank when it is full' removes or reduces the chance of 'Impact injury'.
+        4. Assuming the hazard occurs, explain whether or not 'Do not move the water tank when it is full' removes or reduces the chance of 'Impact injury'.
         If so, it is a mitigation measure.
         5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
         prevention measure and a mitigation measure, answer 'Both'.
 
         Hazard Description: The hazard of 'Water being spilt on the floor causing students to slip' during the activity 'Fluids laboratory' can lead to impact injuries.
-        Prevention Explanation: 'Keeping the water tank stationary when it's full' means water cannot be spilled on to the floor by moving the water tank; no water on the floor reduces the likelihood of the student slipping; since it reduces the likelihood of the hazard event, it is a prevention measure.
-        Mitigation Explanation: If water has been spilled on the floor, 'not moving the water tank when it is full' does not remove or reduce the harm caused by the hazard event, as the water is already spilled to pose a slipping hazard; as it does not reduce the harm caused by the hazard event, it is not a mitigation measure.
+        Prevention Explanation: 'Keeping the water tank stationary when it's full' means water cannot be spilled on to the floor by moving the water tank; no water on the floor reduces the likelihood of the student slipping; since it reduces the likelihood of the hazard, it is a prevention measure.
+        Mitigation Explanation: If water has been spilled on the floor, 'not moving the water tank when it is full' does not remove or reduce the harm caused by the hazard, as the water is already spilled to pose a slipping hazard; as it does not reduce the harm caused by the hazard, it is not a mitigation measure.
         Answer: Prevention.
 
         Follow these instructions:
-        1. In one sentence, describe the hazard event: 'Cut Zip tie flies and hits audience member' during the
+        1. In one sentence, describe the hazard: 'Cut Zip tie flies and hits audience member' during the
         activity: 'Using a spring contraption as a demonstration for a TPS presentation' given how the hazard harms: 'Impact injury.'.
-        2. Explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' reduces the likelihood that the hazard event occurs.
+        2. Explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' reduces the likelihood that the hazard occurs.
         If so, it is a prevention measure.
-        3. If the hazard event occurs, explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' removes or reduces the chance of Impact injury..
+        3. If the hazard occurs, explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' removes or reduces the chance of Impact injury..
         If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
 
-        Hazard Description: The hazard event of 'Cut Zip tie flies and hits audience member' during the activity 'Using a spring contraption as a demonstration for a TPS presentation' can lead to impact injuries.
-        Prevention Explanation: 'Keeping hand around zip tie when cutting to stop it from flying' will stop the zip tie from flying and therefore stop the hazard event from occurring. Therefore, the likelihood of the hazard event occurring has been reduced to zero; since the likelihood has been reduced, it is therefore a prevention measure.
-        Mitigation Explanation: If the hazard event occurs and the zip tie flies and hits an audience member, 'keeping hand around zip tie when cutting to stop it from flying' does not remove or reduce the impact injury caused by the hazard event, as the zip tie has already flown and caused harm; it is therefore not a mitigation measure.
+        Hazard Description: The hazard of 'Cut Zip tie flies and hits audience member' during the activity 'Using a spring contraption as a demonstration for a TPS presentation' can lead to impact injuries.
+        Prevention Explanation: 'Keeping hand around zip tie when cutting to stop it from flying' will stop the zip tie from flying and therefore stop the hazard from occurring. Therefore, the likelihood of the hazard occurring has been reduced to zero; since the likelihood has been reduced, it is therefore a prevention measure.
+        Mitigation Explanation: If the hazard occurs and the zip tie flies and hits an audience member, 'keeping hand around zip tie when cutting to stop it from flying' does not remove or reduce the impact injury caused by the hazard, as the zip tie has already flown and caused harm; it is therefore not a mitigation measure.
         Answer: Prevention.
         """
 
@@ -1142,7 +1140,6 @@ class Prevention(PromptInput):
 
         Use the following output format:
         Hazard Description: <your hazard description>
-        Hazard Event Description: <your hazard event description>
         Prevention Explanation: <your prevention explanation>
         Mitigation Explanation: <your mitigation explanation>
         Answer: <your answer>'''
@@ -1179,9 +1176,7 @@ class Prevention(PromptInput):
             return "For the prevention field, enter a control measure which reduces the likelihood of the hazard event."
         
         if recommendation_type == 'misclassification':
-            return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred.
-            On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place.
-            Please use the above definitions to ammend your prevention input."""
+            return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred. On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place. Please use the above definitions to ammend your prevention input."""
     
 class Mitigation(PromptInput):
     def __init__(self, mitigation, activity, hazard, how_it_harms, who_it_harms):
@@ -1332,6 +1327,4 @@ class Mitigation(PromptInput):
             return "For the mitigation field, enter a control measure which reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred."
         
         if recommendation_type == 'misclassification':
-            return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place.
-            On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred.
-            Please use the above definitions to ammend your mitigation input."""
+            return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to ammend your mitigation input."""
