@@ -73,7 +73,8 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"],
                     ["1"], 
                     ["1"]]
-        answer, params = None, None
+        answer = None
+        params: Params = {"is_feedback_text": False}
 
         result = evaluation_function(response, answer, params)
 
@@ -95,13 +96,37 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"], 
                     ["1"]]
         
-        answer, params = None, None
+        answer = None
+        params: Params = {"is_feedback_text": False}
 
         result = evaluation_function(response, answer, params)
 
         print(result.get("feedback"))
 
         self.assertEqual(result.get("is_correct"), False)
+
+    def test_when_is_text_feedback_true(self):
+        response = [["Fluids laboratory"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor causing impact injuries"],
+                    ["Students"],
+                    ["4"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["Taking care when moving water bucket"],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
+        
+        answer = None
+        params: Params = {"is_feedback_text": True}
+
+        result = evaluation_function(response, answer, params)
+
+        self.assertEqual(result.get("feedback"), "Thank you for your feedback")
+
+        self.assertEqual(result.get("is_correct"), True)
         
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['Activity'])
