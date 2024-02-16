@@ -6,13 +6,13 @@ import unittest
 
 try:
     from .evaluation import Params, evaluation_function
-    from .example_risk_assessments_hazard_event import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
+    from .example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
     from .RegexPatternMatcher import RegexPatternMatcher
 except:
     from evaluation import Params, evaluation_function
-    from example_risk_assessments_hazard_event import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
+    from example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from PromptInputs import Activity
     from RegexPatternMatcher import RegexPatternMatcher
@@ -39,8 +39,7 @@ class TestEvaluationFunction(unittest.TestCase):
     def test_returns_incorrect_field(self):
         response = [["Students"],
                     ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor"],
-                    ["Impact injuries"],
+                    ["Slipping on the water on the floor causing Impact injuries"],
                     ["Students"],
                     ["4"],
                     ["1"],
@@ -63,8 +62,7 @@ class TestEvaluationFunction(unittest.TestCase):
     def test_returns_is_correct_true(self):
         response = [["Fluids laboratory"],
                     ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor"],
-                    ["Impact injuries"],
+                    ["Slipping on the water on the floor causing impact injuries"],
                     ["Students"],
                     ["4"],
                     ["1"],

@@ -9,7 +9,7 @@ from ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 if __name__ == '__main__':
     examples_generator = RiskAssessmentExamplesGeneratorForSinglePrompt(risk_assessments=example_risk_assessments_for_protective_clothing_and_first_aid,
                                                          ground_truth_parameter='mitigation_first_aid_expected_output',
-                                                        method_to_get_prompt_input='get_mitigation_first_aid_input')
+                                                        method_to_get_prompt_input='get_mitigation_first_aid')
     
     examples = examples_generator.get_input_and_expected_output_list()
 
