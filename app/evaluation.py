@@ -102,8 +102,10 @@ def evaluation_function(response: Any, answer: Any, params: Any) -> Result:
                 '''
 
                 feedback_to_add = f'''
-                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
-                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
+                \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n'''
+
+                if longform_feedback != '':
+                    feedback_to_add += f'''\n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
                 
                 if pattern in prompt_input_object.labels_indicating_correct_input:
                     feedback_for_correct_answers += feedback_header_to_add
