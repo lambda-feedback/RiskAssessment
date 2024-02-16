@@ -2,7 +2,7 @@
 
 # The -s option above is so you can see printouts even if the test fails
 
-from TestModelAccuracy import TestModelAccuracy, TestModelAccuracyForActivitiesWithLLAMA
+from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM, LLMWithGeneratedText
 
 import re

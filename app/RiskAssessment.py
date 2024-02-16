@@ -278,7 +278,7 @@ class RiskAssessment:
         if pattern_matched in prompt_input_object.labels_indicating_correct_input:
             return prompt_input_object.get_shortform_feedback(feedback_type='positive')
         else:
-            return prompt_input_object.get_shortform_feedback(feedback_type='positive')
+            return prompt_input_object.get_shortform_feedback(feedback_type='negative')
     
     def are_all_multiplications_correct(self)->bool:
         return self.check_uncontrolled_risk() == 'correct' and self.check_controlled_risk() == 'correct'
