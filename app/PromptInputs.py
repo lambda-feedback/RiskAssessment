@@ -160,27 +160,27 @@ class Activity(PromptInput):
     def get_field_checked(self):
         return 'Activity'
     
+        #     Input: Playing at a Playground
+        # Answer: True
+
+        # Input: Broken equipment
+        # Answer: False
+
+        # Input: Child falling off monkey bars
+        # Answer: True
+
+        # Input: Golf
+        # Answer: True
+
+        # Input: Chess
+        # Answer: True
+
+        # Input: Fluids laboratory
+        # Answer: True
+    
     def generate_prompt(self):
         return f'''
         If the input is an example of an activity, answer True, else answer False.
-
-        Input: Playing at a Playground
-        Answer: True
-
-        Input: Broken equipment
-        Answer: False
-
-        Input: Child falling off monkey bars
-        Answer: True
-
-        Input: Golf
-        Answer: True
-
-        Input: Chess
-        Answer: True
-
-        Input: Fluids laboratory
-        Answer: True
 
         If "{self.activity}" is an example of an activity, answer True, else answer False.
 
