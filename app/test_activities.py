@@ -41,7 +41,8 @@ activities = [
     InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Marathon'), expected_output=True),
     InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Puzzle'), expected_output=True),
     InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Party'), expected_output=True),
-    InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Movie'), expected_output=True)
+    InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Movie'), expected_output=True),
+    InputAndExpectedOutputForSinglePrompt(input=Activity(activity='Working in a school building'), expected_output=True)
 ]
 
 if __name__ == "__main__":
