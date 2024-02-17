@@ -252,7 +252,8 @@ class RiskAssessment:
                 self.get_mitigation_field_classification_input()]
 
     def get_list_of_prompt_input_objects_for_first_3_prompts(self):
-        return [self.get_activity_input(),
+        return [
+            # self.get_activity_input(),
                 self.get_how_it_harms_in_context_input(),
                 self.get_who_it_harms_in_context_input(),
                 # self.get_protective_clothing_input(),
