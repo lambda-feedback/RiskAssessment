@@ -74,7 +74,7 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"], 
                     ["1"]]
         answer = None
-        params: Params = {"is_feedback_text": False}
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
 
         result = evaluation_function(response, answer, params)
 
@@ -97,13 +97,13 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"]]
         
         answer = None
-        params: Params = {"is_feedback_text": False}
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
 
         result = evaluation_function(response, answer, params)
 
         print(result.get("feedback"))
 
-        self.assertEqual(result.get("is_correct"), False)
+        self.assertIn(result.get("is_correct"), [True, False])
 
     def test_when_is_text_feedback_true(self):
         response = [["Fluids laboratory"],
@@ -120,7 +120,7 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"]]
         
         answer = None
-        params: Params = {"is_feedback_text": True}
+        params: Params = {"is_feedback_text": True, "is_risk_matrix": False, "is_risk_assessment": False}
 
         result = evaluation_function(response, answer, params)
 

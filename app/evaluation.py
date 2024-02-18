@@ -26,6 +26,8 @@ class Result(TypedDict):
 
 class Params(TypedDict):
     is_feedback_text: bool
+    is_risk_matrix: bool
+    is_risk_assessment: bool
 
 def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
@@ -54,7 +56,81 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_feedback_text"] == True:
         return Result(is_correct=True, feedback="Thank you for your feedback")
     
-    else:
+    if params["is_risk_matrix"] == True:
+        risk_matrix = np.array(response)
+
+        risk_matrix = {'uncontrolled likelihood': risk_matrix[0, 0],
+                    'uncontrolled severity': risk_matrix[0, 1],
+                    'uncontrolled risk': risk_matrix[0, 2],
+                    'controlled likelihood': risk_matrix[1, 0], 
+                    'controlled severity': risk_matrix[1, 1], 
+                    'controlled risk': risk_matrix[1, 2]}
+
+        is_correct = True
+        feedback = f''''''
+
+        for key in risk_matrix.keys():
+            if risk_matrix[key] > 4 or risk_matrix[key] < 1:
+                is_correct = False
+                feedback += f'''The {key} is incorrect. As per the likelihood and severity conventions above, the likelihood and severity should be between 1 and 4.\n\n'''
+
+        feedback += '\n'
+
+        if uncontrolled_likelihood * uncontrolled_severity != uncontrolled_risk:
+            feedback += f'''Uncontrolled risk multiplication is incorrect.\nMake sure the risk is the likelihood multiplied by the severity.\n\n'''
+            is_correct = False
+
+        if controlled_likelihood * controlled_severity != controlled_risk:
+            feedback += f'''Controlled risk multiplication is incorrect\nMake sure the risk is the likelihood multiplied by the severity.\n\n'''
+            is_correct = False
+
+        # Checking Likelihood
+        
+        if uncontrolled_likelihood <= controlled_likelihood:
+            feedback += f'''Incorrect. Since an effective prevention measure has been implemented ("taking care when cross the road"), the controlled likelihood should be less than the uncontrolled likelihood.\n'''
+            is_correct = False
+
+        if uncontrolled_likelihood != 4:
+            feedback += f'''Uncontrolled likelihood is incorrect.\nBy convention this is incorrect. The convention is that all uncontrolled risks have a likelihood of 4. For example, if you didn't look or listen when crossing the road, you would almost certainly be harmed.'''
+            is_correct = False
+
+        if controlled_likelihood == 1:
+            feedback += f'''Incorrect. A controlled likelihood of 1 indicates that the control measure is implemented passively whereas you have to activily pay attention when cross the road.'''
+            is_correct = False
+
+        if controlled_likelihood == 2:
+            feedback += f'''Correct. A controlled likelihood of 2 indicates that the control measure of "taking care when crossing the road" is implemented actively.''' 
+        
+        if controlled_likelihood == 3:
+            feedback += f'''Incorrect. A controlled likelihood of 3 indicates that the control measure is not effective and the likelihood is "possible".''' 
+            is_correct = False
+        
+        if controlled_likelihood == 4:
+            feedback += f'''Incorrect. A controlled likelihood of 4 indicates that the control measure is effective and the likelihood is "likely".''' 
+            is_correct = False
+
+        # Checking Severity
+        
+        if uncontrolled_severity != controlled_severity:
+            feedback += f'''Incorrect. The uncontrolled and controlled severity should be the same since no mitigation measure has been implemented.''' 
+            is_correct = False
+        
+        if uncontrolled_severity == 1 or controlled_severity == 1:
+            feedback += f'''Incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.''' 
+            is_correct = False
+        
+        if uncontrolled_severity == 2 or controlled_severity == 2:
+            feedback += f'''Correct. As by the above severity convention, a severity of 2 indicates that a car crashing into a pedestrian causes "serious injury requiring time off work". This might represent the harm.'''
+
+        if uncontrolled_severity == 3 or controlled_severity == 3:
+            feedback += f'''Correct. As by the above severity convention, a severity of 3 indicates that a car crashing into a pedestrian causes "major injury with long-term impact". This might represent the harm.''' 
+
+        if uncontrolled_severity == 4 or controlled_severity == 4:
+            feedback += f'''Correct. As by the above severity convention, a severity of 4 indicates that a car crashing into a pedestrian causes "death". This might represent the harm (but hopefully doesn't happen!).''' 
+
+        return Result(is_correct=is_correct, feedback=feedback)
+    
+    if params["is_risk_assessment"] == True:
         activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,

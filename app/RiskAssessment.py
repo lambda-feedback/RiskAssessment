@@ -226,7 +226,7 @@ class RiskAssessment:
             if likelihood * severity == risk:
                 return 'correct'
             else:
-                return 'incorrect. Please check your multiplication.'
+                return 'incorrect. Please check that your risk values are equal to the likelihood multiplied by the severity.'
         
         except ValueError:
             return 'Please make sure that the likelihood, severity, and risk are all integers.'
