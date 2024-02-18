@@ -59,12 +59,21 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_risk_matrix"] == True:
         risk_matrix = np.array(response)
 
-        risk_matrix = {'uncontrolled likelihood': risk_matrix[0, 0],
-                    'uncontrolled severity': risk_matrix[0, 1],
-                    'uncontrolled risk': risk_matrix[0, 2],
-                    'controlled likelihood': risk_matrix[1, 0], 
-                    'controlled severity': risk_matrix[1, 1], 
-                    'controlled risk': risk_matrix[1, 2]}
+        risk_matrix_flattened = np.array(response).flatten()
+        for value in risk_matrix_flattened:
+            if value == '':
+                return Result(is_correct=False, feedback="Please fill in all the fields")
+            try:
+                int_value = int(value)
+            except ValueError:
+                return Result(is_correct=False, feedback="Please enter an integer for all fields.")
+
+        risk_matrix = {'uncontrolled likelihood': int(risk_matrix[0, 0]),
+                    'uncontrolled severity': int(risk_matrix[0, 1]),
+                    'uncontrolled risk': int(risk_matrix[0, 2]),
+                    'controlled likelihood': int(risk_matrix[1, 0]), 
+                    'controlled severity': int(risk_matrix[1, 1]), 
+                    'controlled risk': int(risk_matrix[1, 2])}
 
         is_correct = True
         feedback = f''''''
