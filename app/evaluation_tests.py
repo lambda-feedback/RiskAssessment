@@ -128,13 +128,16 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertEqual(result.get("is_correct"), False)
 
     def test_risk_matrix_true(self):
-        response = [["4", "3", "12"],
-                    ["2", "3", "6"]]
+        response = [["4", "2", "8"],
+                    ["2", "2", "4"]]
         
         answer = None
         params: Params = {"is_feedback_text": False, "is_risk_matrix": True, "is_risk_assessment": False}
 
         result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+        
         self.assertEqual(result.get("is_correct"), True)
 
                 
