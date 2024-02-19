@@ -63,25 +63,33 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         for value in risk_matrix_flattened:
             if value == '':
                 return Result(is_correct=False, feedback="Please fill in all the fields")
-            try:
-                int_value = int(value)
-            except ValueError:
-                return Result(is_correct=False, feedback="Please enter an integer for all fields.")
+            else:
+                try:
+                    int_value = int(value)
+                except ValueError:
+                    return Result(is_correct=False, feedback="Please enter an integer for all fields.")
 
-        risk_matrix = {'uncontrolled likelihood': int(risk_matrix[0, 0]),
+        risk_matrix_dict = {'uncontrolled likelihood': int(risk_matrix[0, 0]),
                     'uncontrolled severity': int(risk_matrix[0, 1]),
-                    'uncontrolled risk': int(risk_matrix[0, 2]),
                     'controlled likelihood': int(risk_matrix[1, 0]), 
-                    'controlled severity': int(risk_matrix[1, 1]), 
-                    'controlled risk': int(risk_matrix[1, 2])}
+                    'controlled severity': int(risk_matrix[1, 1])}
 
         is_correct = True
         feedback = f''''''
 
-        for key in risk_matrix.keys():
-            if risk_matrix[key] > 4 or risk_matrix[key] < 1:
+        for key in risk_matrix_dict.keys():
+            if risk_matrix_dict[key] > 4 or risk_matrix_dict[key] < 1:
                 is_correct = False
                 feedback += f'''The {key} is incorrect. As per the likelihood and severity conventions above, the likelihood and severity should be between 1 and 4.\n\n'''
+
+        uncontrolled_likelihood = risk_matrix_dict['uncontrolled likelihood']
+        uncontrolled_severity = risk_matrix_dict['uncontrolled severity']
+        uncontrolled_risk = int(risk_matrix[0, 2])
+        controlled_likelihood = risk_matrix_dict['controlled likelihood']
+        controlled_severity = risk_matrix_dict['controlled severity']
+        controlled_risk = int(risk_matrix[1, 2])
+
+        print(uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, controlled_likelihood, controlled_severity, controlled_risk)
 
         feedback += '\n'
 
