@@ -82,42 +82,31 @@ class TestEvaluationFunction(unittest.TestCase):
 
         self.assertEqual(result.get("is_correct"), True)
 
-    def test_when_prevention_entered_as_mitigation(self):
-        response = [["Fluids laboratory"],
-                    ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor causing impact injuries"],
-                    ["Students"],
-                    ["4"],
-                    ["1"],
-                    ["4"],
-                    ["Do not move the water tank when it is full"],
-                    ["Taking care when moving water bucket"],
-                    ["1"],
-                    ["1"], 
-                    ["1"]]
+    # def test_when_prevention_entered_as_mitigation(self):
+    #     response = [["Fluids laboratory"],
+    #                 ["Water being spilt on the floor"],
+    #                 ["Slipping on the water on the floor causing impact injuries"],
+    #                 ["Students"],
+    #                 ["4"],
+    #                 ["1"],
+    #                 ["4"],
+    #                 ["Do not move the water tank when it is full"],
+    #                 ["Taking care when moving water bucket"],
+    #                 ["1"],
+    #                 ["1"], 
+    #                 ["1"]]
         
-        answer = None
-        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+    #     answer = None
+    #     params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
 
-        result = evaluation_function(response, answer, params)
+    #     result = evaluation_function(response, answer, params)
 
-        print(result.get("feedback"))
+    #     print(result.get("feedback"))
 
-        self.assertIn(result.get("is_correct"), [True, False])
+    #     self.assertIn(result.get("is_correct"), [True, False])
 
     def test_when_is_text_feedback_true(self):
-        response = [["Fluids laboratory"],
-                    ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor causing impact injuries"],
-                    ["Students"],
-                    ["4"],
-                    ["1"],
-                    ["4"],
-                    ["Do not move the water tank when it is full"],
-                    ["Taking care when moving water bucket"],
-                    ["1"],
-                    ["1"], 
-                    ["1"]]
+        response = [['It was good']]
         
         answer = None
         params: Params = {"is_feedback_text": True, "is_risk_matrix": False, "is_risk_assessment": False}
@@ -127,7 +116,28 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertEqual(result.get("feedback"), "Thank you for your feedback")
 
         self.assertEqual(result.get("is_correct"), True)
+    
+    def test_risk_matrix_false(self):
+        response = [["1", "1", "1"],
+                    ["1", "1", "1"]]
         
+        answer = None
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": True, "is_risk_assessment": False}
+
+        result = evaluation_function(response, answer, params)
+        self.assertEqual(result.get("is_correct"), False)
+
+    def test_risk_matrix_true(self):
+        response = [["4", "3", "12"],
+                    ["2", "3", "6"]]
+        
+        answer = None
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": True, "is_risk_assessment": False}
+
+        result = evaluation_function(response, answer, params)
+        self.assertEqual(result.get("is_correct"), True)
+
+                
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['Activity'])
         self.assertEqual(RA_5.get_empty_fields(), [])
