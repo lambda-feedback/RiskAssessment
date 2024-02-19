@@ -51,6 +51,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     split into many) is entirely up to you. All that matters are the
     return types and that evaluation_function() is the main function used
     to output the evaluation response.
+
     """
 
     if params["is_feedback_text"] == True:
@@ -89,61 +90,72 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         controlled_severity = risk_matrix_dict['controlled severity']
         controlled_risk = int(risk_matrix[1, 2])
 
-        print(uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, controlled_likelihood, controlled_severity, controlled_risk)
-
         feedback += '\n'
 
-        if uncontrolled_likelihood * uncontrolled_severity != uncontrolled_risk:
-            feedback += f'''\n\n\n\n\n##### Uncontrolled risk multiplication is incorrect.\nMake sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
-            is_correct = False
+        # Comparing Uncontrolled and Controlled Rows
+                
+        # Likelihoods
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if uncontrolled_likelihood <= controlled_likelihood:
+                feedback += f'''\n\n\n\n\n##### Likelihood values are incorrect. Since an effective prevention measure has been implemented ("taking care when cross the road"), the controlled likelihood should be less than the uncontrolled likelihood.\n\n\n\n'''
+                is_correct = False
 
-        if controlled_likelihood * controlled_severity != controlled_risk:
-            feedback += f'''\n\n\n\n\n##### Controlled risk multiplication is incorrect\nMake sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
-            is_correct = False
+        # Severities
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if uncontrolled_severity != controlled_severity:
+                feedback += f'''\n\n\n\n\n##### Severity values are incorrect. The uncontrolled and controlled severity should be the same since no mitigation measure has been implemented.\n\n\n\n''' 
+                is_correct = False
 
-        # Checking Likelihood
+        # --- Checking Uncontrolled Row ---
         
-        if uncontrolled_likelihood <= controlled_likelihood:
-            feedback += f'''\n\n\n\n\n##### Likelihood values are incorrect. Since an effective prevention measure has been implemented ("taking care when cross the road"), the controlled likelihood should be less than the uncontrolled likelihood.\n\n\n\n'''
-            is_correct = False
+        # Likelihoods
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if uncontrolled_likelihood != 4:
+                feedback += f'''\n\n\n\n\n##### An uncontrolled likelihood of {uncontrolled_likelihood} is incorrect. The convention is that all uncontrolled risks have a likelihood of 4. If you didn't look or listen when crossing the road, you would almost certainly be harmed.\n\n\n\n'''
+                is_correct = False
 
-        if uncontrolled_likelihood != 4:
-            feedback += f'''\n\n\n\n\n##### An uncontrolled likelihood of {uncontrolled_likelihood} is incorrect. The convention is that all uncontrolled risks have a likelihood of 4. If you didn't look or listen when crossing the road, you would almost certainly be harmed.\n\n\n\n'''
-            is_correct = False
+        # Severities
+        if is_correct == True:
+            if uncontrolled_severity == 1:
+                feedback += f'''\n\n\n\n\n##### An uncontrolled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
+                is_correct = False
 
-        if controlled_likelihood == 1:
-            feedback += f'''\n\n\n\n\n##### Incorrect controlled likelihood. A controlled likelihood of 1 indicates that the control measure is implemented passively whereas you have to activily pay attention when cross the road.\n\n\n\n'''
-            is_correct = False
+        # Multiplications
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if uncontrolled_likelihood * uncontrolled_severity != uncontrolled_risk:
+                feedback += f'''\n\n\n\n\n##### Uncontrolled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
+                is_correct = False
 
-        if controlled_likelihood == 2:
-            feedback += f'''\n\n\n\n\n##### Correct controlled likelihood. A controlled likelihood of 2 indicates that the control measure of "taking care when crossing the road" is implemented actively.\n\n\n\n''' 
-        
-        if controlled_likelihood == 3:
-            feedback += f'''\n\n\n\n\n##### Incorrect controlled likelihood. A controlled likelihood of 3 indicates that the control measure is not effective and the likelihood is "possible".\n\n\n\n''' 
-            is_correct = False
-        
-        if controlled_likelihood == 4:
-            feedback += f'''\n\n\n\n\n##### Incorrect controlled likelihood. A controlled likelihood of 4 indicates that the control measure is effective and the likelihood is "likely".\n\n\n\n''' 
-            is_correct = False
+        # --- Checking Controlled Row ---
+                
+        # Likelihoods
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if controlled_likelihood == 1:
+                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 1 is incorrect. A controlled likelihood of 1 indicates that the control measure is implemented passively whereas you have to activily pay attention when cross the road.\n\n\n\n'''
+                is_correct = False
 
-        # Checking Severity
-        
-        if uncontrolled_severity != controlled_severity:
-            feedback += f'''\n\n\n\n\n##### Severity values are incorrect. The uncontrolled and controlled severity should be the same since no mitigation measure has been implemented.\n\n\n\n''' 
-            is_correct = False
-        
-        if uncontrolled_severity == 1 or controlled_severity == 1:
-            feedback += f'''\n\n\n\n\n##### Severity values are incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
-            is_correct = False
-        
-        if uncontrolled_severity == 2 or controlled_severity == 2:
-            feedback += f'''\n\n\n\n\n##### Severity values are correct. As by the above severity convention, a severity of 2 indicates that a car crashing into a pedestrian causes "serious injury requiring time off work". This might represent the harm.\n\n\n\n'''
+            if controlled_likelihood == 2:
+                feedback += f'''\n\n\n\n\n##### Correct controlled likelihood. A controlled likelihood of 2 indicates that the control measure of "taking care when crossing the road" is implemented actively.\n\n\n\n''' 
+            
+            if controlled_likelihood == 3:
+                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 3 is incorrect. A controlled likelihood of 3 indicates that the control measure is not effective and the likelihood is "possible".\n\n\n\n''' 
+                is_correct = False
+            
+            if controlled_likelihood == 4:
+                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 4 is incorrect. A controlled likelihood of 4 indicates that the control measure is effective and the likelihood is "likely".\n\n\n\n''' 
+                is_correct = False
 
-        if uncontrolled_severity == 3 or controlled_severity == 3:
-            feedback += f'''\n\n\n\n\n##### Severity values are correct. As by the above severity convention, a severity of 3 indicates that a car crashing into a pedestrian causes "major injury with long-term impact". This might represent the harm.\n\n\n\n''' 
+        # Severities
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if controlled_severity == 1:
+                feedback += f'''\n\n\n\n\n##### A controlled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
+                is_correct = False
 
-        if uncontrolled_severity == 4 or controlled_severity == 4:
-            feedback += f'''\n\n\n\n\n##### Severity values are correct. As by the above severity convention, a severity of 4 indicates that a car crashing into a pedestrian causes "death". This might represent the harm (but hopefully doesn't happen!).\n\n\n\n''' 
+        # Multiplications
+        if is_correct == True: # Only write feedback if all previous checks have passed
+            if controlled_likelihood * controlled_severity != controlled_risk:
+                feedback += f'''\n\n\n\n\n##### Controlled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
+                is_correct = False
 
         return Result(is_correct=is_correct, feedback=feedback)
     
