@@ -1173,6 +1173,8 @@ class Prevention(PromptInput):
     def get_shortform_feedback(self, feedback_type):
         if feedback_type == 'positive':
             return f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'"
+        if feedback_type == 'both':
+            return f"Feedback cannot be provided for the prevention: '{self.prevention}'"
         if feedback_type == 'neither':
             return f"Incorrect. '{self.prevention}' is not a prevention measure for the hazard: '{self.hazard}'."
         if feedback_type == 'misclassification':
@@ -1184,9 +1186,12 @@ class Prevention(PromptInput):
 
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):
+        if recommendation_type == 'both':
+            return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred. On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place. Please use the above definitions to check your prevention input."""
+
         if recommendation_type == 'neither':
             return "For the prevention field, enter a control measure which reduces the likelihood of the hazard event."
-        
+
         if recommendation_type == 'misclassification':
             return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred. On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place. Please use the above definitions to ammend your prevention input."""
     
@@ -1324,6 +1329,8 @@ class Mitigation(PromptInput):
     def get_shortform_feedback(self, feedback_type):
         if feedback_type == 'positive':
             return f"Correct! '{self.mitigation}' is a mitigation measure for the hazard: '{self.hazard}'."
+        if feedback_type == 'both':
+            return f"Feedback cannot be provided for the prevention: '{self.mitigation}'"
         if feedback_type == 'neither':
             return f"Incorrect. '{self.mitigation}' is not a mitigation measure for the hazard: '{self.hazard}'."
         if feedback_type == 'misclassification':
@@ -1335,6 +1342,9 @@ class Mitigation(PromptInput):
     
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):
+        if recommendation_type == 'both':
+            return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to check your mitigation input."""
+
         if recommendation_type == 'neither':
             return "For the mitigation field, enter a control measure which reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred."
         
