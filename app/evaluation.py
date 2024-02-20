@@ -29,35 +29,7 @@ class Params(TypedDict):
     is_risk_matrix: bool
     is_risk_assessment: bool
 
-def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
-    """
-    Function used to evaluate a student response.
-    ---
-    The handler function passes three arguments to evaluation_function():
-
-    - `response` which are the answers provided by the student.
-    - `answer` which are the correct answers to compare against.
-    - `params` which are any extra parameters that may be useful,
-        e.g., error tolerances.
-
-    The output of this function is what is returned as the API response
-    and therefore must be JSON-encodable. It must also conform to the
-    response schema.
-
-    Any standard python library may be used, as well as any package
-    available on pip (provided it is added to requirements.txt).
-
-    The way you wish to structure you code (all in this function, or
-    split into many) is entirely up to you. All that matters are the
-    return types and that evaluation_function() is the main function used
-    to output the evaluation response.
-
-    """
-
-    if params["is_feedback_text"] == True:
-        return Result(is_correct=True, feedback="Thank you for your feedback")
-    
-    if params["is_risk_matrix"] == True:
+def provide_feedback_on_risk_matrix(response):
         risk_matrix = np.array(response)
 
         risk_matrix_flattened = np.array(response).flatten()
@@ -158,6 +130,37 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 is_correct = False
 
         return Result(is_correct=is_correct, feedback=feedback)
+
+def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
+    """
+    Function used to evaluate a student response.
+    ---
+    The handler function passes three arguments to evaluation_function():
+
+    - `response` which are the answers provided by the student.
+    - `answer` which are the correct answers to compare against.
+    - `params` which are any extra parameters that may be useful,
+        e.g., error tolerances.
+
+    The output of this function is what is returned as the API response
+    and therefore must be JSON-encodable. It must also conform to the
+    response schema.
+
+    Any standard python library may be used, as well as any package
+    available on pip (provided it is added to requirements.txt).
+
+    The way you wish to structure you code (all in this function, or
+    split into many) is entirely up to you. All that matters are the
+    return types and that evaluation_function() is the main function used
+    to output the evaluation response.
+
+    """
+
+    if params["is_feedback_text"] == True:
+        return Result(is_correct=True, feedback="Thank you for your feedback")
+    
+    if params["is_risk_matrix"] == True:
+        return provide_feedback_on_risk_matrix(response)
     
     if params["is_risk_assessment"] == True:
         activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
@@ -192,8 +195,10 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
             feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
             feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
+            answers_for_which_feedback_cannot_be_given_message = '\n\n\n\n# Feedback for the following answers cannot be given\n\n\n\n'
 
             is_everything_correct = True
+            is_complete_feedback_given = True
             
             if is_everything_correct == True:
                 first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
@@ -280,7 +285,15 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
                         longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prevention_prompt_output)
 
-                        if prevention_pattern == 'prevention' or prevention_pattern == 'both':
+                        if prevention_pattern == 'both':
+                            recommendation = prevention_prompt_input.get_recommendation(recommendation_type='both')
+                            answers_for_which_feedback_cannot_be_given_message += f'''
+                            \n\n\n\n##### {prevention_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+                            is_complete_feedback_given = False
+                        
+                        if prevention_pattern == 'prevention':
                             feedback_for_correct_answers += f'''
                             {feedback_header}
                             \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('positive')}\n\n\n\n
@@ -348,6 +361,14 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
                         longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output)
 
+                        if mitigation_pattern == 'both':
+                            recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='both')
+                            answers_for_which_feedback_cannot_be_given_message += f'''
+                            \n\n\n\n#### {mitigation_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+                            is_complete_feedback_given = False
+
                         if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
                             feedback_for_correct_answers += f'''
                             {feedback_header}
@@ -378,11 +399,18 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             is_everything_correct = False
 
             if is_everything_correct == True:
-                feedback_for_incorrect_answers = '# Congratulations! All your answers are correct!'
+
+                if is_complete_feedback_given == True:
+                    feedback_for_incorrect_answers = '# Congratulations! All your answers are correct!'
+                else:
+                    feedback_for_incorrect_answers = ''
+
+            if is_complete_feedback_given == True:
+                answers_for_which_feedback_cannot_be_given_message = ''
 
             feedback_for_correct_answers += f'''
             \n\n\n## Feedback for Risk Multiplications\n\n\n\n
             \n\n\n\n#### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
             \n\n\n\n#### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
 
-            return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + '\n\n\n\n\n' + feedback_for_correct_answers)
+            return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + '\n\n\n\n\n' + answers_for_which_feedback_cannot_be_given_message + '\n\n\n\n\n' + feedback_for_correct_answers)

@@ -82,6 +82,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
         self.assertEqual(result.get("is_correct"), True)
 
+
     # def test_when_prevention_entered_as_mitigation(self):
     #     response = [["Fluids laboratory"],
     #                 ["Water being spilt on the floor"],
