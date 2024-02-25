@@ -263,7 +263,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 else:
                     feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
 
-                    prevention_protective_barrier_prompt_input = RA.get_prevention_old_protective_barrier_input()
+                    prevention_protective_barrier_prompt_input = RA.get_prevention_protective_barrier_input()
                     prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_barrier_prompt_input, LLM)
                     
                     # Indicating that the prevention is a protective clothing so is actually a mitigation
@@ -353,7 +353,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 else:
                     feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
 
-                    mitigation_protective_barrier_prompt_input = RA.get_mitigation_old_protective_barrier_input()
+                    mitigation_protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
                     mitigation_protective_barrier_prompt_output, mitigation_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_barrier_prompt_input, LLM)
 
                     shortform_feedback = mitigation_protective_barrier_prompt_input.get_shortform_feedback('positive')

@@ -604,27 +604,6 @@ class HazardEvent(PromptInput):
         How it harms: {self.how_it_harms}
         Harm caused: <your harm>
         Event that leads to harm: <your event>'''
-
-class ProtectiveBarrier(PromptInput):
-    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
-        super().__init__()
-
-        self.activity = activity
-        self.hazard = hazard
-        self.who_it_harms = who_it_harms
-        self.how_it_harms = how_it_harms
-        self.control_measure = control_measure
-    
-    def generate_prompt(self, harm_caused, hazard_event):
-        return f'''
-        Follow these instructions:
-        1. In three sentence, explain whether {self.control_measure} offers a physical protective barrier for the "{self.who_it_harms}"
-        from the {harm_caused} caused by {hazard_event}?
-        2. If it does, answer True, else answer False.
-
-        Use the following output format:
-        1. Explanation: <your explanation>
-        2. Overall Answer: <your answer>'''
     
 class Clothing(PromptInput):
     def __init__(self, control_measure):
@@ -634,14 +613,63 @@ class Clothing(PromptInput):
     def generate_prompt(self):
         return f'''
         Follow these instructions:
-        1. In one sentence, explain whether "{self.control_measure}" is an example of clothing.
+        1. In one sentence, explain whether "{self.control_measure}" is an example of something that a person can wear.
+        2. If it is, give the location of where it is worn on the body, else write None.
         2. If it is, answer True, else answer False.
 
         Use the following output format:
         1. Explanation: <your explanation>
+        2. Where it is worn: <your location>
         2. Overall Answer: <your answer>'''
 
-class OldProtectiveBarrier(PromptInput):
+class PartOfBodyHarmed(PromptInput):
+    def __init__(self):
+        super().__init__()
+
+        self.pattern_matching_method = "extract_overall_answer_until_end_of_line"
+    
+    def generate_prompt(self, hazard_event, harm_caused):
+        return f'''
+        Follow these instructions:
+        What are the parts of the body that are most likely to be harmed by the {harm_caused} by {hazard_event}.
+
+        Input:
+        What are the parts of the body that are most likely to be harmed by the puncture wound by a student being pricked by the syringe needle?
+
+        Output:
+        Answer: The hands and arms
+
+        Input:
+        What are the parts of the body that are most likely to be harmed by the impact injury by a worker falling from a height?
+
+        Output:
+        Answer: The head, neck, back, and limbs
+
+        Use the following output format:
+        Overall Answer: <your answer>'''
+
+class ProtectsPartOfBody(PromptInput):
+    def __init__(self, control_measure):
+        super().__init__()
+        self.control_measure = control_measure
+    
+    def generate_prompt(self, hazard_event, harm_caused, part_of_body_harmed):
+        return f'''
+        Input:
+        Assuming that the hazard event: "The cyclist being by struck by a vehicle" has occurred, explain in one sentence whether "Wearing high-viz clothing" reduces the harm to the "head, neck, back and limbs" from the "impact injury" caused by the event.
+
+        Output:
+        Explanation: Since the the cyclist has already been struck by a vehicle, wearing high-viz clothing will not reduce the extent of the "impact injury" caused to the "head, neck, back and limbs" of the cyclist. It merely reduces the likelihood that the event occurs.
+        
+        Follow these instructions:
+        1. Assuming that the hazard event: "{hazard_event}" has occurred, explain in one sentence whether "{self.control_measure}" reduces the harm to {part_of_body_harmed} from the {harm_caused} caused by event.
+        2. If it does, answer True, else answer False.
+        
+        Use the following output format:
+        1. Explanation: <your explanation>
+        2. Overall Answer: <your answer>'''
+
+class ProtectiveBarrier(PromptInput):
     def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
         super().__init__()
 

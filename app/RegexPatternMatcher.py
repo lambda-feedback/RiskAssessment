@@ -80,3 +80,7 @@ class RegexPatternMatcher:
         hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
         
         return hazard_event
+    
+    def extract_overall_answer_until_end_of_line(self, prompt_output):
+
+        return self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Overall Answer")
