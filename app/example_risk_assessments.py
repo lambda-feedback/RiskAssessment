@@ -842,7 +842,7 @@ RA_cycling = RiskAssessment(
     uncontrolled_likelihood="2",
     uncontrolled_severity="4",
     uncontrolled_risk="8",
-    harm_caused_in_how_it_harms='injury',
+    harm_caused_in_how_it_harms='neither',
     hazard_event="Cyclist crashes",
     prevention="Helmet wearing",
     mitigation="Reduces risk of head injury ",
@@ -932,7 +932,7 @@ RA_mop_up_spill = RiskAssessment(
     uncontrolled_likelihood="3",
     uncontrolled_severity="5",
     uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
+    harm_caused_in_how_it_harms='neither',
     hazard_event="Slipping on water spill",
     prevention = "Be careful",
     mitigation = "Mop up",
@@ -1016,6 +1016,53 @@ RA_bigger_beaker = RiskAssessment(
     mitigation_first_aid_expected_output=False,
 )
 
+RA_cycling_high_viz = RiskAssessment(
+    activity = "Riding a Bike",
+    hazard = "Getting hit",
+    how_it_harms = "Could injure",
+    who_it_harms = "The cyclist",
+    uncontrolled_likelihood="3",
+    uncontrolled_severity="5",
+    uncontrolled_risk="15",
+    harm_caused_in_how_it_harms='injury',
+    hazard_event="Cyclist crashes",
+    prevention = "Wear high vis clothing",
+    mitigation = "Wear helmet",
+    controlled_likelihood="1",
+    controlled_severity="3",
+    controlled_risk="3",
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation",
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=True,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
+)
+
+RA_safer_routes = RiskAssessment(
+    activity = "Riding a Bike",
+    hazard = "Getting hit",
+    how_it_harms = "Could injure",
+    who_it_harms = "The cyclist",
+    uncontrolled_likelihood="3",
+    uncontrolled_severity="5",
+    uncontrolled_risk="15",
+    harm_caused_in_how_it_harms='injury',
+    hazard_event="Cyclist crashes",
+    prevention = "Take safer routes",
+    mitigation = "Wear high viz clothing",
+    controlled_likelihood="1",
+    controlled_severity="3",
+    controlled_risk="3",
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "prevention",
+    prevention_protected_clothing_expected_output=False,
+    mitigation_protected_clothing_expected_output=False,
+    prevention_first_aid_expected_output=False,
+    mitigation_first_aid_expected_output=False,
+)
+
+
 example_risk_assessments = [
     # Commented out ones which are difficult to classify
     # RA_3_water_from_instrument, RA_3_water_from_instrument_mitiagation_prevention_switched,
@@ -1048,12 +1095,27 @@ example_risk_assessments = [
     RA_hob,
     RA_crossing_road,
     RA_cycling,
-    RA_ladder
+    RA_ladder,
+    RA_cycling_high_viz,
+    RA_safer_routes,
     ]
 
-example_risk_assessments_for_protective_clothing_and_first_aid = [
-    # RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse,
-    RA_slitter_machine
+example_risk_assessments_for_protective_barrier_and_first_aid = [
+    RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse,
+    RA_slitter_machine,
+    RA_fire_alarm,
+    RA_mop_up_spill,
+    RA_syringe_with_cover,
+    RA_sealed_cups,
+    RA_bigger_beaker,
+    RA_campfire,
+    RA_bouldering,
+    RA_hob,
+    RA_crossing_road,
+    RA_cycling,
+    RA_ladder,
+    RA_cycling_high_viz,
+    RA_safer_routes,
 ]
 
 # Assuming you have a list of RiskAssessment objects named risk_assessments

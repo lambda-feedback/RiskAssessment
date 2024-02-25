@@ -133,26 +133,14 @@ class RiskAssessment:
     def convert_RiskAssessment_object_into_lambda_response_list(self):
         return list(vars(self).values())
     
+    def get_no_information_provided_for_prevention_input(self):
+        return NoInformationProvided(input=self.prevention)
+    
+    def get_no_information_provided_for_mitigation_input(self):
+        return NoInformationProvided(input=self.mitigation)
+    
     def get_activity_input(self):
         return Activity(activity=self.activity)
-    
-    def activity_field_classification_input(self):
-        return InputFieldClassification(input=self.activity, field_name='Activity')
-    
-    def hazard_field_classification_input(self):
-        return InputFieldClassification(input=self.hazard, field_name='Hazard')
-    
-    def how_it_harms_field_classification_input(self):
-        return InputFieldClassification(input=self.how_it_harms, field_name='How it harms')
-    
-    def who_it_harms_field_classification_input(self):
-        return InputFieldClassification(input=self.who_it_harms, field_name='Who is harmed by this event')
-    
-    def get_prevention_field_classification_input(self):
-        return InputFieldClassification(input=self.prevention, field_name='Prevention')
-    
-    def get_mitigation_field_classification_input(self):
-        return InputFieldClassification(input=self.mitigation, field_name='Mitigation')
 
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
@@ -169,16 +157,38 @@ class RiskAssessment:
     def get_illness_input(self):
         return Illness(input=self.how_it_harms)
     
-    def get_prevention_protective_clothing_input(self):
-        return ProtectiveClothing(
+    def get_hazard_event_input(self):
+        return HazardEvent(activity=self.activity,
+                            hazard=self.hazard,
+                            how_it_harms=self.how_it_harms,
+                            who_it_harms=self.who_it_harms)
+
+    def get_prevention_old_protective_barrier_input(self):
+        return OldProtectiveBarrier(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
             control_measure=self.prevention)
     
-    def get_mitigation_protective_clothing_input(self):
-        return ProtectiveClothing(
+    def get_mitigation_old_protective_barrier_input(self):
+        return OldProtectiveBarrier(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
+    
+    def get_prevention_protective_barrier_input(self):
+        return ProtectiveBarrier(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
+    
+    def get_mitigation_protective_barrier_input(self):
+        return ProtectiveBarrier(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
@@ -217,6 +227,25 @@ class RiskAssessment:
             hazard=self.hazard,
             mitigation=self.mitigation)
     
+    def check_that_likelihood_and_severity_values_are_between_1_and_4(self, likelihood, severity):
+        try:
+            likelihood = int(likelihood)
+            severity = int(severity)
+
+            if likelihood > 4 or likelihood < 1 or severity > 4 or severity < 1:
+                return 'Incorrect. Please make sure that, as per the Risk Assessment convention shown in Question 1, all of the likelihood and severity values are between 1 and 4.'
+            else:
+                return 'correct'
+            
+        except ValueError:
+            return 'Please make sure that the likelihood and severity are both integers.'
+        
+    def check_that_uncontrolled_likelihood_and_severity_values_are_between_1_and_4(self):
+        return self.check_that_likelihood_and_severity_values_are_between_1_and_4(self.uncontrolled_likelihood, self.uncontrolled_severity)
+    
+    def check_that_controlled_likelihood_and_severity_values_are_between_1_and_4(self):
+        return self.check_that_likelihood_and_severity_values_are_between_1_and_4(self.controlled_likelihood, self.controlled_severity)
+
     def check_that_risk_equals_likelihood_times_severity(self, likelihood, severity, risk):
         try:
             likelihood = int(likelihood)
@@ -227,19 +256,42 @@ class RiskAssessment:
                 return 'correct'
             else:
                 return 'incorrect. Please check that your risk values are equal to the likelihood multiplied by the severity.'
-        
+            
         except ValueError:
             return 'Please make sure that the likelihood, severity, and risk are all integers.'
 
-    def check_uncontrolled_risk(self):
+    def check_uncontrolled_risk_multiplication(self):
         return self.check_that_risk_equals_likelihood_times_severity(self.uncontrolled_likelihood,
                                                                 self.uncontrolled_severity,
                                                                 self.uncontrolled_risk)
     
-    def check_controlled_risk(self):
+    def check_controlled_risk_multiplication(self):
         return self.check_that_risk_equals_likelihood_times_severity(self.controlled_likelihood,
                                                                 self.controlled_severity,
                                                                 self.controlled_risk)
+    
+    def check_controlled_values_are_less_than_or_equal_to_uncontrolled_values(self, controlled_value, uncontrolled_value, value_name):
+        try:
+            controlled_value = int(controlled_value)
+            uncontrolled_value = int(uncontrolled_value)
+
+            if controlled_value <= uncontrolled_value:
+                return 'correct'
+            else:
+                return f'Your {value_name} values are incorrect. Please make sure that the controlled {value_name} is less than or equal to the uncontrolled {value_name}.'
+            
+        except ValueError:
+            return 'Please make sure that the controlled and uncontrolled values are both integers.'
+    
+    def compare_controlled_and_uncontrolled_likelihood(self):
+        return self.check_controlled_values_are_less_than_or_equal_to_uncontrolled_values(controlled_value=self.controlled_likelihood,
+                                                                                           uncontrolled_value=self.uncontrolled_likelihood,
+                                                                                           value_name='likelihood')
+
+    def compare_controlled_and_uncontrolled_severity(self):
+        return self.check_controlled_values_are_less_than_or_equal_to_uncontrolled_values(controlled_value=self.controlled_severity,
+                                                                                           uncontrolled_value=self.uncontrolled_severity,
+                                                                                           value_name='severity')
     
     # TODO: Add ability to see prompt output percentages - might be possible for LLMs other than GPT-3
 
@@ -256,7 +308,7 @@ class RiskAssessment:
             # self.get_activity_input(),
                 self.get_how_it_harms_in_context_input(),
                 self.get_who_it_harms_in_context_input(),
-                # self.get_protective_clothing_input(),
+                # self.get_protective_barrier_input(),
                 # self.get_first_aid_input(),
                 # self.get_prevention_input(),
                 # self.get_mitigation_input()

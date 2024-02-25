@@ -82,6 +82,50 @@ class TestEvaluationFunction(unittest.TestCase):
 
         self.assertEqual(result.get("is_correct"), True)
 
+    def test_returns_is_correct_true(self):
+        response = [["Fluids laboratory"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor causing impact injuries"],
+                    ["Students"],
+                    ["5"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
+                    seek medical advice without delay."""],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
+        answer = None
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+
+        result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+
+        self.assertEqual(result.get("is_correct"), False)
+
+    def test_no_information_provided_in_mitigation_input(self):
+        response = [["Fluids laboratory"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor causing impact injuries"],
+                    ["Students"],
+                    ["4"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["Not applicable"],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
+        answer = None
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+
+        result = evaluation_function(response, answer, params)
+
+        print(result.get("feedback"))
+
+        self.assertEqual(result.get("is_correct"), True)
 
     # def test_when_prevention_entered_as_mitigation(self):
     #     response = [["Fluids laboratory"],
