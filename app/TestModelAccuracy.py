@@ -300,7 +300,7 @@ class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
 
             return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}\n\nHazard event prompt: {hazard_event_prompt_output}'''
 
-class TestProtectiveBarrierMitigationPrompt(TestModelAccuracyForCombinationOfPrompts):
+class TestProtectiveClothingMitigationPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                 LLM: LLMCaller,
                 LLM_name: str,
@@ -332,13 +332,26 @@ class TestProtectiveBarrierMitigationPrompt(TestModelAccuracyForCombinationOfPro
             hazard_event_prompt_output, hazard_event = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
                                                                                                         LLM_caller=self.LLM,
                                                                                                         harm_caused=harm_caused)
-            protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
-            protective_barrier_prompt_output, protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=protective_barrier_prompt_input,
-                                                                                                                     LLM_caller=self.LLM,
-                                                                                                                     hazard_event=hazard_event,
-                                                                                                                     harm_caused=harm_caused)
+            
+            clothing_prompt_input, part_of_body_prompt_input, protects_part_of_body_prompt_input = RA.get_prompt_inputs_for_mitigation_protective_clothing()
 
-            return expected_output, protective_barrier_pattern, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nProtective clothing:{protective_barrier_prompt_output}'''
+            clothing_prompt_output, clothing_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=clothing_prompt_input,
+                                                                                                            LLM_caller=self.LLM)
+            if clothing_pattern == False:
+                return expected_output, False, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}'''
+            else:
+                part_of_body_prompt_output, part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=part_of_body_prompt_input,
+                                                                                                            LLM_caller=self.LLM,
+                                                                                                            hazard_event=hazard_event,
+                                                                                                            harm_caused=harm_caused)
+                
+                protects_part_of_body_prompt_output, protects_part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=protects_part_of_body_prompt_input,
+                                                                                                            LLM_caller=self.LLM,
+                                                                                                            part_of_body_harmed=part_of_body_pattern,
+                                                                                                            hazard_event=hazard_event,
+                                                                                                            harm_caused=harm_caused)
+
+                return expected_output, protects_part_of_body_pattern, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}\n\nPart of body: {part_of_body_prompt_output}\n\nProtects part of body: {protects_part_of_body_prompt_output}'''
         
 
 class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
@@ -485,6 +498,9 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
                   
                   {first_prevention_prompt_input}'''
 
+
+# TODO: Remove all this duplicate code. There should only be one test and you should be able to specify whether 
+# it is mitigation or prevention that you want to test
 class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                 LLM: LLMCaller,

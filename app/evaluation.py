@@ -170,6 +170,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                             controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
                             prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation',
+                            prevention_clothing=False,
+                            mitigation_clothing=False,
                             prevention_protected_clothing_expected_output=False,
                             mitigation_protected_clothing_expected_output=False,
                             prevention_first_aid_expected_output=False,
@@ -256,14 +258,14 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 # PREVENTION CHECKS
 
                 no_information_provided_for_prevention_prompt_input = RA.get_no_information_provided_for_prevention_input()
-                no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
+                no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
 
-                if no_information_provided_for_prevention == True:
+                if no_information_provided_for_prevention_pattern == 'no information provided':
                     no_information_provided_message += f'''\n\n\n\n#### Prevention\n\n\n\n'''
                 else:
                     feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
 
-                    prevention_protective_barrier_prompt_input = RA.get_prevention_old_protective_barrier_input()
+                    prevention_protective_barrier_prompt_input = RA.get_prevention_protective_barrier_input()
                     prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_barrier_prompt_input, LLM)
                     
                     # Indicating that the prevention is a protective clothing so is actually a mitigation
@@ -310,7 +312,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             if prevention_pattern == 'both':
                                 recommendation = prevention_prompt_input.get_recommendation(recommendation_type='both')
                                 answers_for_which_feedback_cannot_be_given_message += f'''
-                                \n\n\n\n##### {prevention_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                                \n\n\n\n#### {prevention_prompt_input.get_shortform_feedback('both')}\n\n\n\n
                                 \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
                                 is_complete_feedback_given = False
@@ -346,14 +348,14 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
                 # MITIGATION CHECKS
                 no_information_provided_for_mitigation_prompt_input = RA.get_no_information_provided_for_mitigation_input()
-                no_information_provided_for_mitigation_prompt_output, no_information_provided_for_mitigation = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_mitigation_prompt_input, LLM)
+                no_information_provided_for_mitigation_prompt_output, no_information_provided_for_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_mitigation_prompt_input, LLM)
 
-                if no_information_provided_for_mitigation == True:
+                if no_information_provided_for_mitigation_pattern == 'no information provided':
                     no_information_provided_message += f'''\n\n\n\n#### Mitigation\n\n\n\n'''
                 else:
                     feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
 
-                    mitigation_protective_barrier_prompt_input = RA.get_mitigation_old_protective_barrier_input()
+                    mitigation_protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
                     mitigation_protective_barrier_prompt_output, mitigation_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_barrier_prompt_input, LLM)
 
                     shortform_feedback = mitigation_protective_barrier_prompt_input.get_shortform_feedback('positive')
@@ -437,7 +439,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             if is_complete_feedback_given == True:
                 answers_for_which_feedback_cannot_be_given_message = ''
             
-            if no_information_provided_for_prevention == False and no_information_provided_for_mitigation == False:
+            if no_information_provided_for_prevention_pattern == False and no_information_provided_for_mitigation_pattern == False:
                 no_information_provided_message = ''
 
             feedback_for_correct_answers += f'''

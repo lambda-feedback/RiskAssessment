@@ -14,6 +14,7 @@ class RiskAssessment:
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
                  harm_caused_in_how_it_harms, hazard_event,
+                 prevention_clothing, mitigation_clothing,
                  prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
                  prevention_first_aid_expected_output, mitigation_first_aid_expected_output,
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
@@ -32,6 +33,9 @@ class RiskAssessment:
 
         self.harm_caused_in_how_it_harms = harm_caused_in_how_it_harms
         self.hazard_event = hazard_event
+
+        self.prevention_clothing = prevention_clothing
+        self.mitigation_clothing = mitigation_clothing
 
         self.prevention_protected_clothing_expected_output = prevention_protected_clothing_expected_output
         self.mitigation_protected_clothing_expected_output = mitigation_protected_clothing_expected_output
@@ -162,23 +166,26 @@ class RiskAssessment:
                             hazard=self.hazard,
                             how_it_harms=self.how_it_harms,
                             who_it_harms=self.who_it_harms)
+    
+    def get_prevention_clothing(self):
+        return Clothing(control_measure=self.prevention)
+    
+    def get_mitigation_clothing(self):
+        return Clothing(control_measure=self.mitigation)
+    
+    def get_prompt_inputs_for_prevention_protective_clothing(self):
+        return [Clothing(control_measure=self.prevention),
+                PartOfBodyHarmed(),
+                ProtectsPartOfBody(control_measure=self.prevention)]
+    
+    def get_prompt_inputs_for_mitigation_protective_clothing(self):
+        return [Clothing(control_measure=self.mitigation),
+                PartOfBodyHarmed(),
+                ProtectsPartOfBody(control_measure=self.mitigation)]
+    
+    def get_mitigation_protects_part_of_body_input(self):
+        return ProtectsPartOfBody(control_measure=self.mitigation)
 
-    def get_prevention_old_protective_barrier_input(self):
-        return OldProtectiveBarrier(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.prevention)
-    
-    def get_mitigation_old_protective_barrier_input(self):
-        return OldProtectiveBarrier(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.mitigation)
-    
     def get_prevention_protective_barrier_input(self):
         return ProtectiveBarrier(
             activity=self.activity,
