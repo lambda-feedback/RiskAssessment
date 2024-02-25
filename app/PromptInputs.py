@@ -55,10 +55,72 @@ class PromptInput:
 class NoInformationProvided(PromptInput):
     def __init__(self, input: str):
         super().__init__()
-        self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
+        self.pattern_matching_method = 'check_string_for_no_information_provided'
+        self.candidate_labels = ['control measure', 'no information provided']
         self.input = input
     
     def generate_prompt(self):
+        return f'''
+        Follow these instructions:
+        1. Classify the following input as either "No information provided" or "Control measure"
+
+        Input: "N/A" 
+        Answer: No information provided
+
+        Input: "Not Applicable" 
+        Answer: No information provided
+
+        Input: "Unknown" 
+        Answer: No information provided
+
+        Input: "None" 
+        Answer: No information provided
+
+        Input: "TBD" 
+        Answer: No information provided
+
+        Input: "To Be Determined" 
+        Answer: No information provided
+
+        Input: "Unspecified" 
+        Answer: No information provided
+
+        Input: "No Information Available" 
+        Answer: No information provided
+
+        Input: "Do Not Know" 
+        Answer: No information provided
+
+        Input: "Not specified" 
+        Answer: No information provided
+
+        Input: "Unavailable" 
+        Answer: No information provided
+
+        Input: "Not applicable" 
+        Answer: No information provided
+
+        Input: "Not known" 
+        Answer: No information provided
+
+        Input: "Wear helmet"
+        Answer: Control measure
+
+        Input: "Take care"
+        Answer: Control measure
+
+        Input: "Apply ice"
+        Answer: Control measure
+
+        Follow these instructions:
+        1. Classify the following input as either "No information provided" or "Control measure"
+
+        Use the following output format:
+        Overall Answer: <your answer>
+        
+        Input: "{self.input}"'''
+
+    def generate_prompt_without_few_shot_examples(self):
         return f'''
         Follow these instructions:
         1. In one sentence, explain whether the "{self.input}" input contains information.
@@ -559,6 +621,21 @@ class ProtectiveBarrier(PromptInput):
         1. In three sentence, explain whether {self.control_measure} offers a physical protective barrier for the "{self.who_it_harms}"
         from the {harm_caused} caused by {hazard_event}?
         2. If it does, answer True, else answer False.
+
+        Use the following output format:
+        1. Explanation: <your explanation>
+        2. Overall Answer: <your answer>'''
+    
+class Clothing(PromptInput):
+    def __init__(self, control_measure):
+        super().__init__()
+        self.control_measure = control_measure
+    
+    def generate_prompt(self):
+        return f'''
+        Follow these instructions:
+        1. In one sentence, explain whether "{self.control_measure}" is an example of clothing.
+        2. If it is, answer True, else answer False.
 
         Use the following output format:
         1. Explanation: <your explanation>

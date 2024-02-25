@@ -3,6 +3,8 @@ from LLMCaller import *
 from PromptInputs import NoInformationProvided
 from TestModelAccuracy import TestModelAccuracy
 
+from example_risk_assessments import unique_activities, unique_hazards, unique_how_it_harms, unique_who_it_harms, unique_control_measures
+
 no_information_provided_examples = [
     "Leave blank",
     "No data",
@@ -38,13 +40,23 @@ information_provided_examples = [
     "Wearing a helmet while biking",
 ]
 
+unique_examples = []
+# unique_examples.extend(unique_activities)
+# unique_examples.extend(unique_hazards)
+# unique_examples.extend(unique_how_it_harms)
+# unique_examples.extend(unique_who_it_harms)
+unique_examples.extend(unique_control_measures)
+
 examples = []
 
 for example in no_information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output=True))
+    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='no information provided'))
 
-for example in information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output=False))
+# for example in information_provided_examples:
+#     examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output=False))
+
+for example in unique_examples:
+    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
 
 if __name__ == "__main__":
     
