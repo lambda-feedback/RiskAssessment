@@ -52,105 +52,22 @@ class PromptInput:
         else:
             return f"{class_name}()"
 
-class InputFieldClassification(PromptInput):
-    def __init__(self, input, field_name):
+class NoInformationProvided(PromptInput):
+    def __init__(self, input: str):
         super().__init__()
+        self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
         self.input = input
-        self.field_name = field_name
-
-        self.pattern_matching_method = 'check_string_for_type_of_input_field'
-
-        self.candidate_labels = ['activity', 'hazard', 'event that leads to harm', 'harm caused', 'who', 'control measure']
-
-    def get_correct_labels(self):
-        if self.field_name == 'Activity':
-            return ['activity', 'hazard', 'event that leads to harm']
-        if self.field_name == 'Hazard':
-            return ['activity', 'hazard', 'event that leads to harm', 'harm caused', 'who']
-        if self.field_name == 'How it harms':
-            return ['hazard', 'event that leads to harm', 'harm caused'] # Classifying these 3 comes later
-        if self.field_name == 'Who is harmed by this event':
-            return ['who', 'hazard'] # E.g. "Reckless drivers" would be suitable for hazard or who it harms.
-        if self.field_name == 'Prevention' or self.field_name == 'Mitigation':
-            return ['control measure']
-        
+    
     def generate_prompt(self):
         return f'''
-        Classify the following as either an {', '.join(self.candidate_labels)}:
-
-        Input: Playing at a Playground
-        Answer: Activity
-
-        Input: Broken equipment
-        Answer: Hazard
+        Follow these instructions:
+        1. In one sentence, explain whether the "{self.input}" input contains information.
+        2. If "{self.input}" contains no information, answer True, else answer False.
         
-        Input: Child falling off monkey bars
-        Answer: Event that leads to harm
-
-        Input: Fractured arm
-        Answer: Harm caused
-
-        Input: Horse rider
-        Answer: Who
-
-        Input: Wearing a helmet
-        Answer: Control Measure
-
-        Classify the following as either an {', '.join(self.candidate_labels)}:
-        Input: {self.input}
-
-        Use the following format:
-        Answer: <your answer>'''
-        
-    # def generate_prompt(self):
-    #     return f'''
-    #     Follow these instructions:
-    #     1. In one sentence, describe the following: <input>
-    #     2. Classify the following as either an {', '.join(self.candidate_labels)}:
-
-    #     Input: Playing at a Playground
-    #     1. Description: "Playing at a playground" involves children engaging in physical activities.
-    #     2. Answer: Activity
-
-    #     Input: Broken equipment
-    #     1. Description: "Broken equipment" is a dangerous phenomenon that can cause injury or other health impacts.
-    #     2. Answer: Hazard
-        
-    #     Input: Child falling off monkey bars
-    #     1. Description: "Child falling off monkey bars" involves a child losing their grip on the monkey bars and falls to the ground below.
-    #     2. Answer: Event that leads to harm
-
-    #     Input: Fractured arm
-    #     1. Description: "Fractured arm" is a type of injury.
-    #     2. Answer: Harm caused
-
-    #     Input: Horse rider
-    #     1. Description: "Horse rider" is an individual who rides a horse.
-    #     2. Answer: Who
-
-    #     Input: Wearing a helmet
-    #     1. Description: "Wearing a helmet" involves placing a helmet on one's head to provide protection in the event of impact or accident.
-    #     2. Answer: Control Measure
-
-    #     Classify the following as either an {', '.join(self.candidate_labels)}:
-    #     Input: {self.input}
-
-    #     Use the following format:
-    #     1. Description: <your description>
-    #     2. Answer: <your answer>'''
-    
-    def get_input_field_from_pattern_matched(self, pattern_matched):
-        if pattern_matched == 'who':
-            return 'Who is harmed by this event'
-        if pattern_matched == 'harm caused':
-            return 'How it harms'
-        if pattern_matched == 'control measure':
-            return 'Prevention or Mitigation'
-        else:
-            return pattern_matched.capitalize()
-
-    def get_shortform_feedback(self, pattern_matched):
-        return f"""Incorrect! '{self.input}' is not a correct input for the field: '{self.field_name}'. It looks more like an example of the field: '{self.get_input_field_from_pattern_matched(pattern_matched=pattern_matched)}'."""
+        Use the following output format:
+        Explanation: <your explanation>
+        Answer: <your answer>
+        '''
 
 class Activity(PromptInput):
     def __init__(self, activity: str):
@@ -159,24 +76,6 @@ class Activity(PromptInput):
 
     def get_field_checked(self):
         return 'Activity'
-    
-        #     Input: Playing at a Playground
-        # Answer: True
-
-        # Input: Broken equipment
-        # Answer: False
-
-        # Input: Child falling off monkey bars
-        # Answer: True
-
-        # Input: Golf
-        # Answer: True
-
-        # Input: Chess
-        # Answer: True
-
-        # Input: Fluids laboratory
-        # Answer: True
     
     def generate_prompt(self):
         return f'''
@@ -644,7 +543,28 @@ class HazardEvent(PromptInput):
         Harm caused: <your harm>
         Event that leads to harm: <your event>'''
 
-class ProtectiveClothing(PromptInput):
+class ProtectiveBarrier(PromptInput):
+    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
+        super().__init__()
+
+        self.activity = activity
+        self.hazard = hazard
+        self.who_it_harms = who_it_harms
+        self.how_it_harms = how_it_harms
+        self.control_measure = control_measure
+    
+    def generate_prompt(self, harm_caused, hazard_event):
+        return f'''
+        Follow these instructions:
+        1. In three sentence, explain whether {self.control_measure} offers a physical protective barrier for the "{self.who_it_harms}"
+        from the {harm_caused} caused by {hazard_event}?
+        2. If it does, answer True, else answer False.
+
+        Use the following output format:
+        1. Explanation: <your explanation>
+        2. Overall Answer: <your answer>'''
+
+class OldProtectiveBarrier(PromptInput):
     def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
         super().__init__()
 
@@ -675,7 +595,7 @@ class ProtectiveClothing(PromptInput):
         6. If both "Reduces Harm", "Protective Clothing Answer" and "Protects Part of Body Answer" are True, answer True. Else answer False.'''
     
     def generate_prompt(self):
-        example_of_correct_protective_clothing = '''
+        example_of_correct_protective_barrier = '''
         Example Input:
         1. Reduces Harm Explanation: Explain whether "Wearing lab coat and PPE" has the potential to reduce the harm caused by the hazard: "Syringes with sharp needles" given how it harms: "Sharp needles can pierce the skin and cause bleeding"?
         2. Reduces Harm Answer: If "Wearing lab coat and PPE" reduces the harm, answer True, else answer False.
@@ -739,7 +659,7 @@ class ProtectiveClothing(PromptInput):
 
         return f'''
 
-        {example_of_correct_protective_clothing}
+        {example_of_correct_protective_barrier}
 
         {self.generate_prompt_without_few_shot_examples()}
 
@@ -793,7 +713,7 @@ class FirstAid(PromptInput):
         8. If all of "After Medical Emergency Answer", "First Aid Answer" and "Reduces Harm Answer" are True, answer True, else answer False.'''
     
     def generate_prompt(self):
-        example_of_correct_protective_clothing = '''
+        example_of_correct_protective_barrier = '''
         Example Input:
         1. Description: Describe "Washing the eyes out with clean water" in one sentence.
         4. Reduces Harm Explanation: Explain whether "Washing the eyes out with clean water" has the potential to reduce the harm caused by the hazard: "Ink spillage" given how it harms: "Serious eye damage".
@@ -861,7 +781,7 @@ class FirstAid(PromptInput):
 
         return f'''
 
-        {example_of_correct_protective_clothing}
+        {example_of_correct_protective_barrier}
 
         {self.generate_prompt_without_few_shot_examples()}
 

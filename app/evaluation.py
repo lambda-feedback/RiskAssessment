@@ -177,18 +177,33 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             harm_caused_in_how_it_harms='',
                             hazard_event="",
                             )
-        
+
         input_check_feedback_message = RA.get_input_check_feedback_message()
-        controlled_risk = RA.check_controlled_risk()
-        uncontrolled_risk = RA.check_uncontrolled_risk()
 
         if input_check_feedback_message != '':
             return Result(is_correct=False,
                         feedback=f'Feedback: \n\n {input_check_feedback_message}')
-        
-        if input_check_feedback_message == '' and controlled_risk != 'correct' or uncontrolled_risk != 'correct':
+
+        uncontrolled_values_check = RA.check_that_uncontrolled_likelihood_and_severity_values_are_between_1_and_4()
+        controlled_values_check = RA.check_that_controlled_likelihood_and_severity_values_are_between_1_and_4()
+
+        if input_check_feedback_message == '' and uncontrolled_values_check != 'correct' or controlled_values_check != 'correct':
             return Result(is_correct=False,
-                        feedback=f'Feedback: \n\n Uncontrolled risk is: {controlled_risk}\n\nUncontrolled risk is {uncontrolled_risk}')
+                        feedback=f'Feedback: \n\n {uncontrolled_values_check}\n\n{controlled_values_check}')
+
+        controlled_risk_multiplication_check = RA.check_controlled_risk_multiplication()
+        uncontrolled_risk_multiplication_check = RA.check_uncontrolled_risk_multiplication()
+
+        if input_check_feedback_message == '' and controlled_risk_multiplication_check != 'correct' or uncontrolled_risk_multiplication_check != 'correct':
+            return Result(is_correct=False,
+                        feedback=f'Feedback: \n\n {controlled_risk_multiplication_check}\n\nUncontrolled risk is {uncontrolled_risk_multiplication_check}')
+        
+        likelihood_comparison_check = RA.compare_controlled_and_uncontrolled_likelihood()
+        severity_comparison_check = RA.compare_controlled_and_uncontrolled_severity()
+
+        if input_check_feedback_message == '' and likelihood_comparison_check != 'correct' and severity_comparison_check != 'correct':
+            return Result(is_correct=False,
+                        feedback=f'Feedback: \n\n {likelihood_comparison_check}\n\n{severity_comparison_check}')
         
         else:
             LLM = OpenAILLM()
@@ -196,14 +211,15 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
             feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
             answers_for_which_feedback_cannot_be_given_message = '\n\n\n\n# Feedback for the following answers cannot be given\n\n\n\n'
+            no_information_provided_message = '\n\n\n\n# No information provided for the following fields:\n\n\n\n'
 
             is_everything_correct = True
             is_complete_feedback_given = True
-            
-            if is_everything_correct == True:
-                first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
 
-                for prompt_input_object in first_3_prompt_input_objects:
+            first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
+            
+            for prompt_input_object in first_3_prompt_input_objects:
+                if is_everything_correct == True:
                     prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
                     shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
 
@@ -235,39 +251,26 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback_for_incorrect_answers += feedback_header_to_add
                         feedback_for_incorrect_answers += feedback_to_add
 
-                        break
-            
-            # PREVENTION CHECKS
+           
             if is_everything_correct == True:
-                feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
+                # PREVENTION CHECKS
 
-                prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
-                prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_clothing_prompt_input, LLM)
-                
-                # Indicating that the prevention is a protective clothing so is actually a mitigation
-                if prevention_protective_clothing_pattern == True:
-                    shortform_feedback = prevention_protective_clothing_prompt_input.get_shortform_feedback('negative')
-                    longform_feedback = prevention_protective_clothing_prompt_input.get_longform_feedback()
-                    recommendation = prevention_protective_clothing_prompt_input.get_recommendation()
+                no_information_provided_for_prevention_prompt_input = RA.get_no_information_provided_for_prevention_input()
+                no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
 
-                    feedback_for_incorrect_answers += f'''
-                    {feedback_header}
-                    \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
-                    \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-                    \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
-
-                    is_everything_correct = False
-                
-                # Indicating that the prevention is not a protective clothing
+                if no_information_provided_for_prevention == True:
+                    no_information_provided_message += f'''\n\n\n\n#### Prevention\n\n\n\n'''
                 else:
-                    prevention_first_aid_prompt_input = RA.get_prevention_first_aid_input()
-                    prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(prevention_first_aid_prompt_input, LLM)
+                    feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
 
-                    # Indicating that the prevention is an example of first aid so is a mitigation
-                    if prevention_first_aid_pattern == True:
-                        shortform_feedback = prevention_first_aid_prompt_input.get_shortform_feedback('negative')
-                        longform_feedback = prevention_first_aid_prompt_input.get_longform_feedback()
-                        recommendation = prevention_first_aid_prompt_input.get_recommendation()
+                    prevention_protective_barrier_prompt_input = RA.get_prevention_old_protective_barrier_input()
+                    prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prevention_protective_barrier_prompt_input, LLM)
+                    
+                    # Indicating that the prevention is a protective clothing so is actually a mitigation
+                    if prevention_protective_barrier_pattern == True:
+                        shortform_feedback = prevention_protective_barrier_prompt_input.get_shortform_feedback('negative')
+                        longform_feedback = prevention_protective_barrier_prompt_input.get_longform_feedback()
+                        recommendation = prevention_protective_barrier_prompt_input.get_recommendation()
 
                         feedback_for_incorrect_answers += f'''
                         {feedback_header}
@@ -277,126 +280,152 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
                         is_everything_correct = False
                     
-                    # Indicating that the prevention is neither a protective clothing nor an example of first aid
-                    # This checks whether the inputted prevention is a prevention or a mitigation 
+                    # Indicating that the prevention is not a protective clothing
                     else:
-                        prevention_prompt_input = RA.get_prevention_input()
-                        prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, LLM)
+                        prevention_first_aid_prompt_input = RA.get_prevention_first_aid_input()
+                        prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(prevention_first_aid_prompt_input, LLM)
 
-                        longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prevention_prompt_output)
+                        # Indicating that the prevention is an example of first aid so is a mitigation
+                        if prevention_first_aid_pattern == True:
+                            shortform_feedback = prevention_first_aid_prompt_input.get_shortform_feedback('negative')
+                            longform_feedback = prevention_first_aid_prompt_input.get_longform_feedback()
+                            recommendation = prevention_first_aid_prompt_input.get_recommendation()
 
-                        if prevention_pattern == 'both':
-                            recommendation = prevention_prompt_input.get_recommendation(recommendation_type='both')
-                            answers_for_which_feedback_cannot_be_given_message += f'''
-                            \n\n\n\n##### {prevention_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                            feedback_for_incorrect_answers += f'''
+                            {feedback_header}
+                            \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
+                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
                             \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
-                            is_complete_feedback_given = False
+                            is_everything_correct = False
                         
-                        if prevention_pattern == 'prevention':
-                            feedback_for_correct_answers += f'''
-                            {feedback_header}
-                            \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('positive')}\n\n\n\n
-                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
+                        # Indicating that the prevention is neither a protective clothing nor an example of first aid
+                        # This checks whether the inputted prevention is a prevention or a mitigation 
+                        else:
+                            prevention_prompt_input = RA.get_prevention_input()
+                            prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, LLM)
 
-                        if prevention_pattern == 'neither':
-                            recommendation = prevention_prompt_input.get_recommendation(recommendation_type='neither')
-                            feedback_for_incorrect_answers += f'''
-                            {feedback_header}
-                            \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('neither')}\n\n\n\n
-                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+                            longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prevention_prompt_output)
 
-                            is_everything_correct = False
+                            if prevention_pattern == 'both':
+                                recommendation = prevention_prompt_input.get_recommendation(recommendation_type='both')
+                                answers_for_which_feedback_cannot_be_given_message += f'''
+                                \n\n\n\n##### {prevention_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
-                        if prevention_pattern == 'mitigation':
-                            longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation')
-                            recommendation = prevention_prompt_input.get_recommendation(recommendation_type='misclassification')
+                                is_complete_feedback_given = False
+                            
+                            if prevention_pattern == 'prevention':
+                                feedback_for_correct_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('positive')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
 
-                            feedback_for_incorrect_answers += f'''
-                            {feedback_header}
-                            \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('misclassification')}\n\n\n\n
-                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+                            if prevention_pattern == 'neither':
+                                recommendation = prevention_prompt_input.get_recommendation(recommendation_type='neither')
+                                feedback_for_incorrect_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('neither')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
-                            is_everything_correct = False
+                                is_everything_correct = False
+
+                            if prevention_pattern == 'mitigation':
+                                longform_feedback = prevention_prompt_input.get_longform_feedback(prompt_output=prompt_output, pattern_to_search_for='Mitigation Explanation')
+                                recommendation = prevention_prompt_input.get_recommendation(recommendation_type='misclassification')
+
+                                feedback_for_incorrect_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {prevention_prompt_input.get_shortform_feedback('misclassification')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+                                is_everything_correct = False
+
 
                 # MITIGATION CHECKS
-                feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
+                no_information_provided_for_mitigation_prompt_input = RA.get_no_information_provided_for_mitigation_input()
+                no_information_provided_for_mitigation_prompt_output, no_information_provided_for_mitigation = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_mitigation_prompt_input, LLM)
 
-                mitigation_protective_clothing_prompt_input = RA.get_mitigation_protective_clothing_input()
-                mitigation_protective_clothing_prompt_output, mitigation_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_clothing_prompt_input, LLM)
-
-                shortform_feedback = mitigation_protective_clothing_prompt_input.get_shortform_feedback('positive')
-                longform_feedback = mitigation_protective_clothing_prompt_input.get_longform_feedback()
-
-                # Indicating that the mitigation is a protective clothing
-                if mitigation_protective_clothing_pattern == True:
-                    feedback_for_correct_answers += f'''
-                    {feedback_header}
-                    \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
-                    \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
-                
-                # Indicating that the mitigation is not a protective clothing
+                if no_information_provided_for_mitigation == True:
+                    no_information_provided_message += f'''\n\n\n\n#### Mitigation\n\n\n\n'''
                 else:
-                    mitigation_first_aid_prompt_input = RA.get_mitigation_first_aid_input()
-                    mitigation_first_aid_prompt_output, mitigation_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_first_aid_prompt_input, LLM)
+                    feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
 
-                    shortform_feedback = mitigation_first_aid_prompt_input.get_shortform_feedback('positive')
-                    longform_feedback = mitigation_first_aid_prompt_input.get_longform_feedback()
+                    mitigation_protective_barrier_prompt_input = RA.get_mitigation_old_protective_barrier_input()
+                    mitigation_protective_barrier_prompt_output, mitigation_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_barrier_prompt_input, LLM)
 
-                    # Indicating that the mitigation is an example of first aid
-                    if mitigation_first_aid_pattern == True:
-                            
+                    shortform_feedback = mitigation_protective_barrier_prompt_input.get_shortform_feedback('positive')
+                    longform_feedback = mitigation_protective_barrier_prompt_input.get_longform_feedback()
+
+                    # Indicating that the mitigation is a protective clothing
+                    if mitigation_protective_barrier_pattern == True:
                         feedback_for_correct_answers += f'''
                         {feedback_header}
                         \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
                         \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
-
-                    # Indicating that the mitigation is neither a protective clothing or an example of first aid
-                    # This checks whether the inputted mitigation is a prevention or a mitigation 
+                    
+                    # Indicating that the mitigation is not a protective clothing
                     else:
-                        mitigation_prompt_input = RA.get_mitigation_input()
-                        mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, LLM)
+                        mitigation_first_aid_prompt_input = RA.get_mitigation_first_aid_input()
+                        mitigation_first_aid_prompt_output, mitigation_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_first_aid_prompt_input, LLM)
 
-                        longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output)
+                        shortform_feedback = mitigation_first_aid_prompt_input.get_shortform_feedback('positive')
+                        longform_feedback = mitigation_first_aid_prompt_input.get_longform_feedback()
 
-                        if mitigation_pattern == 'both':
-                            recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='both')
-                            answers_for_which_feedback_cannot_be_given_message += f'''
-                            \n\n\n\n#### {mitigation_prompt_input.get_shortform_feedback('both')}\n\n\n\n
-                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
-
-                            is_complete_feedback_given = False
-
-                        if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
+                        # Indicating that the mitigation is an example of first aid
+                        if mitigation_first_aid_pattern == True:
+                                
                             feedback_for_correct_answers += f'''
                             {feedback_header}
-                            \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('positive')}\n\n\n\n
+                            \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n
                             \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
-                        
-                        if mitigation_pattern == 'neither':
-                            recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='neither')
 
-                            feedback_for_incorrect_answers += f'''
-                            {feedback_header}
-                            \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('neither')}\n\n\n\n
-                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+                        # Indicating that the mitigation is neither a protective clothing or an example of first aid
+                        # This checks whether the inputted mitigation is a prevention or a mitigation 
+                        else:
+                            mitigation_prompt_input = RA.get_mitigation_input()
+                            mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, LLM)
 
-                            is_everything_correct = False
+                            longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output)
 
-                        if mitigation_pattern == 'prevention':
-                            longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation')
-                            recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='misclassification')
+                            if mitigation_pattern == 'both':
+                                recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='both')
+                                answers_for_which_feedback_cannot_be_given_message += f'''
+                                \n\n\n\n#### {mitigation_prompt_input.get_shortform_feedback('both')}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
-                            feedback_for_incorrect_answers += f'''
-                            {feedback_header}
-                            \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('misclassification')}\n\n\n\n
-                            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-                            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+                                is_complete_feedback_given = False
+
+                            if mitigation_pattern == 'mitigation' or mitigation_pattern == 'both':
+                                feedback_for_correct_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('positive')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
                             
-                            is_everything_correct = False
+                            if mitigation_pattern == 'neither':
+                                recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='neither')
+
+                                feedback_for_incorrect_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('neither')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+                                is_everything_correct = False
+
+                            if mitigation_pattern == 'prevention':
+                                longform_feedback = mitigation_prompt_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation')
+                                recommendation = mitigation_prompt_input.get_recommendation(recommendation_type='misclassification')
+
+                                feedback_for_incorrect_answers += f'''
+                                {feedback_header}
+                                \n\n\n\n#### Feedback: {mitigation_prompt_input.get_shortform_feedback('misclassification')}\n\n\n\n
+                                \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+                                \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+                                
+                                is_everything_correct = False
 
             if is_everything_correct == True:
 
@@ -407,10 +436,13 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
             if is_complete_feedback_given == True:
                 answers_for_which_feedback_cannot_be_given_message = ''
+            
+            if no_information_provided_for_prevention == False and no_information_provided_for_mitigation == False:
+                no_information_provided_message = ''
 
             feedback_for_correct_answers += f'''
             \n\n\n## Feedback for Risk Multiplications\n\n\n\n
-            \n\n\n\n#### Uncontrolled risk multiplication is: {uncontrolled_risk}\n\n\n\n
-            \n\n\n\n#### Controlled risk multiplication is: {controlled_risk}\n\n\n\n'''
+            \n\n\n\n#### Uncontrolled risk multiplication is: {uncontrolled_risk_multiplication_check}\n\n\n\n
+            \n\n\n\n#### Controlled risk multiplication is: {controlled_risk_multiplication_check}\n\n\n\n'''
 
-            return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + '\n\n\n\n\n' + answers_for_which_feedback_cannot_be_given_message + '\n\n\n\n\n' + feedback_for_correct_answers)
+            return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers + '\n\n\n\n\n' + answers_for_which_feedback_cannot_be_given_message + '\n\n\n\n\n' + feedback_for_correct_answers + '\n\n\n\n\n' + no_information_provided_message)

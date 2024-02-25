@@ -300,6 +300,47 @@ class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
 
             return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}\n\nHazard event prompt: {hazard_event_prompt_output}'''
 
+class TestProtectiveBarrierMitigationPrompt(TestModelAccuracyForCombinationOfPrompts):
+    def __init__(self, 
+                LLM: LLMCaller,
+                LLM_name: str,
+                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                sheet_name: str,
+                test_description: str):
+        
+        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
+        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
+
+        injury_prompt_input = RA.get_injury_input()
+        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+
+        illness_prompt_input = RA.get_illness_input()
+        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+
+        if injury_pattern == False and illness_pattern == False:
+            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+        else:
+            if injury_pattern != False:
+                harm_caused = injury_pattern
+            else:
+                harm_caused = illness_pattern
+
+            hazard_event_prompt_input = RA.get_hazard_event_input()
+            hazard_event_prompt_output, hazard_event = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
+                                                                                                        LLM_caller=self.LLM,
+                                                                                                        harm_caused=harm_caused)
+            protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
+            protective_barrier_prompt_output, protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=protective_barrier_prompt_input,
+                                                                                                                     LLM_caller=self.LLM,
+                                                                                                                     hazard_event=hazard_event,
+                                                                                                                     harm_caused=harm_caused)
+
+            return expected_output, protective_barrier_pattern, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nProtective clothing:{protective_barrier_prompt_output}'''
+        
+
 class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                 LLM: LLMCaller,
@@ -321,7 +362,7 @@ class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
         illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
 
         if injury_pattern == False and illness_pattern == False:
-            return expected_output, 'Harm not detected', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
+            return expected_output, 'Harm not detected', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
         else:
             if injury_pattern != False:
                 harm_caused = injury_pattern
@@ -370,14 +411,11 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
         #                                                                                                 LLM_caller=self.LLM, 
         #                                                                        )
 
-        prevention_protective_clothing_prompt_input = RA.get_prevention_protective_clothing_input()
-        prevention_protective_clothing_prompt_output, prevention_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prevention_protective_clothing_prompt_input, 
-                                                                                                                                        LLM_caller=self.LLM,
-                                                                                                                                        
-                                                                                                                )
-        
-        if prevention_protective_clothing_pattern == True:
-            prompt_output = f'''{prevention_protective_clothing_prompt_output} 
+        prevention_protective_barrier_prompt_input = RA.get_prevention_protective_barrier_input()
+        prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prevention_protective_barrier_prompt_input, 
+                                                                                                                                        LLM_caller=self.LLM)
+        if prevention_protective_barrier_pattern == True:
+            prompt_output = f'''{prevention_protective_barrier_prompt_output} 
             
             'First aid prompt not run'
             
@@ -390,7 +428,7 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
             prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
 
             if prevention_first_aid_pattern == True:
-                prompt_output = f'''{prevention_protective_clothing_prompt_output}
+                prompt_output = f'''{prevention_protective_barrier_prompt_output}
 
                 {prevention_first_aid_prompt_output}
 
@@ -402,7 +440,7 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
                 prevention_prompt_input = RA.get_prevention_input()
                 prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM)
 
-                prompt_output = f'''{prevention_protective_clothing_prompt_output}
+                prompt_output = f'''{prevention_protective_barrier_prompt_output}
 
                 {prevention_first_aid_prompt_output}
                 
@@ -432,8 +470,8 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
         #                                                                                             LLM_caller=self.LLM, 
         #                                                                    )
         
-        first_prevention_protective_clothing_prompt_input_object = RA.get_prevention_protective_clothing_input()
-        first_prevention_protective_clothing_prompt_input = first_prevention_protective_clothing_prompt_input_object.generate_prompt()
+        first_prevention_protective_barrier_prompt_input_object = RA.get_prevention_protective_barrier_input()
+        first_prevention_protective_barrier_prompt_input = first_prevention_protective_barrier_prompt_input_object.generate_prompt()
 
         first_prevention_first_aid_prompt_input_object = RA.get_prevention_first_aid_input()
         first_prevention_first_aid_prompt_input = first_prevention_first_aid_prompt_input_object.generate_prompt()
@@ -441,7 +479,7 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
         first_prevention_prompt_input_object = RA.get_prevention_input()
         first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
 
-        return f'''{first_prevention_protective_clothing_prompt_input}
+        return f'''{first_prevention_protective_barrier_prompt_input}
                   
                   {first_prevention_first_aid_prompt_input}
                   
@@ -461,11 +499,11 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        mitigation_protective_clothing_prompt_input = RA.get_mitigation_protective_clothing_input()
-        mitigation_protective_clothing_prompt_output, mitigation_protective_clothing_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_clothing_prompt_input, self.LLM)
+        mitigation_protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
+        mitigation_protective_barrier_prompt_output, mitigation_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_barrier_prompt_input, self.LLM)
 
-        if mitigation_protective_clothing_pattern == True:
-            prompt_output = f'''{mitigation_protective_clothing_prompt_output} 
+        if mitigation_protective_barrier_pattern == True:
+            prompt_output = f'''{mitigation_protective_barrier_prompt_output} 
             
             'First aid prompt not run'
             
@@ -478,7 +516,7 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
             mitigation_first_aid_prompt_output, mitigation_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
 
             if mitigation_first_aid_pattern == True:
-                prompt_output = f'''{mitigation_protective_clothing_prompt_output}
+                prompt_output = f'''{mitigation_protective_barrier_prompt_output}
 
                 {mitigation_first_aid_prompt_output}
 
@@ -490,7 +528,7 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
                 mitigation_prompt_input = RA.get_mitigation_input()
                 mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, self.LLM)
 
-                prompt_output = f'''{mitigation_protective_clothing_prompt_output}
+                prompt_output = f'''{mitigation_protective_barrier_prompt_output}
 
                 {mitigation_first_aid_prompt_output}
                 
@@ -501,8 +539,8 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
     def get_first_prompt_input(self):
         first_risk_assessment = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
         
-        first_protective_clothing_prompt_input_object = first_risk_assessment.get_mitigation_protective_clothing_input()
-        first_protective_clothing_prompt_input = first_protective_clothing_prompt_input_object.generate_prompt()
+        first_protective_barrier_prompt_input_object = first_risk_assessment.get_mitigation_protective_barrier_input()
+        first_protective_barrier_prompt_input = first_protective_barrier_prompt_input_object.generate_prompt()
 
         first_aid_prompt_input_object = first_risk_assessment.get_mitigation_first_aid_input()
         first_aid_prompt_input = first_aid_prompt_input_object.generate_prompt()
@@ -510,7 +548,7 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
         first_prevention_prompt_input_object = first_risk_assessment.get_mitigation_input()
         first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
 
-        return f'''{first_protective_clothing_prompt_input}
+        return f'''{first_protective_barrier_prompt_input}
                   
                   {first_aid_prompt_input}
                   

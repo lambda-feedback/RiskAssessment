@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
-    test_accuracy = TestIllnessAndInjuryPrompts(test_description="""Testing ability of LLM to produce hazard harm caused from hazard and how it harms inputs 
+    test_accuracy = TestIllnessAndInjuryPrompts(test_description="""Testing ability of LLM to produce harm caused from hazard and how it harms inputs 
                                       Testing with examples from student Fluids Lab and TPS presentation Risk Assessment examples.
                                        """,
                                       LLM=OpenAILLM(),
