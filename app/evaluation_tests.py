@@ -6,7 +6,7 @@ import unittest
 
 try:
     from .evaluation import Params, evaluation_function
-    from .example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
+    from .example_risk_assessments_exemplar import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
     from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
     from .RegexPatternMatcher import RegexPatternMatcher
