@@ -73,6 +73,7 @@ class RiskAssessment:
                 'controlled_severity',
                 'controlled_risk']
     
+    # TODO: It should be OK if either prevention or mitigation field is empty, but not both.
     def get_empty_fields(self):
         empty_fields = []
 
