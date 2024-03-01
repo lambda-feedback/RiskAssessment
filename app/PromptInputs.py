@@ -399,6 +399,46 @@ class WhoItHarmsInContext(PromptInput):
 #         Illness Explanation: <your illness explanation>
 #         Illness: <your illness>'''
 
+class HarmCaused(PromptInput):
+    def __init__(self, hazard, how_it_harms):
+        super().__init__()
+        self.hazard = hazard
+        self.how_it_harms = how_it_harms
+        self.pattern_matching_method = 'extract_harm_caused_and_hazard_event'
+
+    def generate_prompt(self):
+        return f'''
+        Follow these instructions:
+        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
+        1. From the hazard and how it harms, extract the harm caused.
+        1. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+
+        Hazard: Fire in a building
+        How it harms: Clothes catch on fire and cause a burn
+        Event that leads to harm: Fire in building causes clothes to catch on fire
+        Harm caused: Burn
+
+        Hazard: Unsecured scaffolding
+        How it harms: A worker falling from a height causing an impact injury
+        Event that leads to harm: A worker falling from a height
+        Harm caused: Impact injury
+
+        Hazard: Malware infection
+        How it harms: Gives hackers remote access to the infected system, allowing them to steal personal data
+        Event that leads to harm: Malware infects a system giving hackers remote access
+        Harm caused: Personal data theft
+
+        Hazard: Market volatility
+        How it harms: If the value of an investor's holdings decreases due to market downturns, they will experience financial losses when selling their assets
+        Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
+        Harm caused: Financial losses
+
+        Use the following output format:
+        Hazard: {self.hazard}
+        How it harms: {self.how_it_harms}
+        Event that leads to harm: <your event>
+        Harm caused: <your harm caused>'''
+
 class Injury(PromptInput):
     def __init__(self, input):
         super().__init__()
@@ -572,14 +612,14 @@ class HazardEvent(PromptInput):
         self.hazard = hazard
         self.who_it_harms = who_it_harms
         self.how_it_harms = how_it_harms
-        self.pattern_matching_method = "extract_hazard_event"
+        self.pattern_matching_method = "extract_harm_caused_and_hazard_event"
 
-    def generate_prompt(self, harm_caused):
+    def generate_prompt(self):
         return f'''
         Follow these instructions:
-        Given the activity: "{self.activity}", the hazard: "{self.hazard}", who it harms: {self.who_it_harms}, and how it harms: "{self.how_it_harms}":
-        1. The harm caused is: "{harm_caused}".
-        2. Describe the events which lead to the harm caused? Don't mention the harm caused: "{harm_caused}".
+        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
+        1. Given the activity: "{self.activity}", the hazard: "{self.hazard}", who it harms: {self.who_it_harms}, and how it harms: "{self.how_it_harms}", extract the harm caused.
+        2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
 
         Example Output:
         Activity: Building a house
@@ -597,6 +637,22 @@ class HazardEvent(PromptInput):
         Harm caused: Puncture wound
         Event that leads to harm: A student being pricked by the syringe needle
 
+        Example Output:
+        Activity: Using a computer
+        Hazard: Malware infection
+        Who it harms: Computer users
+        How it harms: Gives hackers remote access to the infected system, allowing them to steal personal data
+        Harm caused: Personal data theft
+        Event that leads to harm: Malware infects a system giving hackers remote access
+
+        Example Output:
+        Activity: Investing in stocks
+        Hazard: Market volatility
+        Who it harms: Investors
+        How it harms: If the value of an investor's holdings decreases due to market downturns, they will experience financial losses when selling their assets
+        Harm caused: Financial losses
+        Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
+
         Use the following output format:
         Activity: {self.activity}
         Hazard: {self.hazard}
@@ -604,318 +660,54 @@ class HazardEvent(PromptInput):
         How it harms: {self.how_it_harms}
         Harm caused: <your harm>
         Event that leads to harm: <your event>'''
-    
-class Clothing(PromptInput):
-    def __init__(self, control_measure):
-        super().__init__()
-        self.control_measure = control_measure
-    
-    def generate_prompt(self):
-        return f'''
-        Follow these instructions:
-        1. In one sentence, explain whether "{self.control_measure}" is an example of something that a person can wear.
-        2. If it is, give the location of where it is worn on the body, else write None.
-        2. If it is, answer True, else answer False.
-
-        Use the following output format:
-        1. Explanation: <your explanation>
-        2. Where it is worn: <your location>
-        2. Overall Answer: <your answer>'''
-
-class PartOfBodyHarmed(PromptInput):
-    def __init__(self):
-        super().__init__()
-
-        self.pattern_matching_method = "extract_overall_answer_until_end_of_line"
-    
-    def generate_prompt(self, hazard_event, harm_caused):
-        return f'''
-        Follow these instructions:
-        What are the parts of the body that are most likely to be harmed by the {harm_caused} by {hazard_event}.
-
-        Input:
-        What are the parts of the body that are most likely to be harmed by the puncture wound by a student being pricked by the syringe needle?
-
-        Output:
-        Answer: The hands and arms
-
-        Input:
-        What are the parts of the body that are most likely to be harmed by the impact injury by a worker falling from a height?
-
-        Output:
-        Answer: The head, neck, back, and limbs
-
-        Use the following output format:
-        Overall Answer: <your answer>'''
-
-class ProtectsPartOfBody(PromptInput):
-    def __init__(self, control_measure):
-        super().__init__()
-        self.control_measure = control_measure
-    
-    def generate_prompt(self, hazard_event, harm_caused, part_of_body_harmed):
-        return f'''
-        Input:
-        Assuming that the hazard event: "The cyclist being by struck by a vehicle" has occurred, explain in one sentence whether "Wearing high-viz clothing" reduces the harm to the "head, neck, back and limbs" from the "impact injury" caused by the event.
-
-        Output:
-        Explanation: Since the the cyclist has already been struck by a vehicle, wearing high-viz clothing will not reduce the extent of the "impact injury" caused to the "head, neck, back and limbs" of the cyclist. It merely reduces the likelihood that the event occurs.
-        
-        Follow these instructions:
-        1. Assuming that the hazard event: "{hazard_event}" has occurred, explain in one sentence whether "{self.control_measure}" reduces the harm to {part_of_body_harmed} from the {harm_caused} caused by event.
-        2. If it does, answer True, else answer False.
-        
-        Use the following output format:
-        1. Explanation: <your explanation>
-        2. Overall Answer: <your answer>'''
-
-class ProtectiveBarrier(PromptInput):
-    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
-        super().__init__()
-
-        self.activity = activity
-        self.hazard = hazard
-        self.who_it_harms = who_it_harms
-        self.how_it_harms = how_it_harms
-        self.control_measure = control_measure
-
-        self.labels_indicating_correct_input = [False]
-
-    def get_field_checked(self):
-        return 'Prevention and Mitigation'
-    
-        #     1. Description: In one sentence, describe the hazard: "{self.hazard}" during the
-        # activity: "{self.activity}" given how the hazard harms: "{self.how_it_harms}"
-        # and who the hazard harms: "{self.who_it_harms}".
-    
-    def generate_prompt_without_few_shot_examples(self):
-        return f'''Follow these instructions:
-        2. Reduces Harm Explanation: Explain whether "{self.control_measure}" has the potential to reduce the harm caused by the hazard: "{self.hazard}" given how it harms: "{self.how_it_harms}".
-        3. Reduces Harm Answer: If "{self.control_measure}" reduces the harm, answer True, else answer False.
-        1. Protective Clothing Explanation: Protective clothing provides a physical barrier between the person and potential hazards. In one sentence, explain whether "{self.control_measure}" is an example of protective clothing
-        2. Protective Clothing Answer: If "{self.control_measure}" is an example of providing protective clothing, answer True, else answer False.
-        3. Part of Body: Which parts of the body of the "{self.who_it_harms}" are most likely damaged by the hazard: "{self.hazard}" given how it harms: "{self.how_it_harms}"? 
-        4. Protects Part of Body Explanation: Explain whether "{self.control_measure}" protects some of these body parts from harm.
-        5. Protects Part of Body Answer: If "{self.control_measure}" protects some of these body parts, answer True, else answer False.
-        6. If both "Reduces Harm", "Protective Clothing Answer" and "Protects Part of Body Answer" are True, answer True. Else answer False.'''
-    
-    def generate_prompt(self):
-        example_of_correct_protective_barrier = '''
-        Example Input:
-        1. Reduces Harm Explanation: Explain whether "Wearing lab coat and PPE" has the potential to reduce the harm caused by the hazard: "Syringes with sharp needles" given how it harms: "Sharp needles can pierce the skin and cause bleeding"?
-        2. Reduces Harm Answer: If "Wearing lab coat and PPE" reduces the harm, answer True, else answer False.
-        1. Protective Clothing Explanation: Protective clothing provides a physical barrier between the person and potential hazards. In one sentence, explain whether ""Wearing lab coat and PPE"" is an example of protective clothing
-        2. Protective Clothing Answer: If "Wearing lab coat and PPE" is an example of providing protective clothing, answer True, else answer False.
-        3. Part of Body: Which parts of the body of the "Students" are most likely damaged by the hazard: "Syringes with sharp needles" given how it harms: "Sharp needles can pierce the skin and cause bleeding"? 
-        4. Protects Part of Body Explanation: Explain whether "Wearing lab coat and PPE" protects some of these body parts from harm.
-        5. Protects Part of Body Answer: If "Wearing lab coat and PPE" protects some of these body parts, answer True, else answer False.
-        6. If both "Protective Clothing Answer" and "Protects Part of Body Answer" are True, answer True. Else answer False.
-
-        Output:
-        Reduces Harm Explanation: "Wearing lab coat and PPE" reduces the harm caused by the hazard as it provides a physical barrier between the person and the sharp syringe needle.
-        Reduces Harm Answer: True.
-        Protective Clothing Explanation: Yes, wearing a lab coat is a prime example of wearing protective clothing, as it shields individuals from potential hazards in the laboratory.
-        Protective Clothing Answer: True.
-        Part of Body: "Syringes with sharp needles" can pierce the skin and cause bleeding on any body part.
-        Protects Part of Body Explanation: "Wearing lab coat and PPE" provides protection for the arms and body so provides protection for some of these body parts.
-        Protects Part of Body Answer: True. 
-        Overall Answer: True.
-
-        Example Input:
-        1. Reduces Harm Explanation: Explain whether "Metal gloves" has the potential to reduce the harm caused by the hazard: "Sharp blade" given how it harms: "Cutting injury"?
-        2. Reduces Harm Answer: If "Metal gloves" reduces the harm, answer True, else answer False.
-        1. Protective Clothing Explanation: Protective clothing provides a physical barrier between the person and potential hazards. In one sentence, explain whether "Metal gloves" is an example of protective clothing
-        2. Protective Clothing Answer: If "Metal gloves" is an example of providing protective clothing, answer True, else answer False.
-        3. Part of Body: Which parts of the body of the "Operator" are most likely damaged by the hazard: "Sharp blade" given how it harms: "Cutting injury"?
-        4. Protects Part of Body Explanation: Explain whether "Metal gloves" protects some of these body parts from harm.
-        5. Protects Part of Body Answer: If "Metal gloves" protects some of these body parts, answer True, else answer False.
-        6. If both "Protective Clothing Answer" and "Protects Part of Body Answer" are True, answer True. Else answer False.
-
-        Output:
-        Reduces Harm Explanation: "Metal gloves" reduces the harm caused by the hazard as they provide a physical barrier between the operator's hand and the sharp blade.
-        Reduces Harm Answer: True.
-        Protective Clothing Explanation: "Metal gloves" are an example of protective clothing as they provide a physical barrier between the person and potential hazards.
-        Protective Clothing Answer: True.
-        Part of Body: "Sharp blade" can cause cutting injuries to the hands and fingers.
-        Protects Part of Body Explanation: "Metal gloves" protect the hands and fingers from harm.
-        Protects Part of Body Answer: True.
-        Overall Answer: True.
-
-        Example Input:
-        1. Reduces Harm Explanation: Explain whether "Wearing gloves" has the potential to reduce the harm caused by the hazard: "Horse Kicks" given how it harms: "Impact injury"?
-        2. Reduces Harm Answer: If "Wearing gloves" reduces the harm, answer True, else answer False.
-        1. Protective Clothing Explanation: Protective clothing provides a physical barrier between the person and potential hazards. In one sentence, explain whether "Wearing gloves" is an example of protective clothing
-        2. Protective Clothing Answer: If "Wearing gloves" is an example of providing protective clothing, answer True, else answer False.
-        3. Part of Body: Which parts of the body of the "Stable hand" are most likely damaged by the hazard: "Horse Kicks" given how it harms: "Impact injury"?
-        4. Protects Part of Body Explanation: Explain whether "Wearing gloves" protects some of these body parts from harm.
-        5. Protects Part of Body Answer: If "Wearing gloves" protects some of these body parts, answer True, else answer False.
-        6. If both "Protective Clothing Answer" and "Protects Part of Body Answer" are True, answer True. Else answer False.
-
-        Output:
-        Reduces Harm Explanation: "Wearing gloves" does not reduce the harm caused by the hazard as it will not protect the stable hand from a horse's kick.
-        Reduces Harm Answer: False.
-        Protective Clothing Explanation: "Wearing gloves" is an example of protective clothing as it provides a physical barrier between the person and potential hazards.
-        Protective Clothing Answer: True.
-        Part of Body: "Horse Kicks" can cause significant impact injuries to the torso, back and head.
-        Protects Part of Body Explanation: "Wearing gloves" does not protect the torso, back and head from harm.
-        Protects Part of Body Answer: False.
-        Overall Answer: False.
-        '''
-
-        return f'''
-
-        {example_of_correct_protective_barrier}
-
-        {self.generate_prompt_without_few_shot_examples()}
-
-        Use the following output format:
-        Reduces Harm Explanation: <your explanation>
-        Reduces Harm Answer: <your answer>
-        Protective Clothing Explanation: <your description>
-        Protective Clothing Answer: <your answer>
-        Reduces Harm Explanation: <your explanation>
-        Reduces Harm Answer: <your answer>
-        Overall Answer: <your answer>'''
-    
-    def get_shortform_feedback(self, feedback_type):
-        # Feedback is only given when a mitigation is written in prevention input.
-        if feedback_type == 'positive':
-            return f"Correct! '{self.control_measure}' is an example of a mitigation measure"
-        if feedback_type == 'negative':
-            return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
-    
-    def get_longform_feedback(self, prompt_output=''):
-        return f"{self.control_measure} is an example of wearing protective clothing, which reduces the harm caused by the hazard event so is therefore a mitigation measure."
-    
-    # TODO: When you have hazard event input, can include below
-    def get_recommendation(self):
-        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event. Wearing protective clothing does not reduce the likelihood of the hazard event so it is not a prevention measure."""
-    
-class FirstAid(PromptInput):
-    def __init__(self, activity, hazard, who_it_harms, how_it_harms, control_measure):
-        super().__init__()
-
-        self.activity = activity
-        self.hazard = hazard
-        self.who_it_harms = who_it_harms
-        self.how_it_harms = how_it_harms
-        self.control_measure = control_measure
-
-    def get_field_checked(self):
-        return 'Prevention and Mitigation'
-    
-    def generate_prompt_without_few_shot_examples(self):
-        return f'''Follow these instructions:
-        Follow these instructions:
-        1. Describe "{self.control_measure}" in one sentence.
-        2. Reduces Harm Explanation: Explain whether "{self.control_measure}" has the potential to reduce the harm caused by the hazard: "{self.hazard}" given how it harms: "{self.how_it_harms}".
-        3. Reduces Harm Answer: If "{self.control_measure}" reduces the harm, answer True, else answer False.
-        4. After Medical Emergency Explanation: Explain whether "{self.control_measure}" is likely to be done after a medical emergency.
-        5. After Medical Emergency Answer: If "{self.control_measure}" is likely to be done after a medical emergency, answer True, else answer False.
-        6. Initial Medical Response Explanation: "Definition of initial medical response": "Immediate actions taken by individuals in the presence of a medical emergency or injury to provide basic care or initiate further assistance as needed.
-        Given this "Definition of initial medical response", explain whether "{self.control_measure}" is an example of initial medical response.
-        7. Initial Medical Response Answer: If "{self.control_measure}" is an example of an example of initial medical response, answer True, else answer False.
-        8. If all of "After Medical Emergency Answer", "First Aid Answer" and "Reduces Harm Answer" are True, answer True, else answer False.'''
-    
-    def generate_prompt(self):
-        example_of_correct_protective_barrier = '''
-        Example Input:
-        1. Description: Describe "Washing the eyes out with clean water" in one sentence.
-        4. Reduces Harm Explanation: Explain whether "Washing the eyes out with clean water" has the potential to reduce the harm caused by the hazard: "Ink spillage" given how it harms: "Serious eye damage".
-        5. Reduces Harm Answer: If "Washing the eyes out with clean water" reduces the harm, answer True, else answer False.
-        2. After Medical Emergency Explanation: Explain whether "Washing the eyes out with clean water" is likely to be done after a medical emergency.
-        3. After Medical Emergency Answer: If "Washing the eyes out with clean water" is likely to be done after a medical emergency, answer True, else answer False.
-        2. Initial Medical Response Explanation: "Definition of initial medical response": "Immediate actions taken by individuals in the presence of a medical emergency or injury to provide basic care or initiate further assistance as needed.
-        Given this "Definition of initial medical response", explain whether ""Washing the eyes out with clean water"" is an example of initial medical response.
-        3. Initial Medical Response Answer:  If "Washing the eyes out with clean water" is an example of initial medical response, answer True, else answer False.
-        6. If all of "After Medical Emergency Answer", "First Aid Answer" and "Reduces Harm Answer" are True, answer True, else answer False.
-
-        Output:
-        Description: "Washing the eyes out with clean water" is the process of rinsing the eyes with clean water to remove any foreign bodies or chemicals that may have entered the eye.
-        Reduces Harm Explanation: "Washing the eyes out with clean water" reduces the harm caused by the hazard as it helps to wash the ink out of the eyes and reduce eye damage.
-        Reduces Harm Answer: True.
-        After Medical Emergency Explanation: "Washing the eyes out with clean water" is likely to be done after a medical emergency as it is a first aid measure.
-        After Medical Emergency Answer: True.
-        Intial Medical Response Explanation: "Washing the eyes out with clean water" is an example of basic care provided to an individual so is an example of "initial medical response".
-        Initial Medical Response Answer: True.
-        Overall Answer: True.
-
-        Example Input:
-        1. Description: Describe "Call for urgent medical assistance" in one sentence.
-        4. Reduces Harm Explanation: Explain whether "Call for urgent medical assistance" has the potential to reduce the harm caused by the hazard: "Ink spillage" given how it harms: "Serious eye damage".
-        5. Reduces Harm Answer: If "Call for urgent medical assistance" reduces the harm, answer True, else answer False.
-        2. After Medical Emergency Explanation: Explain whether "Call for urgent medical assistance" is likely to be done after a medical emergency.
-        3. After Medical Emergency Answer: If "Call for urgent medical assistance" is likely to be done after a medical emergency, answer True, else answer False.
-        2. Initial Medical Response Explanation: "Definition of initial medical response": "Immediate actions taken by individuals in the presence of a medical emergency or injury to provide basic care or initiate further assistance as needed.
-        Given this "Definition of initial medical response", explain whether "Call for urgent medical assistance" is an example of initial medical response.
-        3. Initial Medical Response Answer:  If "Call for urgent medical assistance" is an example of initial medical response, answer True, else answer False.
-        6. If all of "After Medical Emergency Answer", "First Aid Answer" and "Reduces Harm Answer" are True, answer True, else answer False.
-
-        Output:
-        Description: "Call for urgent medical assistance" is the process of contacting emergency services to provide urgent medical care to an individual.
-        Reduces Harm Explanation: "Call for urgent medical assistance" has the potential to reduce the harm of "Serious eye damage" as the medical assistance will provide the necessary care to reduce the harm caused by the hazard.
-        Reduces Harm Answer: True.
-        After Medical Emergency Explanation: "Call for urgent medical assistance" is likely to be done after a medical emergency.
-        After Medical Emergency Answer: True.
-        Intial Medical Response Explanation: "Call for urgent medical assistance" is an example of initiating further assistance as needed so is an example of "initial medical response".
-        Initial Medical Response Answer: True.
-        Overall Answer: True.
-
-        Example Input:
-        Describe "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." in one sentence.
-        After Medical Emergency Explanation: Explain whether "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is likely to be done after a medical emergency.
-        Reduces Harm Explanation: Explain whether "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." has the potential to reduce the harm caused by the hazard: "Climbing Protection Gear (Cams and Hexs)" given how it harms: "Some equipment is heavy so could hurt if dropped on feet.".
-        Reduces Harm Answer: If "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." reduces the harm, answer True, else answer False.
-        After Medical Emergency Answer: If "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is likely to be done after a medical emergency, answer True, else answer False.
-        Initial Medical Response Explanation: "Definition of initial medical response": "Immediate actions taken by individuals in the presence of a medical emergency or injury to provide basic care or initiate further assistance as needed.
-        Given this "Definition of initial medical response", explain whether "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is an example of initial medical response.
-        Initial Medical Response Answer:  If "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is an example of initial medical response, answer True, else answer False.
-        If all of "After Medical Emergency Answer", "First Aid Answer" and "Reduces Harm Answer" are True, answer True, else answer False.
-
-        Output:
-        Description: "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is the process of providing information to individuals who wish to hold the equipment of the risk and demonstrate how they are used correctly.
-        Reduces Harm Explanation: "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." has the potential to reduce the harm caused by the hazard of "Climbing Protection Gear (Cams and Hexs)" as it ensures that individuals are aware of the risks and know how to use the equipment properly, reducing the likelihood of accidents or injuries.
-        Reduces Harm Answer: True.
-        After Medical Emergency Explanation: "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." will not be done after a medical emergency as it will be done before the equipment is used.
-        After Medical Emergency Answer: False.
-        Intial Medical Response Explanation: "Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly." is not an example of initial medical response as it does not involve providing immediate care or assistance in a medical emergency.
-        Initial Medical Response Answer: False.
-        Overall Answer: False.
-
-        '''
-
-        return f'''
-
-        {example_of_correct_protective_barrier}
-
-        {self.generate_prompt_without_few_shot_examples()}
-
-        Use the following output format:
-        Description: <your description>
-        Reduces Harm Explanation: <your explanation>
-        Reduces Harm Answer: <your answer>
-        After Medical Emergency Explanation: <your explanation>
-        After Medical Emergency Answer: <your answer>
-        Initial Medical Response Explanation: <your explanation>
-        Initial Medical Response Answer: <your answer>
-        Overall Answer: <your answer>'''
-    
-    def get_shortform_feedback(self, feedback_type):
-        # Feedback is only given when a mitigation is written in prevention input.
-
-        if feedback_type == 'positive':
-            return f"Correct! '{self.control_measure}' is an example of a mitigation measure"
-        if feedback_type == 'negative':
-            return f"Incorrect. '{self.control_measure}' is not a prevention measure, but is actually a mitigation measure."
-    
-    def get_longform_feedback(self, prompt_output=''):
-        return f"""{self.control_measure} is an example of a first aid measure, which reduces the harm caused by the hazard event after it has occurred; it is therefore a mitigation measure."""
-
-    # TODO: When you have hazard event input, can include in feedback.
-    def get_recommendation(self):
-        return f"""For the prevention field, enter a control measure which reduces the likelihood of the hazard event. First aid is applied after the hazard event so does not reduce the likelihood of the hazard event occurring and is therefore not a prevention measure."""
 
 class Prevention(PromptInput):
+    def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):
+        super().__init__()
+        self.control_measure = control_measure
+        self.activity = activity
+        self.hazard = hazard
+        self.how_it_harms = how_it_harms
+        self.who_it_harms = who_it_harms
+    
+    def generate_prompt_without_few_shot_examples(self, hazard_event, harm_caused):
+
+        return f'''Follow these instructions:
+        1. In one sentence, describe the event that leads to harm: '{hazard_event}' during the
+        activity: '{self.activity}' given how the harm caused: '{harm_caused}' for {self.who_it_harms}.
+        2. Explain whether or not '{self.control_measure}' reduces the likelihood that '{hazard_event}' occurs.
+        If so, answer True'''
+    
+    def generate_prompt(self, hazard_event, harm_caused):
+        all_few_shot_examples = """
+
+        Example Outputs: 
+
+        Hazard Description: The hazard of 'Ink spillage on student's face' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
+        Prevention Explanation: 'First aid' is a reactive measure applied after the hazard of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard and is not a prevention measure.
+        Answer: False
+
+        Hazard Description: The hazard of 'Water being spilt on the floor causing students to slip' during the activity 'Fluids laboratory' can lead to impact injuries.
+        Prevention Explanation: 'Keeping the water tank stationary when it's full' means water cannot be spilled on to the floor by moving the water tank; no water on the floor reduces the likelihood of the student slipping; since it reduces the likelihood of the hazard, it is a prevention measure.
+        Answer: True
+
+        Hazard Description: The hazard of 'Cut Zip tie flies and hits audience member' during the activity 'Using a spring contraption as a demonstration for a TPS presentation' can lead to impact injuries.
+        Prevention Explanation: 'Keeping hand around zip tie when cutting to stop it from flying' will stop the zip tie from flying and therefore stop the hazard from occurring. Therefore, the likelihood of the hazard occurring has been reduced to zero; since the likelihood has been reduced, it is therefore a prevention measure.
+        Answer: True
+        """
+
+        return f'''
+        {all_few_shot_examples}
+
+        {self.generate_prompt_without_few_shot_examples(hazard_event, harm_caused)}
+
+        Use the following output format:
+        Hazard Description: <your hazard description>
+        Prevention Explanation: <your explanation>
+        Overall Answer: <your answer>'''
+    
+
+class OldPrevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
         self.prevention = prevention
@@ -931,7 +723,7 @@ class Prevention(PromptInput):
     def get_field_checked(self):
         return 'Prevention'
     
-    def generate_prompt_without_few_shot_examples(self):
+    def generate_prompt_without_few_shot_examples(self, hazard_event, harm_caused):
         # return f'''Follow these instructions:
         # 1. In one sentence, describe the hazard: '{self.hazard}' during the 
         # activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
@@ -946,11 +738,11 @@ class Prevention(PromptInput):
         # prevention measure and a mitigation measure, answer 'both'.'''
 
         return f'''Follow these instructions:
-        1. In one sentence, describe the hazard: '{self.hazard}' during the
-        activity: '{self.activity}' given how the hazard causes harm: '{self.how_it_harms}'.
-        2. Explain whether or not '{self.prevention}' reduces the likelihood that the hazard occurs.
+        1. In one sentence, describe the event that leads to harm: '{hazard_event}' during the
+        activity: '{self.activity}' given how the harm caused: '{harm_caused}' for {self.who_it_harms}.
+        2. Explain whether or not '{self.prevention}' reduces the likelihood that '{hazard_event}' occurs.
         If so, it is a prevention measure.
-        3. If the hazard occurs, explain whether or not '{self.prevention}' removes or reduces the chance of {self.how_it_harms}.
+        3. If the hazard occurs, explain whether or not '{self.prevention}' removes or reduces the harm caused by '{harm_caused}' for the '{self.who_it_harms}'.
         If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
@@ -958,7 +750,7 @@ class Prevention(PromptInput):
     
         # 2. In one sentence, explain why "{self.how_it_harms}" is a way that this hazard can cause harm. 
     
-    def generate_prompt(self):
+    def generate_prompt(self, hazard_event, harm_caused):
 
 
 ## Few shot exampls without chain of thought prompting
@@ -1173,7 +965,7 @@ class Prevention(PromptInput):
         return f'''
         {all_few_shot_examples}
 
-        {self.generate_prompt_without_few_shot_examples()}
+        {self.generate_prompt_without_few_shot_examples(hazard_event, harm_caused)}
 
         Use the following output format:
         Hazard Description: <your hazard description>

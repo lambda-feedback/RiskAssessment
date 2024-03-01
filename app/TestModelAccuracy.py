@@ -236,7 +236,7 @@ class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
 
         return output_string
 
-class TestIllnessAndInjuryPrompts(TestModelAccuracyForCombinationOfPrompts):
+class TestHarmCausedPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                 LLM: LLMCaller,
                 LLM_name: str,
@@ -250,21 +250,10 @@ class TestIllnessAndInjuryPrompts(TestModelAccuracyForCombinationOfPrompts):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+        harm_caused_prompt_input = RA.get_harm_caused_input()
+        harm_caused_prompt_output, harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_prompt_input, self.LLM)
 
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                predicted_output = 'injury'
-            else:
-                predicted_output = 'illness'
-
-            return expected_output, predicted_output, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+        return expected_output, True, harm_caused_prompt_output
 
 class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
@@ -280,116 +269,13 @@ class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
+        # harm_caused_prompt_input = RA.get_harm_caused_input()
+        # harm_caused_prompt_output, harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_prompt_input, self.LLM)
         
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-        
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM)
+        hazard_event_prompt_input = RA.get_hazard_event_input()
+        hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM)
 
-            return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}\n\nHazard event prompt: {hazard_event_prompt_output}'''
-
-class TestProtectiveClothingMitigationPrompt(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
-    
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-                                                                                                        LLM_caller=self.LLM,
-                                                                                                        harm_caused=harm_caused)
-            
-            clothing_prompt_input, part_of_body_prompt_input, protects_part_of_body_prompt_input = RA.get_prompt_inputs_for_mitigation_protective_clothing()
-
-            clothing_prompt_output, clothing_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=clothing_prompt_input,
-                                                                                                            LLM_caller=self.LLM)
-            if clothing_pattern == False:
-                return expected_output, False, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}'''
-            else:
-                part_of_body_prompt_output, part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=part_of_body_prompt_input,
-                                                                                                            LLM_caller=self.LLM,
-                                                                                                            hazard_event=hazard_event,
-                                                                                                            harm_caused=harm_caused)
-                
-                protects_part_of_body_prompt_output, protects_part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=protects_part_of_body_prompt_input,
-                                                                                                            LLM_caller=self.LLM,
-                                                                                                            part_of_body_harmed=part_of_body_pattern,
-                                                                                                            hazard_event=hazard_event,
-                                                                                                            harm_caused=harm_caused)
-
-                return expected_output, protects_part_of_body_pattern, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}\n\nPart of body: {part_of_body_prompt_output}\n\nProtects part of body: {protects_part_of_body_prompt_output}'''
-        
-
-class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
-
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, 'Harm not detected', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-                                                                                                        LLM_caller=self.LLM, 
-                                                                               )
-            first_aid_prompt_input = RA.get_prevention_first_aid_input()
-            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
-
-            return expected_output, prevention_first_aid_pattern, prevention_first_aid_prompt_output
+        return expected_output, True, f'''Hazard event prompt: {hazard_event_prompt_output}'''
 
 class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
@@ -400,104 +286,42 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
                 test_description: str):
         
         super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+
+    def get_classes(self):
+        return ['prevention', 'mitigation', 'neither', 'both']
     
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        # injury_prompt_input = RA.get_injury_input()
-        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+        hazard_event_prompt_input = RA.get_hazard_event_input()
+        hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM)
 
-        # illness_prompt_input = RA.get_illness_input()
-        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+        hazard_event = hazard_event_pattern.hazard_event
+        harm_caused = hazard_event_pattern.harm_caused
 
-        # if injury_pattern == False and illness_pattern == False:
-        #     return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
-        # else:
-        #     if injury_pattern != False:
-        #         harm_caused = injury_pattern
-        #     else:
-        #         harm_caused = illness_pattern
+        prevention_prompt_with_prevention_input = RA.get_prevention_prompt_with_prevention_input()
+        prevention_prompt_with_prevention_output, prevention_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_with_prevention_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
-        #     hazard_event_prompt_input = RA.get_hazard_event_input()
-        #     hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-        #                                                                                                 LLM_caller=self.LLM, 
-        #                                                                        )
+        prevention_prompt_with_mitigation_input = RA.get_prevention_prompt_with_mitigation_input()
+        prevention_prompt_with_mitigation_output, prevention_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_with_mitigation_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
-        prevention_protective_barrier_prompt_input = RA.get_prevention_protective_barrier_input()
-        prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prevention_protective_barrier_prompt_input, 
-                                                                                                                                        LLM_caller=self.LLM)
-        if prevention_protective_barrier_pattern == True:
-            prompt_output = f'''{prevention_protective_barrier_prompt_output} 
-            
-            'First aid prompt not run'
-            
-            'Prevention prompt not run'''
-            
-            return expected_output, 'mitigation', prompt_output
+        prompt_output = f'''{hazard_event_prompt_output}\n\n{prevention_prompt_with_prevention_output}\n\n{prevention_prompt_with_mitigation_output}'''
+        if prevention_prompt_with_prevention_pattern == True and prevention_prompt_with_mitigation_pattern == True:
 
-        else:
-            first_aid_prompt_input = RA.get_prevention_first_aid_input()
-            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
-
-            if prevention_first_aid_pattern == True:
-                prompt_output = f'''{prevention_protective_barrier_prompt_output}
-
-                {prevention_first_aid_prompt_output}
-
-                'Prevention prompt not run'''
-
-                return expected_output, 'mitigation', prompt_output
-            
-            else:
-                prevention_prompt_input = RA.get_prevention_input()
-                prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM)
-
-                prompt_output = f'''{prevention_protective_barrier_prompt_output}
-
-                {prevention_first_aid_prompt_output}
-                
-                {prevention_prompt_output}'''
-
-                return expected_output, prevention_pattern, prompt_output
-    
-    def get_first_prompt_input(self):
-        RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
-
-        # injury_prompt_input = RA.get_injury_input()
-        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        # illness_prompt_input = RA.get_illness_input()
-        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        # if injury_pattern == False and illness_pattern == False:
-        #     harm_caused = RA.how_it_harms
-        # else:
-        #     if injury_pattern != False:
-        #         harm_caused = injury_pattern
-        #     else:
-        #         harm_caused = illness_pattern
-
-        # hazard_event_prompt_input = RA.get_hazard_event_input()
-        # hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-        #                                                                                             LLM_caller=self.LLM, 
-        #                                                                    )
+            return expected_output, 'both', prompt_output
         
-        first_prevention_protective_barrier_prompt_input_object = RA.get_prevention_protective_barrier_input()
-        first_prevention_protective_barrier_prompt_input = first_prevention_protective_barrier_prompt_input_object.generate_prompt()
+        if prevention_prompt_with_prevention_pattern == True and prevention_prompt_with_mitigation_pattern == False:
+            
+            return expected_output, 'prevention', prompt_output
+        
+        if prevention_prompt_with_prevention_pattern == False and prevention_prompt_with_mitigation_pattern == True:
+                
+            return expected_output, 'mitigation', prompt_output
+        
+        if prevention_prompt_with_prevention_pattern == False and prevention_prompt_with_mitigation_pattern == False:
 
-        first_prevention_first_aid_prompt_input_object = RA.get_prevention_first_aid_input()
-        first_prevention_first_aid_prompt_input = first_prevention_first_aid_prompt_input_object.generate_prompt()
-
-        first_prevention_prompt_input_object = RA.get_prevention_input()
-        first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
-
-        return f'''{first_prevention_protective_barrier_prompt_input}
-                  
-                  {first_prevention_first_aid_prompt_input}
-                  
-                  {first_prevention_prompt_input}'''
-
+            return expected_output, 'neither', prompt_output
 
 # TODO: Remove all this duplicate code. There should only be one test and you should be able to specify whether 
 # it is mitigation or prevention that you want to test
@@ -511,6 +335,9 @@ class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForC
         
         super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
 
+    def get_classes(self):
+        return ['prevention', 'mitigation', 'neither', 'both']
+    
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output

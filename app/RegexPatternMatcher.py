@@ -1,5 +1,10 @@
 import re
 
+class HarmCausedAndHazardEvent:
+    def __init__(self, harm_caused, hazard_event):
+        self.harm_caused = harm_caused
+        self.hazard_event = hazard_event
+
 class RegexPatternMatcher:
     def __init__(self):
         pass
@@ -80,6 +85,19 @@ class RegexPatternMatcher:
         hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
         
         return hazard_event
+    
+    def extract_harm_caused(self, prompt_output):
+
+        harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
+        
+        return harm_caused
+    
+    def extract_harm_caused_and_hazard_event(self, prompt_output):
+
+        harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
+        hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
+        
+        return HarmCausedAndHazardEvent(harm_caused=harm_caused, hazard_event=hazard_event)
     
     def extract_overall_answer_until_end_of_line(self, prompt_output):
 

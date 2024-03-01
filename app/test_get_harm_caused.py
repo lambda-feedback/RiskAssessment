@@ -1,21 +1,22 @@
 
-from TestModelAccuracy import TestIllnessAndInjuryPrompts
+from TestModelAccuracy import TestHarmCausedPrompt
 from LLMCaller import OpenAILLM
-from example_risk_assessments import example_risk_assessments
+from example_risk_assessments_exemplar import example_risk_assessments
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
 if __name__ == '__main__':
     # examples_generator = PreventionExamplesGenerator(correct_examples_list=correct_prevention_examples_list)
     examples_generator = RiskAssessmentExamplesGeneratorForMultiplePrompts(risk_assessments=example_risk_assessments,
-                                                         ground_truth_parameter='harm_caused_in_how_it_harms',
-                                                        method_to_get_prompt_input='get_injury_input')
+                                                         ground_truth_parameter='always_true',
+                                                        method_to_get_prompt_input='get_harm_caused_input')
 
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
-    test_accuracy = TestIllnessAndInjuryPrompts(test_description="""Testing ability of LLM to produce harm caused from hazard and how it harms inputs 
+    test_accuracy = TestHarmCausedPrompt(test_description="""Testing ability of LLM to produce harm caused from hazard and how it harms inputs 
                                       Testing with examples from student Fluids Lab and TPS presentation Risk Assessment examples.
-                                       """,
+                                        Testing on physical hazards.
+                                         """,
                                       LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_risk_assessment_and_expected_outputs=examples,
