@@ -12,14 +12,16 @@ if __name__ == '__main__':
     
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
+    LLM = OpenAILLM()
+
     test_accuracy = TestModelAccuracyForCompletePreventionPromptPipeline(
         test_description="""Testing prevention input in student Fluids Lab and TPS presentation Risk Assessment examples.
                             
                             First time testing combination of first aid, protective clothing and prevention prompts
                             
                             Testing with hazard event and how it harms input more well defined.""",
-                                      LLM=OpenAILLM(),
-                                                LLM_name='gpt-3.5-turbo',
+                                      LLM=LLM,
+                                                LLM_name=LLM.name,
                                                 list_of_risk_assessment_and_expected_outputs=examples,
                                                 sheet_name='Combined Prevention Prompts')
     test_accuracy.run_test()

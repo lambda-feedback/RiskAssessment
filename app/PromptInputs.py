@@ -51,7 +51,7 @@ class PromptInput:
             return f"{class_name}({attributes})"
         else:
             return f"{class_name}()"
-
+        
 class NoInformationProvided(PromptInput):
     def __init__(self, input: str):
         super().__init__()
@@ -138,6 +138,11 @@ class Activity(PromptInput):
 
     def get_field_checked(self):
         return 'Activity'
+    
+        # If "Golf" is an example of an activity, answer True, else answer False.
+
+        # Use the following output format:
+        # Overall Answer: <your answer>
     
     def generate_prompt(self):
         return f'''
@@ -299,105 +304,6 @@ class WhoItHarmsInContext(PromptInput):
     
     def get_recommendation(self):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
-    
-# class Event(PromptInput):
-#     def __init__(self, hazard_event):
-#         super().__init__()
-#         self.hazard_event = hazard_event
-#         self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
-    
-#     def get_field_checked(self):
-#         return 'Hazard Event'
-    
-#     def generate_prompt(self):
-#         return f'''
-#         Follow these instructions:
-#         For the following input, if it is an event, answer True, else answer False.
-
-#         Input: Unsecured scaffolding
-#         Answer: False
-
-#         Input: A worker falling from a height
-#         Answer: True
-
-#         Input: Impact injury
-#         Answer: False
-
-#         Input: Operator caught in machinery
-#         Answer: True
-
-#         Input: Construction workers
-#         Answer: False
-
-#         Input: Swimmer drowning
-#         Answer: True
-
-#         For the following input, if it is an event, answer True, else answer False.
-#         Input: {self.hazard_event}
-        
-#         Use the following output format:
-#         Answer: <your answer>'''
-
-# class GetHarmCaused(PromptInput):
-#     def __init__(self, how_it_harms):
-#         super().__init__()
-#         self.how_it_harms = how_it_harms
-    
-#     def get_field_checked(self):
-#         return 'How it harms'
-    
-#     def generate_prompt(self):
-#         return f'''
-
-#         Follow these instructions:
-#         1. An injury is defined as physical damage inflicted on the body.
-#         Explain whether the input aligns with the definition of an injury.
-#         2. If the input contains an example of an injury, give the injury, else write Injury: False.
-#         3. An illness is defined as a disease or sickness affecting the body or mind.
-#         Explain whether the input aligns with the definition of an illness.
-#         4. If the input contains an example of an illness, give the illness, else write Illness: False.
-
-#         Input: A worker falling from a height
-#         Injury Explanation: A worker falling from a height is a description of the event which leads to harm, not the harm itself.
-#         Injury Answer: False
-#         Illness Explanation: A worker falling from a height is not a disease or sickness affecting the body or mind.
-#         Illness Answer: False
-#         Since both Injury Answer and Illness Answer are False, Overall Answer: neither
-
-#         Input: It results in a burn.
-#         Injury Explanation: A burn is an example of physical damage inflicted on the body.
-#         Injury Answer: Burn
-#         Illness Explanation: A burn is not a disease or sickness affecting the body or mind.
-#         Illness Answer: False
-#         Since Injury Answer is not False, Overall Answer: Burn
-
-#         Input: Prolonged exposure to high temperatures without proper precautions
-#         Injury Explanation: Prolonged exposure to high temperatures without proper precautions is a description of the event which leads to an harm, not the harm itself.
-#         Injury Answer: False
-#         Illness Explanation: Prolonged exposure to high temperatures without proper precautions is a description of the event which leads to an harm, not the harm itself.
-#         Illness Answer: False
-#         Since both Injury Answer and Illness Answer are False, Overall Answer: neither
-
-#         Input: Foodborne illnesses due to improper handling of food items
-#         Injury Explanation: Foodborne illnesses are a type of disease or sickness affecting the body or mind, so are an illness.
-#         Injury Answer: False
-#         Illness Explanation: Foodborne illnesses are a type of disease or sickness affecting the body or mind.
-#         Illness Answer: Foodborne illnesses
-#         Since Illness Answer is not False, Overall Answer: Foodborne illnesses
-
-#         1. An injury is defined as damage inflicted on the body.
-#         Explain whether "{self.input}" aligns with the definition of an injury.
-#         2. If the input contains an example of an injury, give the injury, else write Injury: False.
-#         3. An illness is defined as a disease or sickness affecting the body or mind.
-#         Explain whether "{self.input}" aligns with the definition of an illness.
-#         4. If the input contains an example of an illness, give the illness, else write Illness: False.
-#         5. If both the Injury Answer and Illness Answer are False, Overall Answer: neither. If the Injury Answer is not False, Overall Answer: <your injury answer>. If the Illness Answer is not False, Overall Answer: <your illness answer>.
-
-#         Use the following output format:
-#         Injury Explanation: <your injury explanation>
-#         Injury: <your injury>
-#         Illness Explanation: <your illness explanation>
-#         Illness: <your illness>'''
 
 class HarmCaused(PromptInput):
     def __init__(self, hazard, how_it_harms):
@@ -411,199 +317,33 @@ class HarmCaused(PromptInput):
         Follow these instructions:
         The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
         1. From the hazard and how it harms, extract the harm caused.
-        1. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+        2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
 
         Hazard: Fire in a building
         How it harms: Clothes catch on fire and cause a burn
-        Event that leads to harm: Fire in building causes clothes to catch on fire
         Harm caused: Burn
+        Event that leads to harm: Fire in building causes clothes to catch on fire
 
         Hazard: Unsecured scaffolding
         How it harms: A worker falling from a height causing an impact injury
-        Event that leads to harm: A worker falling from a height
         Harm caused: Impact injury
-
+        Event that leads to harm: A worker falling from a height
+    
         Hazard: Malware infection
         How it harms: Gives hackers remote access to the infected system, allowing them to steal personal data
-        Event that leads to harm: Malware infects a system giving hackers remote access
         Harm caused: Personal data theft
+        Event that leads to harm: Malware infects a system giving hackers remote access
 
         Hazard: Market volatility
         How it harms: If the value of an investor's holdings decreases due to market downturns, they will experience financial losses when selling their assets
-        Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
         Harm caused: Financial losses
+        Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
 
         Use the following output format:
         Hazard: {self.hazard}
         How it harms: {self.how_it_harms}
-        Event that leads to harm: <your event>
-        Harm caused: <your harm caused>'''
-
-class Injury(PromptInput):
-    def __init__(self, input):
-        super().__init__()
-        self.input = input
-        self.pattern_matching_method = 'extract_injury'
-
-        self.candidate_labels = ['injury', 'illness', 'neither']
-    
-    def get_field_checked(self):
-        return 'How it harms'
-    
-    def generate_prompt(self):
-        return f'''
-
-        Follow these instructions:
-        1. An injury is defined as physical damage inflicted on the body.
-        In one sentence, explain whether the input contains a phrase which aligns with the definition of an injury.
-        2. If the input contains an example of an injury, give the injury, else write Injury: False.
-
-        Input: An impact injury is caused
-        Explanation: An impact injury is a type of physical damage inflicted on the body.
-        Injury: Impact injury
-
-        Input: A worker falling from a height
-        Explanation: A worker falling from a height is a description of the event which leads to harm, not the harm itself.
-        Injury: False
-
-        Input: It results in a burn.
-        Explanation: A burn is an example of physical damage inflicted on the body.
-        Injury: Burn
-
-        Input: Prolonged exposure to high temperatures without proper precautions
-        Explanation: Prolonged exposure to high temperatures without proper precautions is a description of the event which leads to an harm, not the harm itself.
-        Injury: False
-
-        Input: Foodborne illnesses due to improper handling of food items
-        Explanation: Foodborne illnesses are a type of disease or sickness affecting the body or mind, so are an illness not a injury.
-        Injury: False
-
-        1. An injury is defined as damage inflicted on the body.
-        In one sentence, explain whether "{self.input}" contains a phrase which aligns with the definition of an injury.
-        2. If the input contains an example of an injury, give the injury, else write Injury: False.
-
-        Use the following output format:
-        Explanation: <your explanation>
-        Injury: <your injury>'''
-    
-class Illness(PromptInput):
-    def __init__(self, input):
-        super().__init__()
-        self.input = input
-        self.pattern_matching_method = 'extract_illness'
-
-    def get_field_checked(self):
-        return 'How it harms'
-    
-    def generate_prompt(self):
-        return f'''
-
-        Follow these instructions:
-        1. An illness is defined as a disease or sickness affecting the body or mind.
-        In one sentence, explain whether the input contains a phrase which aligns with the definition of an illness.
-        2. If the input contains an example of an illness, give the illness, else write Illness: False.
-
-        Input: A worker falling from a height
-        Explanation: Explanation: A worker falling from a height is a description of the event which leads to harm, not the harm itself.
-        Illness: False
-
-        Input: It results in a burn.
-        Explanation: A burn is not a disease or sickness affecting the body or mind.
-        Illness: False
-
-        Input: Prolonged exposure to high temperatures without proper precautions
-        Explanation: Prolonged exposure to high temperatures without proper precautions is a description of the event which leads to an harm, not the harm itself.
-        Illness: False
-
-        Input: Foodborne illnesses due to improper handling of food items
-        Explanation: Foodborne illnesses are a type of disease or sickness affecting the body or mind.
-        Illness: Foodborne illnesses
-
-        1. An illness is defined as a disease or sickness affecting the body or mind.
-        In one sentence, explain whether "{self.input}" contains a phrase which aligns with the definition of an illness.
-        2. If the input contains an example of an illness, give the illness, else write Illness: False.
-
-        Use the following output format:
-        Explanation: <your explanation>
-        Illness: <your harm>'''
-
-# class EventCausedByHazard(PromptInput):
-#     def __init__(self, hazard, hazard_event):
-#         super().__init__()
-#         self.hazard = hazard
-#         self.hazard_event = hazard_event
-
-#         self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
-    
-#     def get_field_checked(self):
-#         return 'Event that leads to harm'
-    
-#     def generate_prompt(self):
-#         return f'''
-#         Follow these instructions:
-#         Is "{self.hazard_event}" an event caused by "{self.hazard}"?
-#         If it is, answer True, else answer False.
-
-#         Input:
-#         Is "A worker falling from a height" an event caused by "Unsecured scaffolding"?
-#         Answer: True
-
-#         Input:
-#         Is "Person slipping on wet floor" an event caused by "Unsecured scaffolding"?
-#         Answer: False
-
-#         Input:
-#         Is "Chef burning hand on stove" an event caused by "Hot surfaces"?
-#         Answer: True
-
-#         Input:
-#         Is "Swimmer drowning" an event caused by "Reckless drivers"?
-#         Answer: False
-        
-#         Input:
-#         Is "{self.hazard_event}" an event caused by "{self.hazard}"?
-        
-#         Use the following output format:
-#         Answer: <your answer>'''
-
-# class HarmCausedByEvent(PromptInput):
-#     def __init__(self, hazard_event, how_it_harms):
-#         super().__init__()
-#         self.hazard_event = hazard_event
-#         self.how_it_harms = how_it_harms
-
-#         self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
-    
-#     def get_field_checked(self):
-#         return 'How it harms'
-    
-#     def generate_prompt(self):
-#         return f'''
-#         Follow these instructions:
-#         Does "{self.hazard_event}" cause "{self.how_it_harms}"?
-#         If it does, answer True, else answer False.
-
-#         Input:
-#         Does "A worker falling from a height" cause harm by "Impact injury"?
-#         Answer: True
-
-#         Input:
-#         Does "Person slipping on wet floor" cause harm by "Impact injury"?
-#         Answer: False
-
-#         Input:
-#         Does "Chef burning hand on stove" cause harm by "Burns"?
-#         Answer: True
-
-#         Input:
-#         Does "Swimmer drowning" cause harm by "Impact injury"?
-#         Answer: False
-        
-#         Input:
-#         Does "{self.hazard_event}" cause harm by "{self.how_it_harms}"?
-        
-#         Use the following output format:
-#         Answer: <your answer>'''
+        Harm caused: <your harm caused>
+        Event that leads to harm: <your event>'''
     
 class HazardEvent(PromptInput):
     def __init__(self, activity, hazard, who_it_harms, how_it_harms):
@@ -724,18 +464,6 @@ class OldPrevention(PromptInput):
         return 'Prevention'
     
     def generate_prompt_without_few_shot_examples(self, hazard_event, harm_caused):
-        # return f'''Follow these instructions:
-        # 1. In one sentence, describe the hazard: '{self.hazard}' during the 
-        # activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
-        # and who/what the hazard harms: '{self.who_it_harms}'.
-        # 2. Explain whether or not '{self.prevention}' reduces the likelihood of the hazard described in step 1.
-        # If so, it is a prevention measure.
-        # 3. Assuming the hazard described in step 1 has already led to harm, explain whether or not '{self.prevention}'
-        # would reduce or remove the harm caused by the hazard described in step 1.
-        # If so, it is a mitigation measure.
-        # 4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
-        # prevention measure and a mitigation measure, answer 'both'.'''
 
         return f'''Follow these instructions:
         1. In one sentence, describe the event that leads to harm: '{hazard_event}' during the
@@ -748,166 +476,7 @@ class OldPrevention(PromptInput):
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
         prevention measure and a mitigation measure, answer 'Both'.'''
     
-        # 2. In one sentence, explain why "{self.how_it_harms}" is a way that this hazard can cause harm. 
-    
     def generate_prompt(self, hazard_event, harm_caused):
-
-
-## Few shot exampls without chain of thought prompting
-        # all_few_shot_examples = """
-        # Follow these instructions:
-        # 1. In one sentence, describe the hazard: 'Ink spillage' during the
-        # activity: 'Fluids laboratory' given how the hazard harms: 'Serious eye damage'
-        # and who the hazard harms: 'Students'.
-        # 2. Describe the hazard event, which is the event that leads to harm.
-        # 3. Explain whether or not 'First aid' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'First aid' removes or reduces the harm caused by the event.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Output: 
-        # Hazard Description: The hazard of 'Ink spillage' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
-        # Hazard Event Description: Ink being spilled onto a student's face.
-        # Prevention Explanation: 'First aid' will not reduce the likelihood of ink being spilled on the student's face; it is therefore not a prevention measure.
-        # Mitigation Explanation: As it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these instructions:
-        # 1. In one sentence, describe the hazard: 'Water being spilt on the floor' during the
-        # activity: 'Fluids laboratory' given how the hazard harms: 'Injuries caused by possible slipping on wet floor'
-        # and who the hazard harms: 'Students'.
-        # 2. Describe the hazard event, which is the event that leads to harm.
-        # 3. Explain whether or not 'Do not move the water tank when it is full' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Do not move the water tank when it is full' removes or reduces the harm caused by the event.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Hazard Description: The hazard of 'Water being spilt on the floor' during the activity 'Fluids laboratory' can lead to injuries caused by possible slipping on a wet floor to students.
-        # Hazard Event Description: Water is accidentally spilled on the floor.
-        # Prevention Explanation: As it reduces the likelihood of the hazard event, it is a prevention measure.
-        # Mitigation Explanation: As it does not reduce the harm caused by the hazard event, it is not a mitigation measure.
-        # Answer: Prevention.
-
-        # Follow these instructions:
-        # 1. In one sentence, describe the hazard: 'Loud noise' during the
-        # activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Loud noise from instrument can cause hearing damage.'
-        # and who the hazard harms: 'Everyone present'.
-        # 2. Describe the hazard event, which is the event that leads to harm.
-        # 3. Explain whether or not 'Keep a space between the player and audience' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Keep a space between the player and audience' removes or reduces the harm caused by the event.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Hazard Description: The hazard of 'Loud noise' during the activity 'Using a trombone as a demonstration for a TPS presentation' can cause hearing damage to everyone present.
-        # Hazard Event Description: The trombone player plays the instrument at a high volume, producing a loud noise.
-        # Prevention Explanation: As it does not reduce the likelihood of the hazard event, it is not a prevention measure.
-        # Mitigation Explanation: As it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these instructions:
-        # 1. In one sentence, describe the hazard: 'Syringes with sharp needles' during the
-        # activity: 'Fluids laboratory' given how the hazard harms: 'Sharp needles can pierce the skin and cause bleeding'
-        # and who the hazard harms: 'Students'.
-        # 2. Describe the hazard event, which is the event that leads to harm.
-        # 3. Explain whether or not 'Wear lab coat and PPE' reduces the likelihood that the hazard event occurs.   
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Wear lab coat and PPE' removes or reduces the harm caused by the event.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Hazard Description: The hazard of 'Syringes with sharp needles' during the activity 'Fluids laboratory' can lead to sharp needles piercing the skin and causing bleeding to students.
-        # Hazard Event Description: A sharp syringe needle is directed towards an student.
-        # Prevention Explanation: As it does not reduce the likelihood of the hazard event, it is therefore not a prevention measure.
-        # Mitigation Explanation: As it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these instructions:
-        # 1. In one sentence, describe the hazard: 'Water from instrument' during the
-        # activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Condensation formed in instrument could spread germs if released'
-        # and who the hazard harms: 'Audience'.
-        # 2. Describe the hazard event, which is the event that leads to harm.
-        # 3. Explain whether or not 'Keep a space between the player and audience' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Keep a space between the player and audience' removes or reduces the harm caused by the event.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-        
-        # Hazard Description: The hazard of 'Water from instrument' during the activity 'Using a trombone as a demonstration for a TPS presentation' can lead to the spread of germs to the audience if condensation formed in the instrument is released.
-        # Hazard Event Description: Water from the trombone condenses and is released into the air.
-        # Prevention Explanation: As it does not reduce the likelihood of the hazard event, it is not a prevention measure.
-        # Mitigation Explanation: As it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these
-        # Input: instructions:
-        # 1. In one sentence, describe the hazard: 'Students catch germs from the water' during the
-        # activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Illnesses from germs'.
-        # 3. Explain whether or not 'Keep a space between the player and audience' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Keep a space between the player and audience' removes or reduces the chance of 'Illnesses from germs'.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-        
-        # Hazard Description: The hazard of 'Students catch germs from the water' during the activity 'Using a trombone as a demonstration for a TPS presentation' can lead to the spread of germs to the audience if condensation formed in the instrument is released.
-        # Hazard Event Description: Water from the trombone condenses and is released into the air.
-        # Prevention Explanation: 'Keeping a space between the player and the audience' does not reduce the likelihood of water condensing in the instrument or being released; as it does not reduce the likelihood of the hazard event, it is not a prevention measure.
-        # Mitigation Explanation: If water from the instrument is released, 'keeping a space between the player and the audience' will reduce the likelihood of germs reaching the audience; as it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these
-        # Input: instructions:
-        # 1. In one sentence, describe the hazard: 'Sharp syringe needles poked into student' during the
-        # activity: 'Fluids laboratory' given how the hazard harms: 'Sharp needles can pierce the skin and cause bleeding'.
-        # 3. Explain whether or not 'Wear lab coat and PPE' reduces the likelihood that the hazard event occurs.   
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Wear lab coat and PPE' removes or reduces the chance of 'Sharp needles can pierce the skin and cause bleeding'.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Hazard Description: The hazard of 'Syringes with sharp needles' during the activity 'Fluids laboratory' can lead to sharp needles piercing the skin and causing bleeding to students.
-        # Hazard Event Description: A sharp syringe needle is directed towards an student.
-        # Prevention Explanation: 'Wearing a lab coat and personal protective equipment (PPE)' does not reduce the likelihood of a student directing a syringe needle towards another student; as it does not reduce the likelihood of the hazard event, it is therefore not a prevention measure.
-        # Mitigation Explanation: If a sharp syringe needle is directed towards a student, 'wearing a lab coat and PPE' will reduce the harm caused by the sharp needle as it is unlikely to pierce through the lab coat and PPE; as it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-
-        # Follow these
-        # Input: instructions:
-        # 1. In one sentence, describe the hazard: 'Loud noise' during the
-        # activity: 'Using a trombone as a demonstration for a TPS presentation' given how the hazard harms: 'Hearing damage.'
-        # 3. Explain whether or not 'Keep a space between the player and audience' reduces the likelihood that the hazard event occurs.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard event occurs, explain whether or not 'Keep a space between the player and audience' removes or reduces the chance of 'Hearing damage'.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a        
-        # prevention measure and a mitigation measure, answer 'Both'.
-
-        # Hazard Description: The hazard of 'Loud noise' during the activity 'Using a trombone as a demonstration for a TPS presentation' can cause hearing damage to everyone present.
-        # Hazard Event Description: The trombone player plays the instrument at a high volume, producing a loud noise.
-        # Prevention Explanation: 'Keeping a space between the player and the audience' does not reduce the likelihood of the trombone producing a loud noise. As it does not reduce the likelihood of the hazard event, it is not a prevention measure.
-        # Mitigation Explanation: If the hazard event occurs and the trombone produces a loud noise, 'keeping a space between the player and the audience' will reduce the noise heard by the audience, hence reducing the severity of the hearing damage caused by the loud noise; as it reduces the harm caused by the hazard event, it is a mitigation measure.
-        # Answer: Mitigation.
-        
-        # """
-
-        # TODO: There are 4 mitigations, and 1 prevention!
 
         all_few_shot_examples = """
         Input:
@@ -973,20 +542,6 @@ class OldPrevention(PromptInput):
         Mitigation Explanation: <your mitigation explanation>
         Answer: <your answer>'''
     
-        #     # How it Harms Explanation: <your how it harms explanation>
-
-        # return f'''
-        # {self.generate_prompt_without_few_shot_examples()}
-
-        # Use the following output format:
-        # Hazard Description: <your hazard description>
-        # Hazard Event Description: <your hazard event description>
-        # Prevention Explanation: <your prevention explanation>
-        # Mitigation Explanation: <your mitigation explanation>
-        # Answer: <your answer>'''
-    
-        # How it Harms Explanation: <your how it harms explanation>
-    
     def get_shortform_feedback(self, feedback_type):
         if feedback_type == 'positive':
             return f"Correct! '{self.prevention}' is a prevention measure for the hazard: '{self.hazard}'"
@@ -1034,18 +589,7 @@ class Mitigation(PromptInput):
         given how the hazard harms: '{self.how_it_harms}' and who/what the hazard harms: '{self.who_it_harms}?'''
     
     def generate_prompt_without_few_shot_examples(self):
-        # return f'''Follow these instructions:
-        # 1. In one sentence, describe the hazard: '{self.hazard}' during the 
-        # activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
-        # and who the hazard harms: '{self.who_it_harms}'.
-        # 2. In one sentence, explain why "{self.how_it_harms}" is a way that this hazard can cause harm. 
-        # 3. Explain whether or not '{self.mitigation}' reduces the likelihood that the hazard causes harm.
-        # If so, it is a prevention measure.
-        # 4. Assuming the hazard described above does harm someone, explain whether or not '{self.mitigation}' reduces the harm.
-        # If so, it is a mitigation measure.
-        # 5. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'. 
-        # If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a 
-        # prevention measure and a mitigation measure, answer 'Both'.'''
+        
         return f'''Follow these instructions:
         1. In one sentence, describe the hazard: '{self.hazard}' during the 
         activity: '{self.activity}' given how the hazard harms: '{self.how_it_harms}'
