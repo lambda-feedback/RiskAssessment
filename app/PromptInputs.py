@@ -56,80 +56,106 @@ class NoInformationProvided(PromptInput):
     def __init__(self, input: str):
         super().__init__()
         self.pattern_matching_method = 'check_string_for_no_information_provided'
-        self.candidate_labels = ['control measure', 'no information provided']
+        self.candidate_labels = ['information provided', 'no information provided']
         self.input = input
     
     def generate_prompt(self):
         return f'''
+        <s> [INST]
+
         Follow these instructions:
-        1. Classify the following input as either "No information provided" or "Control measure"
+        1. Classify the following input as either "No information provided" or "Information provided"
 
         Input: "N/A" 
+        <output>
         Answer: No information provided
+        </output>
 
         Input: "Not Applicable" 
+        <output>
         Answer: No information provided
+        </output>
 
-        Input: "Unknown" 
+        Input: "Unknown"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "None" 
+        Input: "None"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "TBD" 
+        Input: "TBD"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "To Be Determined" 
+        Input: "To Be Determined"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Unspecified" 
+        Input: "Unspecified"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "No Information Available" 
+        Input: "No Information Available"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Do Not Know" 
+        Input: "Do Not Know"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Not specified" 
+        Input: "Not specified"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Unavailable" 
+        Input: "Unavailable"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Not applicable" 
+        Input: "Not applicable"
+        <output> 
         Answer: No information provided
+        </output>
 
-        Input: "Not known" 
+        Input: "Not known"
+        <output> 
         Answer: No information provided
+        </output>
 
         Input: "Wear helmet"
+        <output>
         Answer: Control measure
+        </output>
 
         Input: "Take care"
-        Answer: Control measure
+        <output>
+        Answer: Information provided
+        </output>
 
         Input: "Apply ice"
-        Answer: Control measure
-
-        Follow these instructions:
-        1. Classify the following input as either "No information provided" or "Control measure"
+        <output>
+        Answer: Information provided
+        </output>
 
         Use the following output format:
-        Overall Answer: <your answer>
-        
-        Input: "{self.input}"'''
-
-    def generate_prompt_without_few_shot_examples(self):
-        return f'''
-        Follow these instructions:
-        1. In one sentence, explain whether the "{self.input}" input contains information.
-        2. If "{self.input}" contains no information, answer True, else answer False.
-        
-        Use the following output format:
-        Explanation: <your explanation>
         Answer: <your answer>
-        '''
+        
+        After giving one answer, end your response.
+
+        [/INST]
+ 
+        Input: "{self.input}"
+        
+        Answer: '''
 
 class Activity(PromptInput):
     def __init__(self, activity: str):
@@ -305,7 +331,7 @@ class WhoItHarmsInContext(PromptInput):
     def get_recommendation(self):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
 
-class HarmCaused(PromptInput):
+class HarmCausedAndHazardEvent(PromptInput):
     def __init__(self, hazard, how_it_harms):
         super().__init__()
         self.hazard = hazard
@@ -345,61 +371,61 @@ class HarmCaused(PromptInput):
         Harm caused: <your harm caused>
         Event that leads to harm: <your event>'''
     
-class HazardEvent(PromptInput):
-    def __init__(self, activity, hazard, who_it_harms, how_it_harms):
-        super().__init__()
-        self.activity = activity
-        self.hazard = hazard
-        self.who_it_harms = who_it_harms
-        self.how_it_harms = how_it_harms
-        self.pattern_matching_method = "extract_harm_caused_and_hazard_event"
+# class HazardEvent(PromptInput):
+#     def __init__(self, activity, hazard, who_it_harms, how_it_harms):
+#         super().__init__()
+#         self.activity = activity
+#         self.hazard = hazard
+#         self.who_it_harms = who_it_harms
+#         self.how_it_harms = how_it_harms
+#         self.pattern_matching_method = "extract_harm_caused_and_hazard_event"
 
-    def generate_prompt(self):
-        return f'''
-        Follow these instructions:
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        1. Given the activity: "{self.activity}", the hazard: "{self.hazard}", who it harms: {self.who_it_harms}, and how it harms: "{self.how_it_harms}", extract the harm caused.
-        2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+#     def generate_prompt(self):
+#         return f'''
+#         Follow these instructions:
+#         The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
+#         1. Given the activity: "{self.activity}", the hazard: "{self.hazard}", who it harms: {self.who_it_harms}, and how it harms: "{self.how_it_harms}", extract the harm caused.
+#         2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
 
-        Example Output:
-        Activity: Building a house
-        Hazard: Unsecured scaffolding
-        Who it harms: Construction workers
-        How it harms: Impact injuries caused by falling from a height
-        Harm caused: Impact injury
-        Event that leads to harm: A worker falling from a height
+#         Example Output:
+#         Activity: Building a house
+#         Hazard: Unsecured scaffolding
+#         Who it harms: Construction workers
+#         How it harms: Impact injuries caused by falling from a height
+#         Harm caused: Impact injury
+#         Event that leads to harm: A worker falling from a height
 
-        Example Output:
-        Activity: Fluids Laboratory
-        Hazard: Syringes with sharp needles
-        Who it harms: Students
-        How it harms: Sharp needles can pierce the skin and cause bleeding
-        Harm caused: Puncture wound
-        Event that leads to harm: A student being pricked by the syringe needle
+#         Example Output:
+#         Activity: Fluids Laboratory
+#         Hazard: Syringes with sharp needles
+#         Who it harms: Students
+#         How it harms: Sharp needles can pierce the skin and cause bleeding
+#         Harm caused: Puncture wound
+#         Event that leads to harm: A student being pricked by the syringe needle
 
-        Example Output:
-        Activity: Using a computer
-        Hazard: Malware infection
-        Who it harms: Computer users
-        How it harms: Gives hackers remote access to the infected system, allowing them to steal personal data
-        Harm caused: Personal data theft
-        Event that leads to harm: Malware infects a system giving hackers remote access
+#         Example Output:
+#         Activity: Using a computer
+#         Hazard: Malware infection
+#         Who it harms: Computer users
+#         How it harms: Gives hackers remote access to the infected system, allowing them to steal personal data
+#         Harm caused: Personal data theft
+#         Event that leads to harm: Malware infects a system giving hackers remote access
 
-        Example Output:
-        Activity: Investing in stocks
-        Hazard: Market volatility
-        Who it harms: Investors
-        How it harms: If the value of an investor's holdings decreases due to market downturns, they will experience financial losses when selling their assets
-        Harm caused: Financial losses
-        Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
+#         Example Output:
+#         Activity: Investing in stocks
+#         Hazard: Market volatility
+#         Who it harms: Investors
+#         How it harms: If the value of an investor's holdings decreases due to market downturns, they will experience financial losses when selling their assets
+#         Harm caused: Financial losses
+#         Event that leads to harm: Market downturn causes a decrease in the value of an investor's holdings
 
-        Use the following output format:
-        Activity: {self.activity}
-        Hazard: {self.hazard}
-        Who it harms: {self.who_it_harms}
-        How it harms: {self.how_it_harms}
-        Harm caused: <your harm>
-        Event that leads to harm: <your event>'''
+#         Use the following output format:
+#         Activity: {self.activity}
+#         Hazard: {self.hazard}
+#         Who it harms: {self.who_it_harms}
+#         How it harms: {self.how_it_harms}
+#         Harm caused: <your harm>
+#         Event that leads to harm: <your event>'''
 
 class Prevention(PromptInput):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):

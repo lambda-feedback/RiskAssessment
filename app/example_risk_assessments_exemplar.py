@@ -514,61 +514,6 @@ RA_t_shirt = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output = "neither"
 )
 
-RA_finance_credit_risk = RiskAssessmentWithoutNumberInputs(
-    activity='Extending credit to customers',
-    hazard='Default or non-payment',
-    who_it_harms='Lender or creditor',
-    how_it_harms='Loss of interest income',
-    prevention='Conduct thorough credit checks and set appropriate credit limits',
-    mitigation='Diversify credit exposure and establish collateral or guarantees',
-    prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation"
-)
-
-RA_finance_interest_rate_risk = RiskAssessmentWithoutNumberInputs(
-    activity='Issuing or investing in fixed-rate securities',
-    hazard='Changes in interest rates',
-    who_it_harms='Borrower or investor',
-    how_it_harms='Decreased asset value or income',
-    prevention='Analyze interest rate trends and duration of securities',
-    mitigation='Utilize interest rate hedging instruments',
-    prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation"
-)
-
-RA_finance_liquidity_risk = RiskAssessmentWithoutNumberInputs(
-    activity='Holding illiquid assets',
-    hazard='Inability to convert assets into cash',
-    who_it_harms='Investor or institution',
-    how_it_harms='Inability to meet financial obligations or fund withdrawals',
-    prevention='Maintain sufficient cash reserves',
-    mitigation='Establish lines of credit or',
-    prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation"
-)
-
-RA_finance_operational_risk = RiskAssessmentWithoutNumberInputs(
-    activity='Conducting daily operations',
-    hazard='System failures',
-    who_it_harms='Organization or financial institution',
-    how_it_harms='Financial loss',
-    prevention='Implement regular audits',
-    mitigation='Invest in technology infrastructure',
-    prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "prevention"
-)
-
-RA_finance_market_risk = RiskAssessmentWithoutNumberInputs(
-    activity='Trading securities or commodities',
-    hazard='Fluctuations in market prices',
-    who_it_harms='Trader or investor',
-    how_it_harms='Losses due to market movements',
-    prevention='Analyze market trends',
-    mitigation='Implement hedging strategies',
-    prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation"
-)
-
 example_risk_assessments = [
     # Commented out ones which are difficult to classify
     # RA_3_water_from_instrument, RA_3_water_from_instrument_mitiagation_prevention_switched,

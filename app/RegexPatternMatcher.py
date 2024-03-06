@@ -1,6 +1,6 @@
 import re
 
-class HarmCausedAndHazardEvent:
+class HarmCausedAndHazardEventAndHazardEvent:
     def __init__(self, harm_caused, hazard_event):
         self.harm_caused = harm_caused
         self.hazard_event = hazard_event
@@ -15,6 +15,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower() == "true"
         else:
+            print(string)
             raise Exception("Pattern not found in output prompt")
     
     def check_string_for_true_or_false_with_no_overall_answer(self, string):
@@ -26,7 +27,7 @@ class RegexPatternMatcher:
             raise Exception("Pattern not found in output prompt")
         
     def check_string_for_no_information_provided(self, string):
-        pattern = re.compile(r"Overall Answer: (control measure|no information provided)", re.IGNORECASE)
+        pattern = re.compile(r"Overall Answer: (information provided|no information provided)", re.IGNORECASE)
         match = re.search(pattern, string)
         if match:
             return match.group(1).lower()
@@ -66,38 +67,38 @@ class RegexPatternMatcher:
         
         return True
     
-    def extract_illness(self, prompt_output):
-        if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness") == "False":
-            return False
-        else:
-            illness = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness")
-            return illness
+    # def extract_illness(self, prompt_output):
+    #     if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness") == "False":
+    #         return False
+    #     else:
+    #         illness = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness")
+    #         return illness
     
-    def extract_injury(self, prompt_output):
-        if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury") == "False":
-            return False
-        else:
-            injury = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury")
-            return injury
+    # def extract_injury(self, prompt_output):
+    #     if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury") == "False":
+    #         return False
+    #     else:
+    #         injury = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury")
+    #         return injury
         
-    def extract_hazard_event(self, prompt_output):
+    # def extract_hazard_event(self, prompt_output):
     
-        hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
+    #     hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
         
-        return hazard_event
+    #     return hazard_event
     
-    def extract_harm_caused(self, prompt_output):
+    # def extract_harm_caused(self, prompt_output):
 
-        harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
+    #     harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
         
-        return harm_caused
+    #     return harm_caused
     
     def extract_harm_caused_and_hazard_event(self, prompt_output):
 
         harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
         hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
         
-        return HarmCausedAndHazardEvent(harm_caused=harm_caused, hazard_event=hazard_event)
+        return HarmCausedAndHazardEventAndHazardEvent(harm_caused=harm_caused, hazard_event=hazard_event)
     
     def extract_overall_answer_until_end_of_line(self, prompt_output):
 

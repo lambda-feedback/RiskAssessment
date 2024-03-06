@@ -140,15 +140,9 @@ class RiskAssessment:
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
                             activity=self.activity)
     
-    def get_harm_caused_input(self):
-        return HarmCaused(hazard=self.hazard,
+    def get_harm_caused_and_hazard_event_input(self):
+        return HarmCausedAndHazardEvent(hazard=self.hazard,
                           how_it_harms=self.how_it_harms)
-    
-    def get_hazard_event_input(self):
-        return HazardEvent(activity=self.activity,
-                            hazard=self.hazard,
-                            how_it_harms=self.how_it_harms,
-                            who_it_harms=self.who_it_harms)
     
     def get_prevention_prompt_with_prevention_input(self):
         return Prevention(

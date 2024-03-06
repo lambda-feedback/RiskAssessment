@@ -41,7 +41,7 @@ RA_incorrect_prevention_and_mitigation = RiskAssessmentWithoutNumberInputs(
 
 )
 
-RA_1 = RiskAssessmentWithoutNumberInputs(
+RA_trombone_impact = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Impact from instrument",
     who_it_harms="Audience",
@@ -52,7 +52,7 @@ RA_1 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='',
 )
 
-RA_2_hearing_damage = RiskAssessmentWithoutNumberInputs(
+RA_hearing_damage = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
@@ -63,7 +63,7 @@ RA_2_hearing_damage = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_2_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
+RA_hearing_damage_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
@@ -99,7 +99,7 @@ RA_2_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
 #     mitigation_prompt_expected_output='prevention',
 # )
 
-RA_4 = RiskAssessmentWithoutNumberInputs(
+RA_ink_spill_in_eye = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Ink spillage",
     who_it_harms="Students",
@@ -110,7 +110,7 @@ RA_4 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-# RA_4_with_first_aid = RiskAssessmentWithoutNumberInputs(
+# RA_ink_spill_in_eye_with_first_aid = RiskAssessmentWithoutNumberInputs(
 #     activity="Fluids laboratory",
 #     hazard="Ink spillage",
 #     who_it_harms="Students",
@@ -122,7 +122,7 @@ RA_4 = RiskAssessmentWithoutNumberInputs(
 # )
 
 
-RA_4_with_incorrect_how_it_harms = RiskAssessmentWithoutNumberInputs(
+RA_ink_spill_in_eye_with_incorrect_how_it_harms = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Ink spillage",
     who_it_harms="Students",
@@ -133,7 +133,7 @@ RA_4_with_incorrect_how_it_harms = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_5 = RiskAssessmentWithoutNumberInputs(
+RA_wet_hands_electric_shock = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Wet hands",
     who_it_harms="Students",
@@ -144,7 +144,7 @@ RA_5 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_5_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
+RA_wet_hands_electric_shock_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Wet hands",
     who_it_harms="Students",
@@ -155,7 +155,7 @@ RA_5_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention',
 )
 
-RA_6 = RiskAssessmentWithoutNumberInputs(
+RA_tripping_on_belongings = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Tripping over personal belongings",
     who_it_harms="Students",
@@ -166,7 +166,7 @@ RA_6 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention',
 )
 
-RA_7_water_tank = RiskAssessmentWithoutNumberInputs(
+RA_water_tank = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Water being spilt on the floor",
     who_it_harms="Students",
@@ -178,7 +178,7 @@ RA_7_water_tank = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_7_water_tank_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
+RA_water_tank_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Water being spilt on the floor",
     who_it_harms="Students",
@@ -190,8 +190,7 @@ RA_7_water_tank_mitigation_prevention_switched = RiskAssessmentWithoutNumberInpu
     mitigation_prompt_expected_output='prevention',
 )
 
-
-RA_8_syringe_needle = RiskAssessmentWithoutNumberInputs(
+RA_syringe_needle = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Syringes with sharp needles",
     who_it_harms="Students",
@@ -202,7 +201,7 @@ RA_8_syringe_needle = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
+RA_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Syringes with sharp needles",
     who_it_harms="Students",
@@ -246,7 +245,7 @@ RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumber
 #     mitigation_prompt_expected_output='',
 # )
 
-RA_14 = RiskAssessmentWithoutNumberInputs(
+RA_paper_plane_impact = RiskAssessmentWithoutNumberInputs(
     activity='Using  paper plane models as a demonstration for a TPS presentation',
     hazard='Plane could hit audience member,',
     who_it_harms='Audience',
@@ -257,7 +256,7 @@ RA_14 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='',
 )
 
-RA_15 = RiskAssessmentWithoutNumberInputs(
+RA_climbing_gear_on_feet = RiskAssessmentWithoutNumberInputs(
     activity='TPS presentation',
     hazard='Climbing Protection Gear (Cams and Hexs)',
     who_it_harms="Students and other individuals who would like to see how they work.",
@@ -268,7 +267,7 @@ RA_15 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='mitigation',
 )
 
-RA_15_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
+RA_climbing_gear_on_feet_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity='TPS presentation',
     hazard='Climbing Protection Gear (Cams and Hexs)',
     who_it_harms="Students and other individuals who would like to see how they work.",
@@ -279,7 +278,7 @@ RA_15_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention',
 )
 
-RA_17 = RiskAssessmentWithoutNumberInputs(
+RA_sharp_drone_propeller_blade = RiskAssessmentWithoutNumberInputs(
     activity='Bringing in a drone and two empty Li-Po batteries',
     hazard='Sharp Edge of propellor blade on drone',
     who_it_harms='Whoever pokes the propellor blade at the tip',
@@ -290,7 +289,7 @@ RA_17 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='',
 )
 
-RA_18 = RiskAssessmentWithoutNumberInputs(
+RA_battery_causes_fire = RiskAssessmentWithoutNumberInputs(
     activity='Bringing in a drone and two empty Li-Po batteries',
     hazard='Li-Po battery to handle',
     who_it_harms='Whoever is holding it',
@@ -301,7 +300,7 @@ RA_18 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention', # it is both mitigation and prevention
 )
 
-RA_19 = RiskAssessmentWithoutNumberInputs(
+RA_heavy_weight_falls_on_demonstrator = RiskAssessmentWithoutNumberInputs(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Slippage of weight for contraption',
     who_it_harms='Demonstrator',
@@ -312,7 +311,7 @@ RA_19 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention',
 )
 
-RA_20 = RiskAssessmentWithoutNumberInputs(
+RA_zip_cut_hits_audience = RiskAssessmentWithoutNumberInputs(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Cut Zip tie may fly',
     who_it_harms='Audience',
@@ -323,7 +322,7 @@ RA_20 = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention', # Another prevention measure as it reduces the likelihood of the zip tie hitting an audience member
 )
 
-RA_23 = RiskAssessmentWithoutNumberInputs(
+RA_pencil_lead_projectile = RiskAssessmentWithoutNumberInputs(
     activity='Using a mechanical pencil and breaking the pencil lead against a surface for demonstration',
     hazard='Pencil lead breaking and becoming a projectile',
     who_it_harms='Anyone present',
@@ -389,7 +388,7 @@ RA_bouldering = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output="prevention",
 )
 
-RA_hob = RiskAssessmentWithoutNumberInputs(
+RA_hob_burn = RiskAssessmentWithoutNumberInputs(
     activity="Cooking",
     hazard="Fire/ heat",
     who_it_harms="Chef",
@@ -449,11 +448,11 @@ RA_fire_alarm = RiskAssessmentWithoutNumberInputs(
     hazard = "Smoking causes fire",
     who_it_harms = "Students and teachers",
     how_it_harms = "Burns",
-    prevention = "Banning smoking",
+    prevention = "Banning smoking in the school",
     mitigation = "Fire alarm",
-    prevention_prompt_expected_output = "",
-    mitigation_prompt_expected_output = "",
-)
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation",
+)   
 
 RA_mop_up_spill = RiskAssessmentWithoutNumberInputs(
     activity = "Fluid lab",
@@ -477,7 +476,7 @@ RA_syringe_with_cover = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output = "mitigation",
 )
 
-RA_sealed_cups = RiskAssessmentWithoutNumberInputs(
+RA_hot_water_in_cups = RiskAssessmentWithoutNumberInputs(
     activity = "HEAT TRANSFER LAB",
     hazard = "Boiling (hot) water",
     how_it_harms = "Burns",
@@ -510,7 +509,7 @@ RA_cycling_high_viz = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output = "mitigation",
 )
 
-RA_safer_routes = RiskAssessmentWithoutNumberInputs(
+RA_cycling_safer_routes = RiskAssessmentWithoutNumberInputs(
     activity = "Riding a Bike",
     hazard = "Getting hit",
     how_it_harms = "Could injure",
@@ -521,61 +520,118 @@ RA_safer_routes = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output = "prevention",
 )
 
+RA_credit_risk = RiskAssessmentWithoutNumberInputs(
+    activity='Extending credit to customers',
+    hazard='Default or non-payment',
+    who_it_harms='Lender or creditor',
+    how_it_harms='Loss of interest income',
+    prevention='Conduct thorough credit checks and set appropriate credit limits',
+    mitigation='Diversify credit exposure and establish collateral or guarantees',
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation"
+)
 
-example_risk_assessments = [
-    # Commented out ones which are difficult to classify
-    # RA_3_water_from_instrument, RA_3_water_from_instrument_mitiagation_prevention_switched,
-    # RA_8_syringe_needle, RA_8_syringe_needle_mitigation_prevention_switched, 
-    # RA_9, RA_9_mitigation_prevention_switched,
+RA_interest_rate_risk = RiskAssessmentWithoutNumberInputs(
+    activity='Issuing or investing in fixed-rate securities',
+    hazard='Changes in interest rates',
+    who_it_harms='Borrower or investor',
+    how_it_harms='Decreased asset value or income',
+    prevention='Analyze interest rate trends and duration of securities',
+    mitigation='Utilize interest rate hedging instruments',
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation"
+)
 
-    # Removed because basically repeats:
-    # RA_4_with_first_aid,
-    # RA_13,
+RA_liquidity_risk = RiskAssessmentWithoutNumberInputs(
+    activity='Holding illiquid assets',
+    hazard='Inability to convert assets into cash',
+    who_it_harms='Investor or institution',
+    how_it_harms='Inability to meet financial obligations or fund withdrawals',
+    prevention='Maintain sufficient cash reserves',
+    mitigation='Establish lines of credit or',
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation"
+)
 
-    # RA_1, RA_2_hearing_damage, 
-    # RA_4, RA_5, RA_6, RA_7_water_tank,
-    #  RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
-    # RA_23,
-    # RA_incorrect_prevention_and_mitigation, RA_2_mitigation_prevention_switched,
+RA_operational_risk = RiskAssessmentWithoutNumberInputs(
+    activity='Conducting daily operations',
+    hazard='System failures',
+    who_it_harms='Organization or financial institution',
+    how_it_harms='Financial loss',
+    prevention='Implement regular audits',
+    mitigation='Invest in technology infrastructure',
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "prevention"
+)
 
-    # RA_5_mitigation_prevention_switched, RA_7_water_tank_mitigation_prevention_switched,
-    # RA_15_mitigation_prevention_switched,
-    # RA_mucking_out_horse,
-    # RA_slitter_machine,
+RA_market_risk = RiskAssessmentWithoutNumberInputs(
+    activity='Trading securities or commodities',
+    hazard='Fluctuations in market prices',
+    who_it_harms='Trader or investor',
+    how_it_harms='Losses due to market movements',
+    prevention='Analyze market trends',
+    mitigation='Implement hedging strategies',
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation"
+)
+
+example_risk_assessments_dict = {
+    'Old Physical Risks': [
+        RA_syringe_needle, 
+        # RA_syringe_needle_mitigation_prevention_switched, 
+        # RA_trombone_impact, 
+        # RA_hearing_damage, 
+        # RA_ink_spill_in_eye, 
+        # RA_wet_hands_electric_shock, 
+        # RA_tripping_on_belongings, 
+        # RA_water_tank,
+        # RA_paper_plane_impact, 
+        # RA_climbing_gear_on_feet, 
+        # RA_sharp_drone_propeller_blade, 
+        # RA_battery_causes_fire, 
+        # RA_heavy_weight_falls_on_demonstrator, 
+        # RA_zip_cut_hits_audience,
+        # RA_pencil_lead_projectile,
+        # RA_incorrect_prevention_and_mitigation, 
+        # RA_hearing_damage_mitigation_prevention_switched,
+        # RA_wet_hands_electric_shock_mitigation_prevention_switched, 
+        # RA_water_tank_mitigation_prevention_switched,
+        # RA_climbing_gear_on_feet_mitigation_prevention_switched,
+        # RA_mucking_out_horse,
+        # RA_slitter_machine
+        ],
+
+    'New Physical Risks': [
+        # RA_fire_alarm,
+        # RA_mop_up_spill,
+        # RA_syringe_with_cover,
+        # RA_hot_water_in_cups,
+        # RA_bigger_beaker,
+        # RA_campfire,
+        # RA_bouldering,
+        # RA_hob_burn,
+        # RA_crossing_road,
+        # RA_cycling,
+        # RA_ladder,
+        # RA_cycling_high_viz,
+        # RA_cycling_safer_routes
+        ],
     
-    # New Risk Assessments
-    RA_fire_alarm,
-    RA_mop_up_spill,
-    RA_syringe_with_cover,
-    RA_sealed_cups,
-    RA_bigger_beaker,
-    RA_campfire,
-    RA_bouldering,
-    RA_hob,
-    RA_crossing_road,
-    RA_cycling,
-    RA_ladder,
-    RA_cycling_high_viz,
-    RA_safer_routes,
+    'Finance Risks': [
+        # RA_credit_risk,
+        # RA_interest_rate_risk,
+        # RA_liquidity_risk,
+        # RA_operational_risk,
+        # RA_market_risk
     ]
+}
 
-example_risk_assessments_for_protective_barrier_and_first_aid = [
-    RA_1, RA_2_hearing_damage, RA_4, RA_5, RA_6, RA_7_water_tank, RA_14, RA_15, RA_17, RA_18, RA_19, RA_20, RA_23, RA_mucking_out_horse,
-    RA_slitter_machine,
-    RA_fire_alarm,
-    RA_mop_up_spill,
-    RA_syringe_with_cover,
-    RA_sealed_cups,
-    RA_bigger_beaker,
-    RA_campfire,
-    RA_bouldering,
-    RA_hob,
-    RA_crossing_road,
-    RA_cycling,
-    RA_ladder,
-    RA_cycling_high_viz,
-    RA_safer_routes,
-]
+example_risk_assessments = []
+
+for risk_assessment_list in example_risk_assessments_dict.values():
+    example_risk_assessments.extend(risk_assessment_list)
+
+number_of_risk_assessments_in_each_domain = {key: len(value) for key, value in example_risk_assessments_dict.items()}
 
 # Assuming you have a list of RiskAssessment objects named risk_assessments
 
@@ -585,7 +641,6 @@ unique_hazards = set()
 unique_how_it_harms = set()
 unique_who_it_harms = set()
 unique_control_measures = set()
-
 
 # Iterate through the list of risk assessments
 for risk_assessment in example_risk_assessments:
