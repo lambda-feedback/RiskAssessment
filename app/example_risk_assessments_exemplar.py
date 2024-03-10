@@ -3,261 +3,120 @@
 # The hazard event is therefore the projectile hitting someone, not the projectile being released.
 
 try:
-    from .RiskAssessment import RiskAssessment
+    from .RiskAssessment import RiskAssessmentWithoutNumberInputs
 except ImportError:
-    from RiskAssessment import RiskAssessment
+    from RiskAssessment import RiskAssessmentWithoutNumberInputs
 
-RA_empty_input = RiskAssessment(
+RA_empty_input = RiskAssessmentWithoutNumberInputs(
     activity="",
     hazard="Loud noise",
     who_it_harms="Everyone present",
     how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
     prevention="Play quietly, at a volume suitable for the room",
     mitigation="1",
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Playing the instrument at a loud noise",
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
+    mitigation_prompt_expected_output=''
 )
 
-RA_mitigation_wrong_type = RiskAssessment(
+RA_mitigation_wrong_type = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
     how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
     prevention="Play quietly, at a volume suitable for the room",
     mitigation="",
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Playing the instrument at a loud noise",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
 )
 
-RA_controlled_likelihood_wrong_type = RiskAssessment(
-    activity="Using a trombone as a demonstration for a TPS presentation",
-    hazard="Loud noise",
-    who_it_harms="Everyone present",
-    how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
-    prevention="Play quietly, at a volume suitable for the room",
-    mitigation="Keep a space between the player and audience",
-    controlled_likelihood="Keep a space between the player and audience",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Playing the instrument at a loud noise",
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
-)
-
-RA_incorrect_prevention_and_mitigation = RiskAssessment(
+RA_incorrect_prevention_and_mitigation = RiskAssessmentWithoutNumberInputs(
     activity="Welding metal structures",
     hazard="Exposure to toxic welding fumes",
     how_it_harms="Inhaling welding fumes can lead to respiratory problems, lung damage, and long-term health issues.",
     who_it_harms="Welders and individuals in the vicinity of the welding area.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="3",
-    uncontrolled_risk="12",
     prevention="Using the welding equipment in an enclosed space without proper ventilation.",
     mitigation='',
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='illness',
-    hazard_event="Inhaling welding fumes",
     prevention_prompt_expected_output='neither',
     mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
 
 )
 
-RA_1 = RiskAssessment(
+RA_1 = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Impact from instrument",
     who_it_harms="Audience",
     how_it_harms="Slide could hit audience member, causing impact injury.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="2",
-    uncontrolled_risk="8",
     prevention="Keep safe distance between the player and audience",
     mitigation="",
-    controlled_likelihood="1",
-    controlled_severity="2",
-    controlled_risk="2",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Slide hitting audience member",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
 )
 
-RA_2_hearing_damage = RiskAssessment(
+RA_2_hearing_damage = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
     how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
     prevention="Play quietly, at a volume suitable for the room", # reduces likelihood of loud noise
     mitigation="Keep a space between the player and audience", # reduces severity of loud noise
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Playing the instrument at a loud noise",
     prevention_prompt_expected_output='prevention', 
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False
 )
 
-RA_2_mitigation_prevention_switched = RiskAssessment(
+RA_2_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
     how_it_harms="Loud noise from instrument can cause hearing damage.",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="1",
-    uncontrolled_risk="4",
     mitigation="Play quietly, at a volume suitable for the room", # reduces likelihood of loud noise
     prevention="Keep a space between the player and audience", # reduces severity of loud noise
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Playing the instrument at a loud noise",
     prevention_prompt_expected_output='mitigation', 
     mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False
 )
 
 
-# RA_3_water_from_instrument = RiskAssessment(
+# RA_3_water_from_instrument = RiskAssessmentWithoutNumberInputs(
 #     activity="Using a trombone as a demonstration for a TPS presentation",
 #     hazard="Water from instrument",
 #     who_it_harms="Audience",
 #     how_it_harms="Condensation formed in instrument could spread germs if released",
-#     uncontrolled_likelihood="4",
-#     uncontrolled_severity="1",
-#     uncontrolled_risk="4",
 #     prevention="Ensure water is not released during presentation", # Not very specific.
 #     # Should include feedback stating: "How would you ensure water is not released during presentation?"
 #     mitigation="Keep a space between the player and audience", # Reduces severity of water being released
-#     controlled_likelihood="1",
-#     controlled_severity="1",
-#     controlled_risk="1",
 #     prevention_prompt_expected_output='prevention',
 #     mitigation_prompt_expected_output='prevention', # reduces likelihood that someone becomes ill
 # )
 
-# RA_3_water_from_instrument_mitiagation_prevention_switched = RiskAssessment(
+# RA_3_water_from_instrument_mitiagation_prevention_switched = RiskAssessmentWithoutNumberInputs(
 #     activity="Using a trombone as a demonstration for a TPS presentation",
 #     hazard="Water from instrument",
 #     who_it_harms="Audience",
 #     how_it_harms="Condensation formed in instrument could spread germs if released",
-#     uncontrolled_likelihood="4",
-#     uncontrolled_severity="1",
-#     uncontrolled_risk="4",
 #     mitigation="Ensure water is not released during presentation", # Not very specific.
 #     # Should include feedback stating: "How would you ensure water is not released during presentation?"
 #     prevention="Keep a space between the player and audience", # Reduces severity of water being released
-#     controlled_likelihood="1",
-#     controlled_severity="1",
-#     controlled_risk="1",
 #     prevention_prompt_expected_output='mitigation',
 #     mitigation_prompt_expected_output='prevention',
 # )
 
-RA_4_ink_spillage_in_eye = RiskAssessment(
+RA_4_ink_spillage_in_eye = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Ink spillage",
     who_it_harms="Students",
     how_it_harms="Serious eye damage",
-    uncontrolled_likelihood="2",
-    uncontrolled_severity="3",
-    uncontrolled_risk="6",
     prevention="Wear safety glasses", # If ink gets on face, wearing safety glasses reduces severity
     mitigation="Wash your eyes with clean water", # reduces severity after hazard has occurred
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Ink spilling and getting into eyes",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=True,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=True,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
 )
 
-# RA_4_with_first_aid = RiskAssessment(
+# RA_4_with_first_aid = RiskAssessmentWithoutNumberInputs(
 #     activity="Fluids laboratory",
 #     hazard="Ink spillage",
 #     who_it_harms="Students",
 #     how_it_harms="Serious eye damage",
-#     uncontrolled_likelihood="2",
-#     uncontrolled_severity="3",
-#     uncontrolled_risk="6",
 #     prevention="Wear safety glasses", # reduces likelihood of hazard occurring
 #     mitigation="First aid", # reduces severity after hazard has occurred
-#     controlled_likelihood="1",
-#     controlled_severity="3",
-#     controlled_risk="3",
 #     prevention_prompt_expected_output='mitigation',
 #     mitigation_prompt_expected_output='mitigation',
 #     prevention_protected_clothing_expected_output=True,
@@ -267,858 +126,392 @@ RA_4_ink_spillage_in_eye = RiskAssessment(
 # )
 
 
-RA_4_with_incorrect_how_it_harms = RiskAssessment(
+RA_4_with_incorrect_how_it_harms = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Ink spillage",
     who_it_harms="Students",
     how_it_harms="Radiation poisoning",
-    uncontrolled_likelihood="2",
-    uncontrolled_severity="3",
-    uncontrolled_risk="6",
     prevention="Wear safety glasses", # reduces likelihood of hazard occurring
     mitigation="Wash your eyes with clean water", # reduces severity after hazard has occurred
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
-    harm_caused_in_how_it_harms='illness',
-    hazard_event = "Ink spilling and getting into eyes",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=True,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=True,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
 )
 
-RA_5 = RiskAssessment(
+RA_5 = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Wet hands",
     who_it_harms="Students",
     how_it_harms="Electric shock of students when touching electronics (pump power supply) with wet hands",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
     prevention="Students should make sure they touch electronics only with dry hands", # reduces likelihood of hazard occurring
     mitigation="Call for urgent medical assistance", # reduces severity after hazard has occurred
-    controlled_likelihood="2",
-    controlled_severity="3",
-    controlled_risk="6",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Students touching electronics with wet hands",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
 )
 
-RA_5_mitigation_prevention_switched = RiskAssessment(
+RA_5_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Wet hands",
     who_it_harms="Students",
     how_it_harms="Electric shock of students when touching electronics (pump power supply) with wet hands",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
     mitigation="Students should make sure they touch electronics only with dry hands", # reduces likelihood of hazard occurring
     prevention="Unplug the pump and call for urgent medical assistance", # reduces severity after hazard has occurred
-    controlled_likelihood="2",
-    controlled_severity="3",
-    controlled_risk="6",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Students touching electronics with wet hands",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=True,
-    mitigation_first_aid_expected_output=False,
 )
 
-RA_6 = RiskAssessment(
+RA_6 = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Tripping over personal belongings",
     who_it_harms="Students",
     how_it_harms="Tripping can cause physical harm.",
-    uncontrolled_likelihood="5",
-    uncontrolled_severity="2",
-    uncontrolled_risk="10",
     prevention="Put all belongings away from footpaths", # This reduces likelihood of hazard occurring and is therefore a prevention measure
     mitigation="Take care when walking around", # This reduces likelihood of hazard occurring and is therefore a prevention measure 
-    controlled_likelihood="1",
-    controlled_severity="2",
-    controlled_risk="2",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Tripping over personal belongings",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
 )
 
-RA_7_water_tank = RiskAssessment(
+RA_7_water_tank = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Water being spilt on the floor",
     who_it_harms="Students",
     how_it_harms="Injuries caused by possible slipping on wet floor",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="2",
-    uncontrolled_risk="6",
     prevention="Do not move the water tank when it is full",
     mitigation="""If someone gets injured due to slipping, apply an ice pack to the injured area and 
     seek medical advice without delay.""",
-    controlled_likelihood="2",
-    controlled_severity="2",
-    controlled_risk="4",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Slipping on the wet floor",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
 )
 
-RA_7_water_tank_mitigation_prevention_switched = RiskAssessment(
+RA_7_water_tank_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Water being spilt on the floor",
     who_it_harms="Students",
     how_it_harms="Injuries caused by possible slipping on wet floor",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="2",
-    uncontrolled_risk="6",
     mitigation="Do not move the water tank when it is full",
     prevention="""If someone gets injured due to slipping, apply an ice pack to the injured area and 
     seek medical advice without delay.""",
-    controlled_likelihood="2",
-    controlled_severity="2",
-    controlled_risk="4",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event = "Slipping on the wet floor",
     prevention_prompt_expected_output='mitigation',
     mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=True,
-    mitigation_first_aid_expected_output=False,
 )
 
 
-RA_8_syringe_needle = RiskAssessment(
+RA_8_syringe_needle = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Syringes with sharp needles",
     who_it_harms="Students",
     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
     prevention="Point needle away from yourself and others",
     mitigation="Wear lab coat and PPE", # This is both prevention and mitigation
-    controlled_likelihood="2",
-    controlled_severity="1",
-    controlled_risk="2",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Piercing the skin with a sharp needle",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
 )
 
-RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessment(
+RA_8_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Syringes with sharp needles",
     who_it_harms="Students",
     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
     mitigation="Point needle away from yourself and others",
     prevention="Wear lab coat and PPE", # This is both prevention and mitigation
-    controlled_likelihood="2",
-    controlled_severity="1",
-    controlled_risk="2",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Piercing the skin with a sharp needle",
     prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention'
 )
 
-# RA_9 = RiskAssessment(
+# RA_9 = RiskAssessmentWithoutNumberInputs(
 #     activity="Fluids laboratory",
 #     hazard="Electrocution",
 #     who_it_harms="Students",
 #     how_it_harms="Electrocuted by mains voltage", # This is a description of the process not the harm on the students
-#     uncontrolled_likelihood="2",
-#     uncontrolled_severity="2",
-#     uncontrolled_risk="4",
 #     prevention="Pump plug stays away from water",
 #     mitigation="First aid on site", # There needs to be a description of how this will be used in the event of an electrocution.
-#     controlled_likelihood="1",
-#     controlled_severity="2",
-#     controlled_risk="2",
 #     prevention_prompt_expected_output='prevention',
 #     mitigation_prompt_expected_output='mitigation',
 # )
 
-# RA_9_mitigation_prevention_switched = RiskAssessment(
+# RA_9_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
 #     activity="Fluids laboratory",
 #     hazard="Electrocution",
 #     who_it_harms="Students",
 #     how_it_harms="Electrocuted by mains voltage", # This is a description of the process not the harm on the students
-#     uncontrolled_likelihood="2",
-#     uncontrolled_severity="2",
-#     uncontrolled_risk="4",
 #     mitigation="Pump plug stays away from water",
 #     prevention="First aid on site", # There needs to be a description of how this will be used in the event of an electrocution.
-#     controlled_likelihood="1",
-#     controlled_severity="2",
-#     controlled_risk="2",
 #     prevention_prompt_expected_output='mitigation',
 #     mitigation_prompt_expected_output='prevention',
 # )
 
-# RA_13 = RiskAssessment(
+# RA_13 = RiskAssessmentWithoutNumberInputs(
 #     activity='Presentation Demonstration',
 #     hazard='Demonstration with ruler, styrofoam and bbq sticks. I will be flicking the ruler while clamping it to a table. The bbq sticks will be stuck in the styrofoam and I will shake to show resonance',
 #     who_it_harms='Me and audience',
 #     how_it_harms='Could hit someone or the demonstration falls apart',
-#     uncontrolled_likelihood='4',
-#     uncontrolled_severity='1',
-#     uncontrolled_risk='4',
 #     prevention='Do the demonstration with care',
 #     mitigation='',
-#     controlled_likelihood='2',
-#     controlled_severity='1',
-#     controlled_risk='2',
 #     prevention_prompt_expected_output='prevention',
 #     mitigation_prompt_expected_output='',
 # )
 
-RA_14 = RiskAssessment(
+RA_14 = RiskAssessmentWithoutNumberInputs(
     activity='Using  paper plane models as a demonstration for a TPS presentation',
     hazard='Plane could hit audience member,',
     who_it_harms='Audience',
     how_it_harms='Impact injury.',
-    uncontrolled_likelihood='4',
-    uncontrolled_severity='2',
-    uncontrolled_risk='8',
     prevention='Throw the paper plane to a direction without anyone',
     mitigation='',
-    controlled_likelihood='1',
-    controlled_severity='2',
-    controlled_risk='2',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Paper plane hitting someone',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
+    mitigation_prompt_expected_output=''
 )
 
-RA_15 = RiskAssessment(
+RA_15 = RiskAssessmentWithoutNumberInputs(
     activity='TPS presentation',
     hazard='Climbing Protection Gear (Cams and Hexs)',
     who_it_harms="Students and other individuals who would like to see how they work.",
     how_it_harms="""Some equipment is heavy so could hurt if dropped on feet resulting in a foot injury.""",
-    uncontrolled_likelihood='2',
-    uncontrolled_severity='1',
-    uncontrolled_risk='2',
     prevention='Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly.',
     mitigation='First aid if necessary',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Equipment being dropped on feet',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
+    mitigation_prompt_expected_output='mitigation'
 )
 
-RA_15_mitigation_prevention_switched = RiskAssessment(
+RA_15_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity='TPS presentation',
     hazard='Climbing Protection Gear (Cams and Hexs)',
     who_it_harms="Students and other individuals who would like to see how they work.",
     how_it_harms="""Some equipment is heavy so could hurt if dropped on feet resulting in a foot injury.""",
-    uncontrolled_likelihood='2',
-    uncontrolled_severity='1',
-    uncontrolled_risk='2',
     mitigation='Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly.',
     prevention='First aid if necessary',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Equipment being dropped on feet',
     prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=True,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention'
 )
 
-RA_17 = RiskAssessment(
+RA_17 = RiskAssessmentWithoutNumberInputs(
     activity='Bringing in a drone and two empty Li-Po batteries',
     hazard='Sharp Edge of propellor blade on drone',
     who_it_harms='Whoever pokes the propellor blade at the tip',
     how_it_harms='Is sharp to the touch to cause pain but not sharp enough to pierce skin',
-    uncontrolled_likelihood='1',
-    uncontrolled_severity='1',
-    uncontrolled_risk='1',
     prevention='Make them aware the tip is sharp',
     mitigation='',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Poking the propellor blade at the tip',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
+    mitigation_prompt_expected_output=''
 )
 
-RA_18 = RiskAssessment(
+RA_18 = RiskAssessmentWithoutNumberInputs(
     activity='Bringing in a drone and two empty Li-Po batteries',
     hazard='Li-Po battery to handle',
     who_it_harms='Whoever is holding it',
     how_it_harms='It may heat up with an unlikely chance of a fire causing a burn injury.',
-    uncontrolled_likelihood='1',
-    uncontrolled_severity='2',
-    uncontrolled_risk='2',
     prevention='Li-Po batteries have been discharged to a safe level',
     mitigation='Don\'t let the audience handle it for too long',
-    controlled_likelihood='1',
-    controlled_severity='2',
-    controlled_risk='2',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Li-Po battery heating up and catching fire',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention', # it is both mitigation and prevention
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention', # it is both mitigation and preventio
 )
 
-RA_19 = RiskAssessment(
+RA_19 = RiskAssessmentWithoutNumberInputs(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Slippage of weight for contraption',
     who_it_harms='Demonstrator',
     how_it_harms='Heavy impact when falling onto demonstator, causing injury',
-    uncontrolled_likelihood='3',
-    uncontrolled_severity='4',
-    uncontrolled_risk='12',
     prevention='Make sure the mass is properly secured to the contraption and the contraption is secured.',
     mitigation='Keep away from below the contraption',
-    controlled_likelihood='1',
-    controlled_severity='2',
-    controlled_risk='2',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Weight falling onto demonstrator',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention'
 )
 
-RA_20 = RiskAssessment(
+RA_20 = RiskAssessmentWithoutNumberInputs(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Cut Zip tie may fly',
     who_it_harms='Audience',
     how_it_harms='When cut the zip tie may hit an audience member in the eye causing an eye injury.',
-    uncontrolled_likelihood='4',
-    uncontrolled_severity='2',
-    uncontrolled_risk='8',
     prevention='Keep hand around zip tie when cutting to stop it from flying',
     mitigation='Ensure safe distance between contraption and audience.',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Zip tie hitting an audience member',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='prevention', # Another prevention measure as it reduces the likelihood of the zip tie hitting an audience member
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention', # Another prevention measure as it reduces the likelihood of the zip tie hitting an audience membe
 )
 
-RA_23 = RiskAssessment(
+RA_23 = RiskAssessmentWithoutNumberInputs(
     activity='Using a mechanical pencil and breaking the pencil lead against a surface for demonstration',
     hazard='Pencil lead breaking and becoming a projectile',
     who_it_harms='Anyone present',
     how_it_harms='May enter one\'s eye causing an eye injury',
-    uncontrolled_likelihood='3',
-    uncontrolled_severity='2',
-    uncontrolled_risk='6',
     prevention='Keep safe distance between the audience when demonstrating lead breakage',
     mitigation='',
-    controlled_likelihood='2',
-    controlled_severity='1',
-    controlled_risk='2',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Pencil lead being projected into someone\'s eye',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='',
-    prevention_clothing=False,
-    mitigation_clothing='',
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output='',
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output='',
+    mitigation_prompt_expected_output=''
 )
 
-RA_mucking_out_horse = RiskAssessment(
+RA_mucking_out_horse = RiskAssessmentWithoutNumberInputs(
     activity='Mucking out a horse',
     hazard='Horse kicks out',
     who_it_harms='Horse rider',
     how_it_harms='Impact injury',
-    uncontrolled_likelihood='4',
-    uncontrolled_severity='3',
-    uncontrolled_risk='12',
     prevention='Keep a safe distance from the horse',
     mitigation='Wear a helmet and body protector',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Horse kicking person',
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='mitigation',
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='mitigation'
 )
 
-RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessment(
+RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
     activity='Mucking out a horse',
     hazard='Horse kicks out',
     who_it_harms='Horse rider',
     how_it_harms='Impact injury',
-    uncontrolled_likelihood='4',
-    uncontrolled_severity='3',
-    uncontrolled_risk='12',
     mitigation='Keep a safe distance from the horse',
     prevention='Wear a helmet and body protector',
-    controlled_likelihood='1',
-    controlled_severity='1',
-    controlled_risk='1',
-    harm_caused_in_how_it_harms='injury',
-    hazard_event='Horse kicking person',
     prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=True,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output='prevention'
 )
 
-RA_slitter_machine = RiskAssessment(
+RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
     activity="Slitter machine usage",
     hazard="Sharp blade",
     who_it_harms="Operator",
     how_it_harms="Bleeding from a cut caused by the sharp blade",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
     prevention="Guard",
     mitigation="Metal gloves for maintenance",
-    controlled_likelihood="1",
-    controlled_severity="2",
-    controlled_risk="2",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Sharp blade cuts operator",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="mitigation"
 )
 
-RA_campfire = RiskAssessment(
+RA_campfire = RiskAssessmentWithoutNumberInputs(
     activity="Building a campfire",
     hazard="Flame",
     who_it_harms="People or property ",
     how_it_harms="Burns or damage",
-    uncontrolled_likelihood="1",
-    uncontrolled_severity="3",
-    uncontrolled_risk="3",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Flame sets fire to clothing",
     prevention="Safe distance from fire to be adhered to",
     mitigation="Flameproof clothing/insulation",
-    controlled_likelihood="1",
-    controlled_severity="2",
-    controlled_risk="2",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="mitigation"
 )
 
-RA_bouldering = RiskAssessment(
+RA_bouldering = RiskAssessmentWithoutNumberInputs(
     activity="Climbing (Bouldering)",
     hazard="Not landing Safely",
     who_it_harms="Climbers",
     how_it_harms="Landing in a awkward way can cause twisted ankle",
-    uncontrolled_likelihood="4",
-    uncontrolled_severity="3",
-    uncontrolled_risk="12",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Climber falls",
     prevention="Make sure to climb down before you come off the wall",
     mitigation="Make sure to always land of two feet",
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="prevention",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="prevention"
 )
 
-RA_hob = RiskAssessment(
+RA_hob = RiskAssessmentWithoutNumberInputs(
     activity="Cooking",
     hazard="Fire/ heat",
     who_it_harms="Chef",
     how_it_harms="Burns",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Chef burns hand",
     prevention="Use induction stove,",
     mitigation="wear insulated gloves and use insulated cooking equipment",
-    controlled_likelihood="1",
-    controlled_severity="1",
-    controlled_risk="1",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="mitigation"
 )
 
-RA_crossing_road = RiskAssessment(
+RA_crossing_road = RiskAssessmentWithoutNumberInputs(
     activity="Crossing Exhibition Road",
     hazard="A car crashing into you",
     who_it_harms="The person crossing the road",
     how_it_harms="Impact injury",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="3",
-    uncontrolled_risk="9",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Car crashes into person",
     prevention="Inform participants they should cross on their own terms",
     mitigation="One person at back and one at front",
-    controlled_likelihood="2",
-    controlled_severity="3",
-    controlled_risk="6",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="prevention",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="prevention"
 )
 
-RA_cycling = RiskAssessment(
+RA_cycling = RiskAssessmentWithoutNumberInputs(
     activity="Cycle commuting",
     hazard="Crash",
     who_it_harms="Cyclist",
     how_it_harms="Mistakes by cyclists or motorists leading to a crash and head injury",
-    uncontrolled_likelihood="2",
-    uncontrolled_severity="4",
-    uncontrolled_risk="8",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Cyclist crashes",
     prevention="Helmet wearing",
     mitigation="Reduces risk of head injury ",
-    controlled_likelihood="2",
-    controlled_severity="2",
-    controlled_risk="4",
     prevention_prompt_expected_output="mitigation",
-    mitigation_prompt_expected_output="neither",
-    prevention_clothing=True,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=True,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="neither"
 )
 
-RA_ladder = RiskAssessment(
+RA_ladder = RiskAssessmentWithoutNumberInputs(
     activity="Climbing a tall ladder",
     hazard="Falling, slipping",
     who_it_harms="the person on the ladder, people below the ladder",
     how_it_harms="The impact injury from hitting the ground",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Person falls off ladder",
     prevention="Have someone hold the ladder. Make sure the ladder is locked and the ground in even. ",
     mitigation="Wear helment and padded clothes.",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output="mitigation"
 )
 
-RA_fire_alarm = RiskAssessment(
+RA_fire_alarm = RiskAssessmentWithoutNumberInputs(
     activity = "Lesson in school building",
     hazard = "Smoking causes fire",
     who_it_harms = "Students and teachers",
     how_it_harms = "Burns",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Fire in school building",
     prevention = "Banning smoking",
     mitigation = "Fire alarm",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
+    mitigation_prompt_expected_output = "mitigation"
 )
 
-RA_mop_up_spill = RiskAssessment(
+RA_mop_up_spill = RiskAssessmentWithoutNumberInputs(
     activity = "Fluid lab",
     hazard = "Water spills",
     how_it_harms = "Slip causing impact injury",
     who_it_harms = "Users",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='neither',
-    hazard_event="Slipping on water spill",
     prevention = "Be careful",
     mitigation = "Mop up",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "prevention",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output = "prevention"
 )
 
-RA_syringe_with_cover = RiskAssessment(
+RA_syringe_with_cover = RiskAssessmentWithoutNumberInputs(
     activity = "Using syringe for injecting fuel",
     hazard = "Stabbing yourself",
     how_it_harms = "Sharp blade cuts skin and causes bleeding",
     who_it_harms = "The user",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Stabbing yourself with a syringe",
     prevention = "Use a cover over the syringe when not in use",
     mitigation = "Wear gloves",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "mitigation",
-    mitigation_prompt_expected_output = "mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=True,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output = "mitigation"
 )
 
-RA_sealed_cups = RiskAssessment(
+RA_sealed_cups = RiskAssessmentWithoutNumberInputs(
     activity = "HEAT TRANSFER LAB",
     hazard = "Boiling (hot) water",
     how_it_harms = "Burns",
     who_it_harms = "Students",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Spilling hot water on yourself",
     prevention = "Sealed cups",
     mitigation = "Cold water tap nearby",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=True,
+    mitigation_prompt_expected_output = "mitigation"
 )
 
-RA_bigger_beaker = RiskAssessment(
+RA_bigger_beaker = RiskAssessmentWithoutNumberInputs(
     activity = "Filling a beaker with hot water",
     hazard = "Spilling hot water on your hands",
     how_it_harms = "Leaves you with painful burn scars",
     who_it_harms = "Yourself",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Spilling hot water on your hands",
     prevention = "Use a bigger beaker",
     mitigation = "Be attentive when filling beaker",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "prevention",
-    prevention_clothing=False,
-    mitigation_clothing=False,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output = "prevention"
 )
 
-RA_cycling_high_viz = RiskAssessment(
+RA_cycling_high_viz = RiskAssessmentWithoutNumberInputs(
     activity = "Riding a Bike",
     hazard = "Getting hit",
     how_it_harms = "Impact injuries",
     who_it_harms = "The cyclist",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Cyclist crashes",
     prevention = "Take safer routes",
     mitigation = "Wear high vis clothing",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "mitigation",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output = "mitigation"
 )
 
-RA_t_shirt = RiskAssessment(
+RA_t_shirt = RiskAssessmentWithoutNumberInputs(
     activity = "Riding a Bike",
     hazard = "Getting hit",
     how_it_harms = "Impact injuries",
     who_it_harms = "The cyclist",
-    uncontrolled_likelihood="3",
-    uncontrolled_severity="5",
-    uncontrolled_risk="15",
-    harm_caused_in_how_it_harms='injury',
-    hazard_event="Cyclist crashes",
     prevention = "Take safer routes",
     mitigation = "Wear a t-shirt",
-    controlled_likelihood="1",
-    controlled_severity="3",
-    controlled_risk="3",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "neither",
-    prevention_clothing=False,
-    mitigation_clothing=True,
-    prevention_protected_clothing_expected_output=False,
-    mitigation_protected_clothing_expected_output=False,
-    prevention_first_aid_expected_output=False,
-    mitigation_first_aid_expected_output=False,
+    mitigation_prompt_expected_output = "neither"
 )
 
 example_risk_assessments = [
@@ -1131,15 +524,17 @@ example_risk_assessments = [
     # RA_4_with_first_aid,
     # RA_13,
 
-    RA_1, RA_2_hearing_damage, 
-    RA_4_ink_spillage_in_eye, 
-    RA_5, RA_6, RA_7_water_tank,
-     RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
-    RA_23,
+    # RA_1, RA_2_hearing_damage, 
+    # RA_4_ink_spillage_in_eye, 
+    # RA_5, RA_6, RA_7_water_tank,
+    #  RA_14, RA_15, RA_17, RA_18, RA_19, RA_20,
+    # RA_23,
     # RA_incorrect_prevention_and_mitigation, RA_2_mitigation_prevention_switched,
 
     # RA_5_mitigation_prevention_switched, RA_7_water_tank_mitigation_prevention_switched,
     # RA_15_mitigation_prevention_switched,
+    
+    # New examples from user testing
     RA_mucking_out_horse,
     RA_slitter_machine,
     RA_fire_alarm,
@@ -1154,7 +549,14 @@ example_risk_assessments = [
     RA_cycling,
     RA_ladder,
     RA_cycling_high_viz,
-    RA_t_shirt
+    RA_t_shirt,
+
+    ## Finance examples
+    RA_finance_credit_risk,
+    RA_finance_interest_rate_risk,
+    RA_finance_liquidity_risk,
+    RA_finance_operational_risk,
+    RA_finance_market_risk
     ]
 
 example_risk_assessments_for_protective_barrier_and_first_aid = [

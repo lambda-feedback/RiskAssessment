@@ -39,23 +39,20 @@ class RiskAssessmentExamplesGeneratorForSinglePrompt:
         return input_and_expected_output_list
     
 class RiskAssessmentExamplesGeneratorForMultiplePrompts:
-    def __init__(self, risk_assessments, ground_truth_parameter, method_to_get_prompt_input):
+    def __init__(self, risk_assessments, ground_truth_parameter):
         self.risk_assessments = risk_assessments
         self.ground_truth_parameter = ground_truth_parameter
-        self.method_to_get_prompt_input = method_to_get_prompt_input
     
     def get_risk_assessment_and_expected_output_list(self):
         risk_assessment_and_expected_output_list = []
         
         for risk_assessment in self.risk_assessments:
-            final_prompt_input = getattr(risk_assessment, self.method_to_get_prompt_input)()
             expected_output = getattr(risk_assessment, self.ground_truth_parameter)
             if expected_output == '':
                 continue
             else:
                 risk_assessment_and_expected_output_list.append(
-                    InputAndExpectedOutputForCombinedPrompts(risk_assessment=risk_assessment, 
-                                                             final_prompt_input=final_prompt_input, 
+                    InputAndExpectedOutputForCombinedPrompts(risk_assessment=risk_assessment,  
                                                              expected_output=expected_output))
         
         return risk_assessment_and_expected_output_list

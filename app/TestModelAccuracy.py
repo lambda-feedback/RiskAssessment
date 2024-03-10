@@ -12,31 +12,27 @@ from RegexPatternMatcher import RegexPatternMatcher
 class TestModelAccuracy:
     def __init__(self, 
                 LLM: LLMCaller,
-                LLM_name: str,
                 list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
+                number_of_examples_in_each_domain: dict,
                 sheet_name: str,
-                test_description: str):
+                examples_gathered_or_generated_message: str):
         
         self.LLM = LLM
-        self.LLM_name = LLM_name
         self.list_of_input_and_expected_outputs = list_of_input_and_expected_outputs
+        self.number_of_examples_in_each_domain = number_of_examples_in_each_domain
         self.sheet_name = sheet_name
-        self.test_description = test_description
+        self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
 
     def get_number_of_examples(self):
         return len(self.list_of_input_and_expected_outputs)
-    
-    def get_first_prompt_input_object(self):
-        
-        return self.list_of_input_and_expected_outputs[0].input
 
     def get_first_prompt_input(self):
-        first_prompt_input_object = self.get_first_prompt_input_object()
+        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].input
         first_prompt_input = first_prompt_input_object.generate_prompt()
         return first_prompt_input
     
     def get_classes(self):
-        first_prompt_input_object = self.get_first_prompt_input_object()
+        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].input
 
         classes = first_prompt_input_object.candidate_labels
         return classes
@@ -66,39 +62,43 @@ class TestModelAccuracy:
 
         return confusion_matrix_string
 
-    def update_output_string(self, output_string, i, pattern_matched, expected_output):
-        result_dict = {'input': self.list_of_input_and_expected_outputs[i].input.to_string(),
+    def update_output_string(self, output_string, example_index, pattern_matched, expected_output):
+        result_dict = {'input': self.list_of_input_and_expected_outputs[example_index].input.to_string(),
                 'pattern_matched': pattern_matched, 
                 'expected_output': expected_output}
 
-        output_string += f'{i + 1}: {str(result_dict)}\n\n'
+        output_string += f'{example_index + 1}: {str(result_dict)}\n\n'
 
         return output_string
 
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        expected_output = self.list_of_input_and_expected_outputs[i].expected_output
-        input = self.list_of_input_and_expected_outputs[i].input
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, example_index):
+        expected_output = self.list_of_input_and_expected_outputs[example_index].expected_output
+        input = self.list_of_input_and_expected_outputs[example_index].input
 
         pattern_matching_method_string = input.pattern_matching_method
         regex_pattern_matcher = RegexPatternMatcher()
         pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
     
         prompt_output = self.LLM.get_model_output(input.generate_prompt())
+        print(prompt_output)
 
         pattern_matched = pattern_matching_method(prompt_output)
         
         return expected_output, pattern_matched, prompt_output
     
-    def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, i, count_correct):
+    def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, example_index, count_correct):
         if pattern_matched == expected_output:
             count_correct += 1
 
-            prompt_outputs_for_correct_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+            binary_correct_list.append(1)
+
+            prompt_outputs_for_correct_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
 
         else:
-            prompt_outputs_for_incorrect_responses += f'{i + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+            binary_correct_list.append(0)
+            prompt_outputs_for_incorrect_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
 
-        return prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct
+        return binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct
 
     def convert_list_of_lists_to_string(self, list_of_lists):
         # Convert each sublist to a string with newline
@@ -108,6 +108,8 @@ class TestModelAccuracy:
         return '[' + ',\n'.join(sublist_strings) + ']'
 
     def get_model_accuracy_and_model_outputs(self):
+        purpose_of_test_input = input('Please enter the purpose of the test: ')
+
         print('Counting correct responses...')
         count_correct = 0
         
@@ -122,23 +124,27 @@ class TestModelAccuracy:
 
         n_examples = self.get_number_of_examples()
 
-        for i in range(n_examples):
+        binary_correct_list = []
 
-            expected_output, pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(i)
+        for example_index in range(n_examples):
+
+            expected_output, pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(example_index)
 
             confusion_matrix = self.update_confusion_matrix(confusion_matrix, classes, pattern_matched, expected_output)
 
-            output_string = self.update_output_string(output_string, i, pattern_matched, expected_output)
+            output_string = self.update_output_string(output_string, example_index, pattern_matched, expected_output)
 
             prompt_outputs_for_correct_responses, 
             prompt_outputs_for_incorrect_responses, 
-            prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct = self.update_prompt_output_strings(prompt_output, 
-                                                                expected_output, 
-                                                                pattern_matched, 
-                                                                prompt_outputs_for_correct_responses, 
-                                                                prompt_outputs_for_incorrect_responses, 
-                                                                i, 
-                                                                count_correct)
+            binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct = self.update_prompt_output_strings(
+                                                                                                                            prompt_output=prompt_output, 
+                                                                                                                            expected_output=expected_output, 
+                                                                                                                            pattern_matched=pattern_matched, 
+                                                                                                                            binary_correct_list=binary_correct_list,
+                                                                                                                            prompt_outputs_for_correct_responses=prompt_outputs_for_correct_responses, 
+                                                                                                                            prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses, 
+                                                                                                                            example_index=example_index, 
+                                                                                                                            count_correct=count_correct)
             
             print(count_correct)
 
@@ -146,16 +152,36 @@ class TestModelAccuracy:
 
         confusion_matrix_string = self.generate_confusion_matrix_string(confusion_matrix, classes)
         
-        return accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
+        return purpose_of_test_input, binary_correct_list, accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
     
     def get_first_prompt_input(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
         first_prompt_input = first_input.generate_prompt()
 
         return first_prompt_input
+
+    def get_accuracy_in_different_domains(self, binary_correct_list):
+        domains = self.number_of_examples_in_each_domain.keys()
+        domain_accuracy_string = ''
+
+        starting_index_of_current_domain_in_binary_correct_list = 0
+        for domain in domains:
+            number_of_risk_assessments_in_domain = self.number_of_examples_in_each_domain[domain]
+
+            ending_index_of_current_domain_in_binary_correct_list = starting_index_of_current_domain_in_binary_correct_list + number_of_risk_assessments_in_domain
+            
+            number_of_risk_assessments_correctly_classified_in_domain = sum(binary_correct_list[starting_index_of_current_domain_in_binary_correct_list:ending_index_of_current_domain_in_binary_correct_list])
+
+            domain_accuracy_string += f'{domain}: {number_of_risk_assessments_correctly_classified_in_domain}/{number_of_risk_assessments_in_domain}\n\n'
+
+            starting_index_of_current_domain_in_binary_correct_list = ending_index_of_current_domain_in_binary_correct_list
+
+        return domain_accuracy_string
     
     def save_test_results(self, 
+                          purpose_of_test_input,
                           accuracy, 
+                          accuracy_in_different_domains_string,
                           confusion_matrix,
                           output_string, 
                           prompt_outputs_for_correct_responses,
@@ -164,53 +190,60 @@ class TestModelAccuracy:
 
         datetime_now = datetime.now().strftime("%d-%m_%H-%M")
 
-        if self.LLM_name == 'gpt-3.5-turbo':
+        if self.LLM.name.split('-')[0] in ['gpt', 'claude']:
             model_parameters = f'Temp: {self.LLM.temperature}, Max tokens: {self.LLM.max_tokens}'
         else:
             model_parameters = ''
         
         num_examples = self.get_number_of_examples()
 
-        new_line_data = [self.test_description, 
-                         self.LLM_name, 
-                            datetime_now, 
-                            0,
-                            model_parameters, 
-                            accuracy, 
-                            num_examples,
-                            confusion_matrix,
-                            output_string[:45000],
-                            first_prompt_input,
-                            prompt_outputs_for_correct_responses[:45000],
-                            prompt_outputs_for_incorrect_responses[:45000]]
+        new_line_data = [purpose_of_test_input, 
+                         datetime_now, 
+                         self.LLM.name, 
+                        model_parameters, 
+                        self.examples_gathered_or_generated_message,
+                        accuracy, 
+                        accuracy_in_different_domains_string,
+                        num_examples,
+                        confusion_matrix,
+                        output_string[:45000], # Google Sheets has a 50,000 character limit
+                        first_prompt_input,
+                        prompt_outputs_for_correct_responses[:45000],
+                        prompt_outputs_for_incorrect_responses[:45000]]
         
         sheets_writer = GoogleSheetsWriter(sheet_name=self.sheet_name)
         sheets_writer.write_to_sheets(new_line_data)
-        
+
     # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
-        accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
+        purpose_of_test_input, binary_correct_list, accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
+
+        accuracy_in_different_domains_string = self.get_accuracy_in_different_domains(binary_correct_list)
+
         first_prompt_input = self.get_first_prompt_input()
-        self.save_test_results(accuracy=accuracy, 
+        self.save_test_results(purpose_of_test_input=purpose_of_test_input,
+                               accuracy=accuracy, 
+                               accuracy_in_different_domains_string=accuracy_in_different_domains_string,
                                confusion_matrix=confusion_matrix,
                                output_string=output_string, 
                                first_prompt_input=first_prompt_input,
                                prompt_outputs_for_correct_responses=prompt_outputs_for_correct_responses,
-                               prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses,)
+                               prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses)
 
 class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
     def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    number_of_examples_in_each_domain: dict,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list):
         self.LLM = LLM
-        self.LLM_name = LLM_name
         self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
+        self.number_of_examples_in_each_domain = number_of_examples_in_each_domain
         self.sheet_name = sheet_name
-        self.test_description = test_description
+        self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
+        self.candidate_labels = candidate_labels
 
     # Defined in children classes below
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
@@ -220,12 +253,11 @@ class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
     def get_first_prompt_input(self):
         pass
 
+    def get_classes(self):
+        return self.candidate_labels
+
     def get_number_of_examples(self):
         return len(self.list_of_risk_assessment_and_expected_outputs)
-
-    def get_first_prompt_input_object(self):
-        
-        return self.list_of_risk_assessment_and_expected_outputs[0].final_prompt_input
     
     def update_output_string(self, output_string, i, pattern_matched, expected_output):
         result_dict = {'risk_assessment': self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment.to_string(),
@@ -236,281 +268,96 @@ class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
 
         return output_string
 
-class TestIllnessAndInjuryPrompts(TestModelAccuracyForCombinationOfPrompts):
+class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    number_of_examples_in_each_domain: dict,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list):
         
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+
+    def get_first_prompt_input(self):
+        first_RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+
+        first_harm_caused_prompt_input = first_RA.get_harm_caused_and_hazard_event_input()
+
+        return first_harm_caused_prompt_input.generate_prompt()
     
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+        harm_caused_prompt_input = RA.get_harm_caused_and_hazard_event_input()
+        harm_caused_prompt_output, harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_prompt_input, self.LLM)
 
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                predicted_output = 'injury'
-            else:
-                predicted_output = 'illness'
-
-            return expected_output, predicted_output, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-
-class TestHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
-    
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-        
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_prompt_input, self.LLM)
-
-            return expected_output, True, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}\n\nHazard event prompt: {hazard_event_prompt_output}'''
-
-class TestProtectiveClothingMitigationPrompt(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
-    
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, False, f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-                                                                                                        LLM_caller=self.LLM,
-                                                                                                        harm_caused=harm_caused)
-            
-            clothing_prompt_input, part_of_body_prompt_input, protects_part_of_body_prompt_input = RA.get_prompt_inputs_for_mitigation_protective_clothing()
-
-            clothing_prompt_output, clothing_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=clothing_prompt_input,
-                                                                                                            LLM_caller=self.LLM)
-            if clothing_pattern == False:
-                return expected_output, False, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}'''
-            else:
-                part_of_body_prompt_output, part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=part_of_body_prompt_input,
-                                                                                                            LLM_caller=self.LLM,
-                                                                                                            hazard_event=hazard_event,
-                                                                                                            harm_caused=harm_caused)
-                
-                protects_part_of_body_prompt_output, protects_part_of_body_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=protects_part_of_body_prompt_input,
-                                                                                                            LLM_caller=self.LLM,
-                                                                                                            part_of_body_harmed=part_of_body_pattern,
-                                                                                                            hazard_event=hazard_event,
-                                                                                                            harm_caused=harm_caused)
-
-                return expected_output, protects_part_of_body_pattern, f'''Harm caused: {harm_caused}\n\nHazard Event: {hazard_event}\n\nClothing:{clothing_prompt_output}\n\nPart of body: {part_of_body_prompt_output}\n\nProtects part of body: {protects_part_of_body_prompt_output}'''
-        
-
-class TestFirstAidPreventionPrompt(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
-        
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
-
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        injury_prompt_input = RA.get_injury_input()
-        injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        illness_prompt_input = RA.get_illness_input()
-        illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        if injury_pattern == False and illness_pattern == False:
-            return expected_output, 'Harm not detected', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {illness_prompt_output}'''
-        else:
-            if injury_pattern != False:
-                harm_caused = injury_pattern
-            else:
-                harm_caused = illness_pattern
-
-            hazard_event_prompt_input = RA.get_hazard_event_input()
-            hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-                                                                                                        LLM_caller=self.LLM, 
-                                                                               )
-            first_aid_prompt_input = RA.get_prevention_first_aid_input()
-            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
-
-            return expected_output, prevention_first_aid_pattern, prevention_first_aid_prompt_output
+        return expected_output, True, harm_caused_prompt_output
 
 class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    number_of_examples_in_each_domain: dict,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list):
         
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+
+    def get_classes(self):
+        return ['prevention', 'mitigation', 'neither', 'both']
     
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        # injury_prompt_input = RA.get_injury_input()
-        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
+        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
+        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, self.LLM)
 
-        # illness_prompt_input = RA.get_illness_input()
-        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
+        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
+        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
-        # if injury_pattern == False and illness_pattern == False:
-        #     return expected_output, 'neither', f'''Injury prompt: {injury_prompt_output}\n\nIllness prompt: {i}'''
-        # else:
-        #     if injury_pattern != False:
-        #         harm_caused = injury_pattern
-        #     else:
-        #         harm_caused = illness_pattern
+        prevention_prompt_with_prevention_input = RA.get_prevention_prompt_with_prevention_input()
+        prevention_prompt_with_prevention_output, prevention_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_with_prevention_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
-        #     hazard_event_prompt_input = RA.get_hazard_event_input()
-        #     hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-        #                                                                                                 LLM_caller=self.LLM, 
-        #                                                                        )
+        prevention_prompt_with_mitigation_input = RA.get_prevention_prompt_with_mitigation_input()
+        prevention_prompt_with_mitigation_output, prevention_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_with_mitigation_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
-        prevention_protective_barrier_prompt_input = RA.get_prevention_protective_barrier_input()
-        prevention_protective_barrier_prompt_output, prevention_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prevention_protective_barrier_prompt_input, 
-                                                                                                                                        LLM_caller=self.LLM)
-        if prevention_protective_barrier_pattern == True:
-            prompt_output = f'''{prevention_protective_barrier_prompt_output} 
-            
-            'First aid prompt not run'
-            
-            'Prevention prompt not run'''
-            
-            return expected_output, 'mitigation', prompt_output
+        prompt_output = f'''{harm_caused_and_hazard_event_prompt_output}\n\n{prevention_prompt_with_prevention_output}\n\n{prevention_prompt_with_mitigation_output}'''
+        if prevention_prompt_with_prevention_pattern == True and prevention_prompt_with_mitigation_pattern == True:
 
-        else:
-            first_aid_prompt_input = RA.get_prevention_first_aid_input()
-            prevention_first_aid_prompt_output, prevention_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
-
-            if prevention_first_aid_pattern == True:
-                prompt_output = f'''{prevention_protective_barrier_prompt_output}
-
-                {prevention_first_aid_prompt_output}
-
-                'Prevention prompt not run'''
-
-                return expected_output, 'mitigation', prompt_output
-            
-            else:
-                prevention_prompt_input = RA.get_prevention_input()
-                prevention_prompt_output, prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_input, self.LLM)
-
-                prompt_output = f'''{prevention_protective_barrier_prompt_output}
-
-                {prevention_first_aid_prompt_output}
-                
-                {prevention_prompt_output}'''
-
-                return expected_output, prevention_pattern, prompt_output
-    
-    def get_first_prompt_input(self):
-        RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
-
-        # injury_prompt_input = RA.get_injury_input()
-        # injury_prompt_output, injury_pattern = RA.get_prompt_output_and_pattern_matched(injury_prompt_input, self.LLM)
-
-        # illness_prompt_input = RA.get_illness_input()
-        # illness_prompt_output, illness_pattern = RA.get_prompt_output_and_pattern_matched(illness_prompt_input, self.LLM)
-
-        # if injury_pattern == False and illness_pattern == False:
-        #     harm_caused = RA.how_it_harms
-        # else:
-        #     if injury_pattern != False:
-        #         harm_caused = injury_pattern
-        #     else:
-        #         harm_caused = illness_pattern
-
-        # hazard_event_prompt_input = RA.get_hazard_event_input()
-        # hazard_event_prompt_output, hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_prompt_input, 
-        #                                                                                             LLM_caller=self.LLM, 
-        #                                                                    )
+            return expected_output, 'both', prompt_output
         
-        first_prevention_protective_barrier_prompt_input_object = RA.get_prevention_protective_barrier_input()
-        first_prevention_protective_barrier_prompt_input = first_prevention_protective_barrier_prompt_input_object.generate_prompt()
+        if prevention_prompt_with_prevention_pattern == True and prevention_prompt_with_mitigation_pattern == False:
+            
+            return expected_output, 'prevention', prompt_output
+        
+        if prevention_prompt_with_prevention_pattern == False and prevention_prompt_with_mitigation_pattern == True:
+                
+            return expected_output, 'mitigation', prompt_output
+        
+        if prevention_prompt_with_prevention_pattern == False and prevention_prompt_with_mitigation_pattern == False:
 
-        first_prevention_first_aid_prompt_input_object = RA.get_prevention_first_aid_input()
-        first_prevention_first_aid_prompt_input = first_prevention_first_aid_prompt_input_object.generate_prompt()
-
-        first_prevention_prompt_input_object = RA.get_prevention_input()
-        first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
-
-        return f'''{first_prevention_protective_barrier_prompt_input}
-                  
-                  {first_prevention_first_aid_prompt_input}
-                  
-                  {first_prevention_prompt_input}'''
-
+            return expected_output, 'neither', prompt_output
 
 # TODO: Remove all this duplicate code. There should only be one test and you should be able to specify whether 
 # it is mitigation or prevention that you want to test
 class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
-                LLM: LLMCaller,
-                LLM_name: str,
-                list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                sheet_name: str,
-                test_description: str):
+                    LLM: LLMCaller,
+                    list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
+                    number_of_examples_in_each_domain: dict,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list):
         
-        super().__init__(LLM, LLM_name, list_of_risk_assessment_and_expected_outputs, sheet_name, test_description)
+        super().__init__(LLM, list_of_input_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
 
+    def get_classes(self):
+        return ['prevention', 'mitigation', 'neither', 'both']
+    
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output

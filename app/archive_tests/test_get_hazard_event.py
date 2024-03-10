@@ -1,7 +1,7 @@
 
 from TestModelAccuracy import TestHazardEventPrompt
 from LLMCaller import OpenAILLM
-from example_risk_assessments import example_risk_assessments
+from example_risk_assessments_exemplar import example_risk_assessments
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
@@ -15,7 +15,8 @@ if __name__ == '__main__':
 
     test_accuracy = TestHazardEventPrompt(test_description="""Testing ability of LLM to produce hazard harm caused from hazard and how it harms inputs 
                                       Testing with examples from student Fluids Lab and TPS presentation Risk Assessment examples.
-                                       """,
+                                        Testing finance examples.
+                                          """,
                                       LLM=OpenAILLM(),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_risk_assessment_and_expected_outputs=examples,

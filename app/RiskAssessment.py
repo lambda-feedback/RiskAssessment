@@ -13,10 +13,6 @@ class RiskAssessment:
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
-                 harm_caused_in_how_it_harms, hazard_event,
-                 prevention_clothing, mitigation_clothing,
-                 prevention_protected_clothing_expected_output, mitigation_protected_clothing_expected_output,
-                 prevention_first_aid_expected_output, mitigation_first_aid_expected_output,
                  prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
@@ -31,21 +27,10 @@ class RiskAssessment:
         self.controlled_severity = controlled_severity
         self.controlled_risk = controlled_risk
 
-        self.harm_caused_in_how_it_harms = harm_caused_in_how_it_harms
-        self.hazard_event = hazard_event
-
-        self.prevention_clothing = prevention_clothing
-        self.mitigation_clothing = mitigation_clothing
-
-        self.prevention_protected_clothing_expected_output = prevention_protected_clothing_expected_output
-        self.mitigation_protected_clothing_expected_output = mitigation_protected_clothing_expected_output
-
-        self.prevention_first_aid_expected_output = prevention_first_aid_expected_output
-        self.mitigation_first_aid_expected_output = mitigation_first_aid_expected_output
-
         self.prevention_prompt_expected_output = prevention_prompt_expected_output
         self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
 
+        # TODO: Remove these parameters
         self.always_true = True
         self.always_false = False
 
@@ -156,76 +141,25 @@ class RiskAssessment:
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
                             activity=self.activity)
     
-    def get_injury_input(self):
-        return Injury(input=self.how_it_harms)
+    def get_harm_caused_and_hazard_event_input(self):
+        return HarmCausedAndHazardEvent(hazard=self.hazard,
+                          how_it_harms=self.how_it_harms)
     
-    def get_illness_input(self):
-        return Illness(input=self.how_it_harms)
-    
-    def get_hazard_event_input(self):
-        return HazardEvent(activity=self.activity,
-                            hazard=self.hazard,
-                            how_it_harms=self.how_it_harms,
-                            who_it_harms=self.who_it_harms)
-    
-    def get_prevention_clothing(self):
-        return Clothing(control_measure=self.prevention)
-    
-    def get_mitigation_clothing(self):
-        return Clothing(control_measure=self.mitigation)
-    
-    def get_prompt_inputs_for_prevention_protective_clothing(self):
-        return [Clothing(control_measure=self.prevention),
-                PartOfBodyHarmed(),
-                ProtectsPartOfBody(control_measure=self.prevention)]
-    
-    def get_prompt_inputs_for_mitigation_protective_clothing(self):
-        return [Clothing(control_measure=self.mitigation),
-                PartOfBodyHarmed(),
-                ProtectsPartOfBody(control_measure=self.mitigation)]
-    
-    def get_mitigation_protects_part_of_body_input(self):
-        return ProtectsPartOfBody(control_measure=self.mitigation)
-
-    def get_prevention_protective_barrier_input(self):
-        return ProtectiveBarrier(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.prevention)
-    
-    def get_mitigation_protective_barrier_input(self):
-        return ProtectiveBarrier(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.mitigation)
-    
-    def get_prevention_first_aid_input(self):
-        return FirstAid(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.prevention)
-    
-    def get_mitigation_first_aid_input(self):
-        return FirstAid(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.mitigation)
-    
-    def get_prevention_input(self):
+    def get_prevention_prompt_with_prevention_input(self):
         return Prevention(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
-            prevention=self.prevention)
+            control_measure=self.prevention)
+    
+    def get_prevention_prompt_with_mitigation_input(self):
+        return Prevention(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
     
     def get_mitigation_input(self):
         return Mitigation(
@@ -316,10 +250,6 @@ class RiskAssessment:
             # self.get_activity_input(),
                 self.get_how_it_harms_in_context_input(),
                 self.get_who_it_harms_in_context_input(),
-                # self.get_protective_barrier_input(),
-                # self.get_first_aid_input(),
-                # self.get_prevention_input(),
-                # self.get_mitigation_input()
                 ]
 
     def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller], **kwargs):
@@ -353,3 +283,22 @@ class RiskAssessment:
                 return False
         
         return True
+
+class RiskAssessmentWithoutNumberInputs(RiskAssessment):
+    def __init__(self, activity, hazard, how_it_harms, who_it_harms,
+                 prevention, mitigation, prevention_prompt_expected_output, 
+                 mitigation_prompt_expected_output):
+        super().__init__(activity=activity,
+                         hazard=hazard,
+                         how_it_harms=how_it_harms,
+                         who_it_harms=who_it_harms,
+                         uncontrolled_likelihood='1',
+                         uncontrolled_severity='1',
+                         uncontrolled_risk='1',
+                         prevention=prevention,
+                         mitigation=mitigation,
+                         controlled_likelihood='1',
+                         controlled_severity='1',
+                         controlled_risk='1',
+                         prevention_prompt_expected_output=prevention_prompt_expected_output,
+                         mitigation_prompt_expected_output=mitigation_prompt_expected_output)
