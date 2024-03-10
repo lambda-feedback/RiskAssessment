@@ -439,7 +439,6 @@ class Prevention(PromptInput):
         Hazard Description: <your hazard description>
         Prevention Explanation: <your explanation>
         Overall Answer: <your answer>'''
-    
 
 class OldPrevention(PromptInput):
     def __init__(self, prevention, activity, hazard, how_it_harms, who_it_harms):
