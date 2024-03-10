@@ -15,10 +15,10 @@ except:
 
 try:
     from RiskAssessment import RiskAssessment
-    from LLMCaller import LLMWithCandidateLabels, LLMWithGeneratedText
+    from LLMCaller import LLMWithGeneratedText
 except:
     from .RiskAssessment import RiskAssessment
-    from .LLMCaller import LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
+    from .LLMCaller import LLMWithGeneratedText, OpenAILLM
 
 class Result(TypedDict):
     is_correct: bool
@@ -169,15 +169,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                             controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
-                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation',
-                            prevention_clothing=False,
-                            mitigation_clothing=False,
-                            prevention_protected_clothing_expected_output=False,
-                            mitigation_protected_clothing_expected_output=False,
-                            prevention_first_aid_expected_output=False,
-                            mitigation_first_aid_expected_output=False,
-                            harm_caused_in_how_it_harms='',
-                            hazard_event="",
+                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation'
                             )
 
         input_check_feedback_message = RA.get_input_check_feedback_message()

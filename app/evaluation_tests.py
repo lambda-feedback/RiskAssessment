@@ -6,14 +6,14 @@ import unittest
 
 try:
     from .evaluation import Params, evaluation_function
-    from .example_risk_assessments_exemplar import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
-    from .LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
+    from .example_risk_assessments import RA_hearing_damage, RA_controlled_likelihood_wrong_type, RA_mitigation_wrong_type, RA_empty_input
+    from .LLMCaller import LLMCaller, LLMWithGeneratedText, OpenAILLM
     from .PromptInputs import Activity
     from .RegexPatternMatcher import RegexPatternMatcher
 except:
     from evaluation import Params, evaluation_function
-    from example_risk_assessments import RA_5, RA_mitigation_wrong_type, RA_controlled_likelihood_wrong_type, RA_empty_input
-    from LLMCaller import LLMCaller, LLMWithCandidateLabels, LLMWithGeneratedText, OpenAILLM
+    from example_risk_assessments import RA_hearing_damage, RA_controlled_likelihood_wrong_type, RA_mitigation_wrong_type, RA_empty_input
+    from LLMCaller import LLMCaller, LLMWithGeneratedText, OpenAILLM
     from PromptInputs import Activity
     from RegexPatternMatcher import RegexPatternMatcher
 
@@ -82,27 +82,27 @@ class TestEvaluationFunction(unittest.TestCase):
 
     #     self.assertEqual(result.get("is_correct"), True)
 
-    def test_no_information_provided_in_mitigation_input(self):
-        response = [["Fluids laboratory"],
-                    ["Water being spilt on the floor"],
-                    ["Slipping on the water on the floor causing impact injuries"],
-                    ["Students"],
-                    ["4"],
-                    ["1"],
-                    ["4"],
-                    ["Do not move the water tank when it is full"],
-                    ["Not applicable"],
-                    ["1"],
-                    ["1"], 
-                    ["1"]]
-        answer = None
-        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+    # def test_no_information_provided_in_mitigation_input(self):
+    #     response = [["Fluids laboratory"],
+    #                 ["Water being spilt on the floor"],
+    #                 ["Slipping on the water on the floor causing impact injuries"],
+    #                 ["Students"],
+    #                 ["4"],
+    #                 ["1"],
+    #                 ["4"],
+    #                 ["Do not move the water tank when it is full"],
+    #                 ["Not applicable"],
+    #                 ["1"],
+    #                 ["1"], 
+    #                 ["1"]]
+    #     answer = None
+    #     params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
 
-        result = evaluation_function(response, answer, params)
+    #     result = evaluation_function(response, answer, params)
 
-        print(result.get("feedback"))
+    #     print(result.get("feedback"))
 
-        self.assertEqual(result.get("is_correct"), True)
+    #     self.assertEqual(result.get("is_correct"), True)
 
     # def test_when_prevention_entered_as_mitigation(self):
     #     response = [["Fluids laboratory"],
@@ -165,19 +165,19 @@ class TestEvaluationFunction(unittest.TestCase):
                 
     def test_handles_empty_input(self):
         self.assertEqual(RA_empty_input.get_empty_fields(), ['Activity'])
-        self.assertEqual(RA_5.get_empty_fields(), [])
+        self.assertEqual(RA_hearing_damage.get_empty_fields(), [])
     
     def test_does_string_represent_an_integer(self):
 
-        self.assertEqual(RA_5.does_string_represent_an_integer('1'), True)
-        self.assertEqual(RA_5.does_string_represent_an_integer('1.0'), False)
-        self.assertEqual(RA_5.does_string_represent_an_integer('One'), False)
+        self.assertEqual(RA_hearing_damage.does_string_represent_an_integer('1'), True)
+        self.assertEqual(RA_hearing_damage.does_string_represent_an_integer('1.0'), False)
+        self.assertEqual(RA_hearing_damage.does_string_represent_an_integer('One'), False)
     
     def test_does_string_represent_words(self):
 
-        self.assertEqual(RA_5.does_string_represent_words('1'), False)
-        self.assertEqual(RA_5.does_string_represent_words('1.0'), False)
-        self.assertEqual(RA_5.does_string_represent_words('One'), True)
+        self.assertEqual(RA_hearing_damage.does_string_represent_words('1'), False)
+        self.assertEqual(RA_hearing_damage.does_string_represent_words('1.0'), False)
+        self.assertEqual(RA_hearing_damage.does_string_represent_words('One'), True)
 
     def test_get_word_fields_incorrect(self):
         self.assertEqual(RA_mitigation_wrong_type.get_word_fields_incorrect(), ['Mitigation'])

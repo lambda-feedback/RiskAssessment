@@ -108,6 +108,7 @@ class RiskAssessment:
         
         feedback_message = ''
 
+        # TODO: Should make it non-compulsory to enter anything for the mitigation field
         if len(empty_fields) > 0:
             feedback_message += f'Please fill in the following fields: {str(empty_fields)[1:-1]}.\n\n'
         
