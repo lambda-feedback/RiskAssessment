@@ -190,7 +190,7 @@ class TestModelAccuracy:
 
         datetime_now = datetime.now().strftime("%d-%m_%H-%M")
 
-        if self.LLM.name[:3] == 'gpt':
+        if self.LLM.name.split('-')[0] in ['gpt', 'claude']:
             model_parameters = f'Temp: {self.LLM.temperature}, Max tokens: {self.LLM.max_tokens}'
         else:
             model_parameters = ''

@@ -27,7 +27,7 @@ class RegexPatternMatcher:
             raise Exception("Pattern not found in output prompt")
         
     def check_string_for_no_information_provided(self, string):
-        pattern = re.compile(r"Overall Answer: (information provided|no information provided)", re.IGNORECASE)
+        pattern = re.compile(r"Answer: (control measure|no information provided)", re.IGNORECASE)
         match = re.search(pattern, string)
         if match:
             return match.group(1).lower()

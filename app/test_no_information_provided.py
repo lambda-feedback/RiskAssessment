@@ -19,17 +19,17 @@ no_information_provided_examples = [
 ]
 
 information_provided_examples = [
-    # Hazard
-    "Bike collides with car",
-    "Fall during climbing ascent",
+    # # Hazard
+    # "Bike collides with car",
+    # "Fall during climbing ascent",
     
-    # How it harms
-    "Impact injuries from bike collision",
-    "Injuries sustained in climbing fall",
+    # # How it harms
+    # "Impact injuries from bike collision",
+    # "Injuries sustained in climbing fall",
     
-    # Who it harms
-    "Biker and car occupants",
-    "Climber and belayer",
+    # # Who it harms
+    # "Biker and car occupants",
+    # "Climber and belayer",
 
     # Prevention
     "Using safe climbing techniques",
@@ -60,20 +60,20 @@ for example in no_information_provided_examples:
     examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='no information provided'))
 
 for example in information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='information provided'))
+    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
 
-# for example in unique_examples:
-#     examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
+for example in unique_examples:
+    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
 
 if __name__ == "__main__":
 
     test_accuracy = TestModelAccuracy(
-        # LLM=OpenAILLM(),
+        LLM=OpenAILLM(),
         # LLM=AnthropicLLM(name='claude-3-sonnet-20240229', system_message='You are capable of following instructions and learning patterns from examples. '),
-        LLM=MixtralLLM(),
+        # LLM=MixtralLLM(),
         list_of_input_and_expected_outputs=examples,
         number_of_examples_in_each_domain=number_of_examples_in_each_domain,
         sheet_name='No Information Provided',
-        examples_gathered_or_generated_message='"No information" examples generated using Chat GPT. "Information provided" examples gathered from student risk assessments.'
+        examples_gathered_or_generated_message='"No information" examples generated using Chat GPT.\n\n "Information provided" examples gathered from student risk assessments.'
         )
     test_accuracy.run_test()

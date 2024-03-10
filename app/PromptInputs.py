@@ -56,7 +56,7 @@ class NoInformationProvided(PromptInput):
     def __init__(self, input: str):
         super().__init__()
         self.pattern_matching_method = 'check_string_for_no_information_provided'
-        self.candidate_labels = ['information provided', 'no information provided']
+        self.candidate_labels = ['control measure', 'no information provided']
         self.input = input
     
     def generate_prompt(self):
@@ -64,98 +64,66 @@ class NoInformationProvided(PromptInput):
         <s> [INST]
 
         Follow these instructions:
-        1. Classify the following input as either "No information provided" or "Information provided"
+        1. Classify the following input as either "No information provided" or "Control measure"
 
+        <EXAMPLES>
         Input: "N/A" 
-        <output>
         Answer: No information provided
-        </output>
 
         Input: "Not Applicable" 
-        <output>
         Answer: No information provided
-        </output>
 
-        Input: "Unknown"
-        <output> 
+        Input: "Unknown" 
         Answer: No information provided
-        </output>
 
-        Input: "None"
-        <output> 
+        Input: "None" 
         Answer: No information provided
-        </output>
 
-        Input: "TBD"
-        <output> 
+        Input: "TBD" 
         Answer: No information provided
-        </output>
 
-        Input: "To Be Determined"
-        <output> 
+        Input: "To Be Determined" 
         Answer: No information provided
-        </output>
 
-        Input: "Unspecified"
-        <output> 
+        Input: "Unspecified" 
         Answer: No information provided
-        </output>
 
-        Input: "No Information Available"
-        <output> 
+        Input: "No Information Available" 
         Answer: No information provided
-        </output>
 
-        Input: "Do Not Know"
-        <output> 
+        Input: "Do Not Know" 
         Answer: No information provided
-        </output>
 
-        Input: "Not specified"
-        <output> 
+        Input: "Not specified" 
         Answer: No information provided
-        </output>
 
-        Input: "Unavailable"
-        <output> 
+        Input: "Unavailable" 
         Answer: No information provided
-        </output>
 
-        Input: "Not applicable"
-        <output> 
+        Input: "Not applicable" 
         Answer: No information provided
-        </output>
 
-        Input: "Not known"
-        <output> 
+        Input: "Not known" 
         Answer: No information provided
-        </output>
 
         Input: "Wear helmet"
-        <output>
         Answer: Control measure
-        </output>
 
         Input: "Take care"
-        <output>
-        Answer: Information provided
-        </output>
+        Answer: Control measure
 
         Input: "Apply ice"
-        <output>
-        Answer: Information provided
-        </output>
+        Answer: Control measure
+        </EXAMPLES>
 
+        <OUTPUT FORMAT>
         Use the following output format:
         Answer: <your answer>
-        
-        After giving one answer, end your response.
+        </OUTPUT FORMAT>
 
         [/INST]
  
-        Input: "{self.input}"
-        
-        Answer: '''
+        Input: "{self.input}"'''
 
 class Activity(PromptInput):
     def __init__(self, activity: str):
