@@ -3,9 +3,9 @@
 # The hazard event is therefore the projectile hitting someone, not the projectile being released.
 
 try:
-    from .RiskAssessment import RiskAssessmentWithoutNumberInputs
+    from .RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
 except ImportError:
-    from RiskAssessment import RiskAssessmentWithoutNumberInputs
+    from RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
 
 RA_empty_input = RiskAssessmentWithoutNumberInputs(
     activity="",
@@ -18,13 +18,30 @@ RA_empty_input = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='',
 )
 
-RA_mitigation_wrong_type = RiskAssessmentWithoutNumberInputs(
+RA_controlled_likelihood_wrong_type = RiskAssessment(
     activity="Using a trombone as a demonstration for a TPS presentation",
     hazard="Loud noise",
     who_it_harms="Everyone present",
     how_it_harms="Loud noise from instrument can cause hearing damage.",
     prevention="Play quietly, at a volume suitable for the room",
     mitigation="",
+    prevention_prompt_expected_output='prevention',
+    mitigation_prompt_expected_output='',
+    uncontrolled_likelihood='1',
+    uncontrolled_severity='1',
+    uncontrolled_risk='1',
+    controlled_likelihood='One',
+    controlled_severity='1',
+    controlled_risk='1'
+)
+
+RA_mitigation_wrong_type = RiskAssessmentWithoutNumberInputs(
+    activity="Using a trombone as a demonstration for a TPS presentation",
+    hazard="Loud noise",
+    who_it_harms="Everyone present",
+    how_it_harms="Loud noise from instrument can cause hearing damage.",
+    prevention="Play quietly, at a volume suitable for the room",
+    mitigation="1",
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='',
 )
