@@ -328,7 +328,7 @@ RA_heavy_weight_falls_on_demonstrator = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_output='prevention',
 )
 
-RA_zip_cut_hits_audience = RiskAssessmentWithoutNumberInputs(
+RA_zip_tie_hits_audience = RiskAssessmentWithoutNumberInputs(
     activity='Using a spring contraption as a demonstration for a TPS presentation',
     hazard='Cut Zip tie may fly',
     who_it_harms='Audience',
@@ -594,52 +594,52 @@ RA_market_risk = RiskAssessmentWithoutNumberInputs(
 
 example_risk_assessments_dict = {
     'Old Physical Risks': [
-        RA_syringe_needle, 
-        RA_syringe_needle_mitigation_prevention_switched, 
-        RA_trombone_impact, 
-        RA_hearing_damage, 
-        RA_ink_spill_in_eye, 
-        RA_wet_hands_electric_shock, 
-        RA_tripping_on_belongings, 
-        RA_water_tank,
-        RA_paper_plane_impact, 
-        RA_climbing_gear_on_feet, 
-        RA_sharp_drone_propeller_blade, 
-        RA_battery_causes_fire, 
-        RA_heavy_weight_falls_on_demonstrator, 
-        RA_zip_cut_hits_audience,
-        RA_pencil_lead_projectile,
-        RA_incorrect_prevention_and_mitigation, 
-        RA_hearing_damage_mitigation_prevention_switched,
-        RA_wet_hands_electric_shock_mitigation_prevention_switched, 
-        RA_water_tank_mitigation_prevention_switched,
-        RA_climbing_gear_on_feet_mitigation_prevention_switched,
-        RA_mucking_out_horse,
-        RA_slitter_machine
+        # RA_syringe_needle, 
+        # RA_syringe_needle_mitigation_prevention_switched, 
+        # RA_trombone_impact, 
+        # RA_hearing_damage, 
+        # RA_ink_spill_in_eye, 
+        # RA_wet_hands_electric_shock, 
+        # RA_tripping_on_belongings, 
+        # RA_water_tank,
+        # RA_paper_plane_impact, 
+        # RA_climbing_gear_on_feet, 
+        # RA_sharp_drone_propeller_blade, 
+        # RA_battery_causes_fire, 
+        # RA_heavy_weight_falls_on_demonstrator, 
+        # RA_zip_tie_hits_audience,
+        # RA_pencil_lead_projectile,
+        # RA_incorrect_prevention_and_mitigation, 
+        # RA_hearing_damage_mitigation_prevention_switched,
+        # RA_wet_hands_electric_shock_mitigation_prevention_switched, 
+        # RA_water_tank_mitigation_prevention_switched,
+        # RA_climbing_gear_on_feet_mitigation_prevention_switched,
+        # RA_mucking_out_horse,
+        # RA_slitter_machine
         ],
 
     'New Physical Risks': [
         RA_fire_alarm,
         RA_mop_up_spill,
         RA_syringe_with_cover,
-        RA_hot_water_in_cups,
-        RA_bigger_beaker,
-        RA_campfire,
-        RA_bouldering,
-        RA_hob_burn,
-        RA_crossing_road,
-        RA_cycling,
-        RA_ladder,
-        RA_cycling_high_viz,
-        RA_cycling_safer_routes
+        # RA_hot_water_in_cups,
+        # RA_bigger_beaker,
+        # RA_campfire,
+        # RA_bouldering,
+        # RA_hob_burn,
+        # RA_crossing_road,
+        # RA_cycling,
+        # RA_ladder,
+        # RA_cycling_high_viz,
+        # RA_cycling_safer_routes
         ],
     
     'Finance Risks': [
-        RA_credit_risk,
-        RA_interest_rate_risk,
-        RA_liquidity_risk,
-        RA_operational_risk,
-        RA_market_risk
+        # RA_credit_risk,
+        # RA_interest_rate_risk,
+        # RA_liquidity_risk,
+        # RA_operational_risk,
+        # RA_market_risk
     ]
 }
 

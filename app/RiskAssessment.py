@@ -162,13 +162,37 @@ class RiskAssessment:
             hazard=self.hazard,
             control_measure=self.mitigation)
     
-    def get_mitigation_input(self):
+    def get_mitigation_prompt_with_prevention_input(self):
         return Mitigation(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
-            mitigation=self.mitigation)
+            control_measure=self.prevention)
+    
+    def get_mitigation_prompt_with_mitigation_input(self):
+        return Mitigation(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
+    
+    def get_control_measure_prompt_with_prevention_input(self):
+        return OldPrevention(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
+
+    def get_control_measure_prompt_with_mitigation_input(self):
+        return OldPrevention(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
     
     def check_that_likelihood_and_severity_values_are_between_1_and_4(self, likelihood, severity):
         try:
