@@ -3,6 +3,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from tabulate import tabulate
+import time
 
 from LLMCaller import LLMCaller
 from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
@@ -147,6 +148,7 @@ class TestModelAccuracy:
                                                                                                                             count_correct=count_correct)
             
             print(count_correct)
+            time.sleep(self.LLM.delay_between_requests)
 
         accuracy = round(count_correct / n_examples * 100, 2)
 
@@ -295,7 +297,7 @@ class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompt
 
         return expected_output, True, harm_caused_prompt_output
 
-class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+class TestControlMeasurePrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -305,176 +307,74 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
                     candidate_labels: list):
         
         super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
-
+    
     def get_classes(self):
         return ['prevention', 'mitigation', 'neither', 'both']
     
-    def get_first_prompt_input(self):
+    def get_hazard_event_and_harm_caused_and_prompt(self, RA):
+        hazard_event_and_harm_caused_prompt_input = RA.get_harm_caused_and_hazard_event_input()
+        hazard_event_and_harm_caused_prompt = hazard_event_and_harm_caused_prompt_input.generate_prompt()
+        hazard_event_and_harm_caused_prompt_output, hazard_event_and_harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_and_harm_caused_prompt_input, self.LLM)
+
+        hazard_event = hazard_event_and_harm_caused_pattern.hazard_event
+        harm_caused = hazard_event_and_harm_caused_pattern.harm_caused
+
+        return hazard_event, harm_caused, hazard_event_and_harm_caused_prompt, hazard_event_and_harm_caused_prompt_output
+    
+    def get_first_prompt_input_with_risk_assessment_method(self, risk_assessment_method_name):
         first_RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
 
-        first_harm_caused_prompt_input = first_RA.get_harm_caused_and_hazard_event_input()
-        first_harm_caused_prompt = first_harm_caused_prompt_input.generate_prompt()
-        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = first_RA.get_prompt_output_and_pattern_matched(first_harm_caused_prompt_input, self.LLM)
+        hazard_event, harm_caused, hazard_event_and_harm_caused_prompt, _  = self.get_hazard_event_and_harm_caused_and_prompt(first_RA)
 
-        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
+        control_measure_prompt_input = getattr(first_RA, risk_assessment_method_name)()
+        control_measure_prompt = control_measure_prompt_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
 
-        first_prevention_prompt_with_prevention_input = first_RA.get_prevention_prompt_with_prevention_input()
-        first_prevention_prompt_with_prevention_prompt = first_prevention_prompt_with_prevention_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
-
-        first_mitigation_prompt_with_prevention_input = first_RA.get_mitigation_prompt_with_prevention_input()
-        first_mitigation_prompt_with_prevention_prompt = first_mitigation_prompt_with_prevention_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
-
-        return f'''Harm Caused:\n{first_harm_caused_prompt}\n\nPrevention :\n{first_prevention_prompt_with_prevention_prompt}\n\nMitigation: {first_mitigation_prompt_with_prevention_prompt}'''
+        return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\Control Measure:\n{control_measure_prompt}'''
     
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, self.LLM)
-
-        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
-
-        prevention_prompt_with_prevention_input = RA.get_prevention_prompt_with_prevention_input()
-        prevention_prompt_with_prevention_output, prevention_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prevention_prompt_with_prevention_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
-
-        mitigation_prompt_with_prevention_input = RA.get_mitigation_prompt_with_prevention_input()
-        mitigation_prompt_with_prevention_output, mitigation_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_with_prevention_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
-
-        prompt_output = f'''{harm_caused_and_hazard_event_prompt_output}\n\n{prevention_prompt_with_prevention_output}\n\n{mitigation_prompt_with_prevention_output}'''
-
-        if prevention_prompt_with_prevention_pattern == True and mitigation_prompt_with_prevention_pattern == True:
-            return expected_output, 'both', prompt_output
-        
-        if prevention_prompt_with_prevention_pattern == True and mitigation_prompt_with_prevention_pattern == False:
-            return expected_output, 'prevention', prompt_output
-        
-        if prevention_prompt_with_prevention_pattern == False and mitigation_prompt_with_prevention_pattern == True:
-            return expected_output, 'mitigation', prompt_output
-        
-        if prevention_prompt_with_prevention_pattern == False and mitigation_prompt_with_prevention_pattern == False:
-            return expected_output, 'neither', prompt_output
-
-class ControlMeasurePromptWithPreventionInput(TestModelAccuracyForCombinationOfPrompts):
-    def __init__(self, 
-                    LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
-                    sheet_name: str,
-                    examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
-        
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
-
-    def get_classes(self):
-        return ['prevention', 'mitigation', 'neither', 'both']
-    
-    def get_first_prompt_input(self):
-        first_RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
-
-        first_harm_caused_prompt_input = first_RA.get_harm_caused_and_hazard_event_input()
-        first_harm_caused_prompt = first_harm_caused_prompt_input.generate_prompt()
-        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = first_RA.get_prompt_output_and_pattern_matched(first_harm_caused_prompt_input, self.LLM)
-
-        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
-
-        control_measure_prompt_with_prevention_input = first_RA.get_control_measure_prompt_with_prevention_input()
-        control_measure_prompt_with_prevention_prompt = control_measure_prompt_with_prevention_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
-
-        return f'''Harm Caused:\n{first_harm_caused_prompt}\n\nPrevention:\n{control_measure_prompt_with_prevention_prompt}'''
-    
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+    def get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(self, i, risk_assessment_method_name):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
 
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
-        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, self.LLM)
+        hazard_event, harm_caused, _, hazard_event_and_harm_caused_prompt_output  = self.get_hazard_event_and_harm_caused_and_prompt(RA)
 
-        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
+        control_measure_prompt_input = getattr(RA, risk_assessment_method_name)()
+        control_measure_prompt_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
-        control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
-        control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
-
-        prompt_output = f'''{harm_caused_and_hazard_event_prompt_output}\n\n{control_measure_prompt_with_prevention_output}'''
+        prompt_output = f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt_output}\n\nControl Measure:\n{control_measure_prompt_output}'''
 
         return expected_output, control_measure_prompt_with_prevention_pattern, prompt_output
 
-# TODO: Remove all this duplicate code. There should only be one test and you should be able to specify whether 
-# it is mitigation or prevention that you want to test
-class TestModelAccuracyForCompleteMitigationPromptPipeline(TestModelAccuracyForCombinationOfPrompts):
+class TestPreventionPromptInput(TestControlMeasurePrompt):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
                     number_of_examples_in_each_domain: dict,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list):
         
-        super().__init__(LLM, list_of_input_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
-
-    def get_classes(self):
-        return ['prevention', 'mitigation', 'neither', 'both']
-    
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
-        RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
-        expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
-
-        mitigation_protective_barrier_prompt_input = RA.get_mitigation_protective_barrier_input()
-        mitigation_protective_barrier_prompt_output, mitigation_protective_barrier_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_protective_barrier_prompt_input, self.LLM)
-
-        if mitigation_protective_barrier_pattern == True:
-            prompt_output = f'''{mitigation_protective_barrier_prompt_output} 
-            
-            'First aid prompt not run'
-            
-            'Mitigation prompt not run'''
-            
-            return expected_output, 'mitigation', prompt_output
-
-        else:
-            first_aid_prompt_input = RA.get_mitigation_first_aid_input()
-            mitigation_first_aid_prompt_output, mitigation_first_aid_pattern = RA.get_prompt_output_and_pattern_matched(first_aid_prompt_input, self.LLM)
-
-            if mitigation_first_aid_pattern == True:
-                prompt_output = f'''{mitigation_protective_barrier_prompt_output}
-
-                {mitigation_first_aid_prompt_output}
-
-                'Mitigation prompt not run'''
-
-                return expected_output, 'mitigation', prompt_output
-            
-            else:
-                mitigation_prompt_input = RA.get_mitigation_input()
-                mitigation_prompt_output, mitigation_pattern = RA.get_prompt_output_and_pattern_matched(mitigation_prompt_input, self.LLM)
-
-                prompt_output = f'''{mitigation_protective_barrier_prompt_output}
-
-                {mitigation_first_aid_prompt_output}
-                
-                {mitigation_prompt_output}'''
-
-                return expected_output, mitigation_pattern, prompt_output
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
     
     def get_first_prompt_input(self):
-        first_risk_assessment = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
+        return self.get_first_prompt_input_with_risk_assessment_method('get_prevention_prompt_input')
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'get_prevention_prompt_input')
+    
+class TestMitigationPromptInput(TestControlMeasurePrompt):
+    def __init__(self, 
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    number_of_examples_in_each_domain: dict,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list):
         
-        first_protective_barrier_prompt_input_object = first_risk_assessment.get_mitigation_protective_barrier_input()
-        first_protective_barrier_prompt_input = first_protective_barrier_prompt_input_object.generate_prompt()
-
-        first_aid_prompt_input_object = first_risk_assessment.get_mitigation_first_aid_input()
-        first_aid_prompt_input = first_aid_prompt_input_object.generate_prompt()
-
-        first_prevention_prompt_input_object = first_risk_assessment.get_mitigation_input()
-        first_prevention_prompt_input = first_prevention_prompt_input_object.generate_prompt()
-
-        return f'''{first_protective_barrier_prompt_input}
-                  
-                  {first_aid_prompt_input}
-                  
-                  {first_prevention_prompt_input}'''
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+    
+    def get_first_prompt_input(self):
+        return self.get_first_prompt_input_with_risk_assessment_method('get_mitigation_prompt_input')
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'get_mitigation_prompt_input')

@@ -32,6 +32,7 @@ class OpenAILLM(LLMCaller):
         self.update_api_key_from_env_file()
         self.temperature = 0.1
         self.max_tokens = 300
+        self.delay_between_requests = 0
 
     def update_api_key_from_env_file(self):
         load_dotenv()
@@ -59,6 +60,7 @@ class AnthropicLLM(LLMCaller):
         self.update_api_key_from_env_file()
         self.temperature = 0.1
         self.max_tokens = 300
+        self.delay_between_requests = 20
 
     def update_api_key_from_env_file(self):
         load_dotenv()

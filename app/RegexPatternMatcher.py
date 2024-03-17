@@ -34,6 +34,14 @@ class RegexPatternMatcher:
         else:
             raise Exception("Pattern not found in output prompt")
         
+    def check_string_for_classification(self, string):
+        pattern = re.compile(r"Classification: (physical risk to individuals|environmental risk)", re.IGNORECASE)
+        match = re.search(pattern, string)
+        if match:
+            return match.group(1).lower()
+        else:
+            raise Exception("Pattern not found in output prompt")
+        
     def check_string_for_prevention_mitigation_or_neither(self, string):
         pattern = re.compile(r"Answer: (prevention|mitigation|neither|both)", re.IGNORECASE)
         match = re.search(pattern, string)
@@ -59,40 +67,6 @@ class RegexPatternMatcher:
         else:
             raise Exception("Pattern not found in output prompt")
         
-    def always_return_false(self, prompt_output):
-
-        return False
-    
-    def always_return_true(self, prompt_output):
-        
-        return True
-    
-    # def extract_illness(self, prompt_output):
-    #     if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness") == "False":
-    #         return False
-    #     else:
-    #         illness = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Illness")
-    #         return illness
-    
-    # def extract_injury(self, prompt_output):
-    #     if self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury") == "False":
-    #         return False
-    #     else:
-    #         injury = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Injury")
-    #         return injury
-        
-    # def extract_hazard_event(self, prompt_output):
-    
-    #     hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
-        
-    #     return hazard_event
-    
-    # def extract_harm_caused(self, prompt_output):
-
-    #     harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
-        
-    #     return harm_caused
-    
     def extract_harm_caused_and_hazard_event(self, prompt_output):
 
         harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
@@ -103,3 +77,11 @@ class RegexPatternMatcher:
     def extract_overall_answer_until_end_of_line(self, prompt_output):
 
         return self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Overall Answer")
+    
+    def always_return_false(self, prompt_output):
+
+        return False
+    
+    def always_return_true(self, prompt_output):
+        
+        return True
