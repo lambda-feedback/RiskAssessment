@@ -13,7 +13,7 @@ class RiskAssessment:
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
                   uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk,
                  prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk,
-                 prevention_prompt_expected_output, mitigation_prompt_expected_output):
+                 risk_domain, prevention_prompt_expected_output, mitigation_prompt_expected_output):
         self.activity = activity
         self.hazard = hazard
         self.how_it_harms = how_it_harms
@@ -29,6 +29,7 @@ class RiskAssessment:
 
         self.prevention_prompt_expected_output = prevention_prompt_expected_output
         self.mitigation_prompt_expected_output = mitigation_prompt_expected_output
+        self.risk_domain = risk_domain
 
         # TODO: Remove these parameters
         self.always_true = True
@@ -142,56 +143,31 @@ class RiskAssessment:
                             activity=self.activity)
     
     def get_harm_caused_and_hazard_event_input(self):
-        return HarmCausedAndHazardEvent(hazard=self.hazard,
+        return HarmCausedAndHazardEvent(
+                            activity=self.activity,
+                            hazard=self.hazard,
                           how_it_harms=self.how_it_harms)
     
-    def get_prevention_prompt_with_prevention_input(self):
-        return Prevention(
+    def get_prevention_prompt_input(self):
+        return PreventionPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
             control_measure=self.prevention)
     
-    def get_prevention_prompt_with_mitigation_input(self):
-        return Prevention(
+    def get_mitigation_prompt_input(self):
+        return MitigationPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
             control_measure=self.mitigation)
     
-    def get_mitigation_prompt_with_prevention_input(self):
-        return Mitigation(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.prevention)
-    
-    def get_mitigation_prompt_with_mitigation_input(self):
-        return Mitigation(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.mitigation)
-    
-    def get_control_measure_prompt_with_prevention_input(self):
-        return OldPrevention(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.prevention)
-
-    def get_control_measure_prompt_with_mitigation_input(self):
-        return OldPrevention(
-            activity=self.activity,
-            who_it_harms=self.who_it_harms,
-            how_it_harms=self.how_it_harms,
-            hazard=self.hazard,
-            control_measure=self.mitigation)
+    def get_risk_domain_classification_input(self):
+        return RiskDomainClassification(hazard=self.hazard,
+                                        how_it_harms=self.how_it_harms,
+                                        who_it_harms=self.who_it_harms)
     
     def check_that_likelihood_and_severity_values_are_between_1_and_4(self, likelihood, severity):
         try:
@@ -310,7 +286,9 @@ class RiskAssessment:
 
 class RiskAssessmentWithoutNumberInputs(RiskAssessment):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
-                 prevention, mitigation, prevention_prompt_expected_output, 
+                 prevention, mitigation, 
+                 risk_domain,
+                 prevention_prompt_expected_output, 
                  mitigation_prompt_expected_output):
         super().__init__(activity=activity,
                          hazard=hazard,
@@ -324,5 +302,6 @@ class RiskAssessmentWithoutNumberInputs(RiskAssessment):
                          controlled_likelihood='1',
                          controlled_severity='1',
                          controlled_risk='1',
+                         risk_domain=risk_domain,
                          prevention_prompt_expected_output=prevention_prompt_expected_output,
                          mitigation_prompt_expected_output=mitigation_prompt_expected_output)

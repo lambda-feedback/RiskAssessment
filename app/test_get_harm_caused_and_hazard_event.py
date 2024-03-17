@@ -18,6 +18,6 @@ if __name__ == '__main__':
                                     number_of_examples_in_each_domain=number_of_risk_assessments_in_each_domain,
                                     examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
                                     candidate_labels=[True, False],
-                                    sheet_name='Get Harm Caused')
+                                    sheet_name='Harm Caused and Hazard Event')
     
     test_accuracy.run_test()
