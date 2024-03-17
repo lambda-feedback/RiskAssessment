@@ -451,7 +451,7 @@ RA_crossing_road = RiskAssessmentWithoutNumberInputs(
     hazard="A car crashing into you",
     who_it_harms="The person crossing the road",
     how_it_harms="Could cause potentially life threatening injury",
-    prevention="Inform participants they should cross on their own terms",
+    prevention="Look left and right before crossing the road",
     mitigation="One person at back and one at front",
     prevention_prompt_expected_output="prevention",
     mitigation_prompt_expected_output="prevention",
@@ -512,7 +512,7 @@ RA_mop_up_spill = RiskAssessmentWithoutNumberInputs(
     who_it_harms = "Users",
     prevention = "Be careful",
     mitigation = "Mop up",
-    prevention_prompt_expected_output = "prevention",
+    prevention_prompt_expected_output = "neither", # Not specific enough
     mitigation_prompt_expected_output = "prevention",
     risk_domain="physical risk to individuals"
 )
@@ -524,7 +524,7 @@ RA_syringe_with_cover = RiskAssessmentWithoutNumberInputs(
     who_it_harms = "The user",
     prevention = "Use a cover over the syringe when not in use",
     mitigation = "Wear gloves",
-    prevention_prompt_expected_output = "mitigation",
+    prevention_prompt_expected_output = "prevention",
     mitigation_prompt_expected_output = "mitigation",
     risk_domain="physical risk to individuals"
 )
@@ -771,6 +771,370 @@ RA_volcano_post_disaster_recovery = RiskAssessmentWithoutNumberInputs(
     risk_domain="environmental risk"
 )
 
+RA_ransomware_NHS_isolation = RiskAssessmentWithoutNumberInputs(
+    activity="Providing healthcare services",
+    hazard="Ransomware",
+    who_it_harms="Patients and healthcare providers",
+    how_it_harms="Disruption of healthcare services and potential data loss",
+    prevention="Regularly update and patch software.",
+    mitigation="Isolate infected system from the rest of the network",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_ransomware_NHS_MFA = RiskAssessmentWithoutNumberInputs(
+    activity="Providing healthcare services",
+    hazard="Ransomware attack",
+    who_it_harms="Patients and healthcare providers",
+    how_it_harms="Disruption of healthcare services and potential data loss",
+    prevention="Multi-factor authentication",
+    mitigation="Investigate whether decryption tools are available for the specific ransomware variant that infected the systems",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_ransomware_NHS_data_backup = RiskAssessmentWithoutNumberInputs(
+    activity="Providing healthcare services",
+    hazard="Ransomware",
+    who_it_harms="Patients and healthcare providers",
+    how_it_harms="Disruption of healthcare services and potential data loss",
+    prevention="Provide training to employees on how to recognize phishing emails",
+    mitigation="Implement a robust data backup strategy",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_bank_cybersecurity_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Providing banking services",
+    hazard="Phishing Attack",
+    who_it_harms="Customers",
+    how_it_harms="Unauthorized access to sensitive financial information",
+    prevention="Educate customers and employees about phishing techniques and how to recognize suspicious emails",
+    mitigation="Implement email filtering solutions to detect and block phishing attempts",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_transport_cyber_attack_specific = RiskAssessmentWithoutNumberInputs(
+    activity="Managing transportation systems",
+    hazard="Ransomware Attack on Traffic Control Systems",
+    who_it_harms="Passengers",
+    how_it_harms="Disruption of traffic flow, safety risks, financial loss",
+    prevention="Regularly update and patch traffic control system software to mitigate known vulnerabilities exploited by ransomware",
+    mitigation="Implement robust data backup strategies to minimize the impact of ransomware attacks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_telecoms_cyber_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Managing telecommunications networks",
+    hazard="Disruptive Cyber Attack on Major UK Telecoms Network Provider",
+    who_it_harms="Telecommunications customers",
+    how_it_harms="Disruption of internet and voice calls for millions of customers",
+    prevention="Conduct regular security assessments and penetration tests to identify and address vulnerabilities in telecoms network infrastructure",
+    mitigation="Develop and test incident response plans to enable rapid detection, containment, and recovery from cyber attacks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk",
+)
+
+RA_civil_nuclear_cyber_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Operating civil nuclear generating sites",
+    hazard="Cyber Attack on Civil Nuclear Generating Site",
+    who_it_harms="Energy consumers",
+    how_it_harms="Temporary loss of power supply, potential regional-level impact on essential services, financial and reputational damage",
+    prevention="Foster sector-wide collaboration and information sharing to enhance resilience to dynamic and evolving cyber threats.",
+    mitigation="Develop incident response plans for cyber attacks, including procedures for controlled shutdown of generating sites",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_electricity_infrastructure_cyber_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Operating the National Electicity Transmission System (NETS)",
+    hazard="Cyber Attack on NETS",
+    who_it_harms="Energy consumers",
+    how_it_harms="Total failure of the NETS, instantaneous loss of mains electricity supply, secondary impacts on critical utilities networks (telecommunications, water, sewage, fuel, gas), significant disruption to public services, businesses, households, and loss of life",
+    prevention="Empower employees to recognize and respond effectively to suspicious activities.",
+    mitigation="Divide the NETS infrastructure into distinct segments or zones to limit the spread of a cybersecurity attack",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_gas_infrastructure_cyber_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Operating gas transmission and distribution networks",
+    hazard="Encrypting of data upon which critical Gas Infrastructure systems depend",
+    who_it_harms="Energy consumers",
+    how_it_harms="Disruption of gas supply",
+    prevention="Implement multi-factor authentication and access controls to protect critical systems and data",
+    mitigation="Develop and test incident response plans to enable rapid detection, containment, and recovery from cyber attacks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_fuel_supply_cyber_attack = RiskAssessmentWithoutNumberInputs(
+    activity="Operating fuel supply infrastructure",
+    hazard="Cyber Attack on system critical to UK fuel distribution and supply",
+    who_it_harms="Energy consumers",
+    how_it_harms="Disruption of fuel supply",
+    prevention="Conduct regular security assessments and penetration tests to identify and address vulnerabilities in fuel supply infrastructure",
+    mitigation="Form a dedicated team of cybersecurity experts responsible for coordinating and executing response efforts in the event of a cyber attacks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
+)
+
+RA_explosive_devices_sniffer_dogs = RiskAssessmentWithoutNumberInputs(
+    activity="Public gatherings or events",
+    hazard="Explosive terrorist attack (e.g., person-borne, vehicle-borne, or emplaced improvised explosive devices)",
+    who_it_harms="Attendees, bystanders, emergency responders",
+    how_it_harms="Multiple fatalities and casualties, structural collapse, fire/smoke inhalation, panic-induced injuries",
+    prevention="Enhancing detection of explosives capabilities, e.g. with sniffer dogs",
+    mitigation="Providing victim support structures",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_explosive_devices_security = RiskAssessmentWithoutNumberInputs(
+    activity="Public gatherings or events",
+    hazard="Explosive terrorist attack (e.g., person-borne, vehicle-borne, or emplaced improvised explosive devices)",
+    who_it_harms="Attendees, bystanders, emergency responders",
+    how_it_harms="Multiple fatalities and casualties, structural collapse, fire/smoke inhalation, panic-induced injuries",
+    prevention="Implementing security measures at public events (e.g., bag checks, surveillance)",
+    mitigation="Leveraging Forensic Explosives Laboratory for investigation and prosecution",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_terrorism_aviation_background_checks = RiskAssessmentWithoutNumberInputs(
+    activity="Air travel operations",
+    hazard="Terrorist attack targeting aircraft",
+    who_it_harms="Passengers, crew members, individuals in the vicinity of the crash site",
+    how_it_harms="Significant loss of life, injuries ranging from minor to severe, widespread property damage",
+    prevention="Conducting thorough background checks on airport staff.",
+    mitigation="Providing psychological treatment and support for affected individuals",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_terrorism_aviation_improving_standards = RiskAssessmentWithoutNumberInputs(
+    activity="Air travel operations",
+    hazard="Terrorist attack targeting aircraft",
+    who_it_harms="Passengers, crew members, individuals in the vicinity of the crash site",
+    how_it_harms="Significant loss of life, injuries ranging from minor to severe, widespread property damage",
+    prevention="Improve global aviation security standards",
+    mitigation="Deploy search and rescue teams",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_hostage_negotiation_teams = RiskAssessmentWithoutNumberInputs(
+    activity="Public gatherings or high-profile events",
+    hazard="Strategic hostage taking",
+    who_it_harms="Hostages",
+    how_it_harms="Risk of fatalities and casualties, psychological trauma",
+    prevention="Implementing security measures",
+    mitigation="Utilizing hostage negotiation teams",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_hostage_psychological_support = RiskAssessmentWithoutNumberInputs(
+    activity="Public gatherings or high-profile events",
+    hazard="Strategic hostage taking",
+    who_it_harms="Hostages, bystanders, law enforcement personnel",
+    how_it_harms="Risk of fatalities and casualties, psychological trauma",
+    prevention="Enhancing intelligence gathering and analysis capabilities",
+    mitigation="Providing psychological support",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_high_profile_assassination_protection = RiskAssessmentWithoutNumberInputs(
+    activity="Public appearances or events involving high-profile figures",
+    hazard="Assassination of a high-profile public figure",
+    who_it_harms="High-profile public figures",
+    how_it_harms="Loss of life, psychological trauma, potential escalation of community tensions",
+    prevention="Providing close protection for high-profile figures",
+    mitigation="Conducting thorough investigations to apprehend perpetrators and prevent further attacks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_high_profile_assassination_security_measures = RiskAssessmentWithoutNumberInputs(
+    activity="Public appearances or events involving high-profile figures",
+    hazard="Assassination of a high-profile public figure",
+    who_it_harms="High-profile public figures",
+    how_it_harms="Loss of life, psychological trauma, potential escalation of community tensions",
+    prevention="Implementing robust security measures for public appearances",
+    mitigation="Managing public communications to prevent escalation of tensions",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_CBRN_attack_securing_borders = RiskAssessmentWithoutNumberInputs(
+    activity="Public safety and national security",
+    hazard="CBRN (Chemical, Biological, Radiological, Nuclear) attack",
+    who_it_harms="General public, emergency responders, environmental ecosystems",
+    how_it_harms="Contamination of food and water supplies",
+    prevention="Securing borders to limit access to hazardous materials and precursors",
+    mitigation="Rapid response and decontamination procedures",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+# TODO: This is a mix between a biohazard and a terrorist attack
+# This confirms that you should have multiple different prompts for different risk
+# domains and that certain risks can fall into multiple different domains
+RA_CBRN_attack_enhance_detection = RiskAssessmentWithoutNumberInputs(
+    activity="Public safety and national security",
+    hazard="CBRN (Chemical, Biological, Radiological, Nuclear) attack",
+    who_it_harms="General public, emergency responders, environmental ecosystems",
+    how_it_harms="Potential for large numbers of casualties and fatalities",
+    prevention="Enhancing detection and monitoring methods for CBRN materials",
+    mitigation="Providing medical treatment and support for affected individuals",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="terrorism risk"
+)
+
+RA_pandemic_isolate_cases = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="Promoting good hygiene practices, and educating the public about disease transmission can help reduce the spread of pathogens.",
+    mitigation="Rapid response to identify and isolate suspected cases",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+
+RA_pandemic_scalable_treatment = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="Addressing factors contributing to the spread of infectious diseases, such as climate change and habitat destruction",
+    mitigation="Scalable diagnostics and treatment options",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_pandemic_vaccines = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="",
+    mitigation="Rapid deployment and distribution of vaccines",
+    prevention_prompt_expected_output="",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_pandemic_resource_allocation = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="",
+    mitigation="Prioritizing allocation of resources",
+    prevention_prompt_expected_output="",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_pandemic_quarantine = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="",
+    mitigation="Contact tracing and quarantine measures",
+    prevention_prompt_expected_output="",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_pandemic_surge_capacity = RiskAssessmentWithoutNumberInputs(
+    activity="Public health and emergency response",
+    hazard="Pandemic",
+    who_it_harms="General population",
+    how_it_harms="High attack rate leading to widespread illness, strain on healthcare systems, economic downturn",
+    prevention="",
+    mitigation="Implementing surge capacity plans",
+    prevention_prompt_expected_output="",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_foot_and_mouth_disease_rapid_response = RiskAssessmentWithoutNumberInputs(
+    activity="Livestock farming operations",
+    hazard="Major outbreak of foot and mouth disease (FMD)",
+    who_it_harms="Livestock",
+    how_it_harms="Economic losses in agriculture sector, disruption of food supply",
+    prevention="Implementing farm visitor management protocols",
+    mitigation="Rapid response to detect and contain outbreaks",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_foot_and_mouth_disease_culling = RiskAssessmentWithoutNumberInputs(
+    activity="Livestock farming operations",
+    hazard="Major outbreak of foot and mouth disease (FMD)",
+    who_it_harms="Livestock",
+    how_it_harms="Economic losses in agriculture sector, disruption of food supply",
+    prevention="Maintaining high standards of hygiene on the farm",
+    mitigation="Conducting mass culling of infected animals",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_laboratory_biohazard = RiskAssessmentWithoutNumberInputs(
+    activity="Laboratory research involving biohazardous materials",
+    hazard="Potential exposure to infectious agents or toxins",
+    who_it_harms="Laboratory personnel, researchers, surrounding community",
+    how_it_harms="Infection, illness, accidental release of biohazardous materials",
+    prevention="Providing training and education on biohazard handling",
+    mitigation="Conducting decontamination procedures",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="biohazard risk"
+)
+
+RA_healthcare_biohazard = RiskAssessmentWithoutNumberInputs(
+    activity="Healthcare facility operations involving infectious patients",
+    hazard="Potential transmission of infectious diseases",
+    who_it_harms="Patients, healthcare workers, visitors",
+    how_it_harms="Transmission of infections",
+    prevention="Conducting regular cleaning and disinfection",
+    mitigation="Implementing quarantine measures when necessary",
+    prevention_prompt_expected_output="Effective infection control practices, minimized risk of transmission within healthcare settings",
+    mitigation_prompt_expected_output="Timely response to outbreaks, containment of infections, minimal impact on patient care",
+    risk_domain="biohazard risk"
+)
+
 example_risk_assessments_dict = {
     'Physical risks to individuals (original student data)': [
         # RA_syringe_needle, 
@@ -798,19 +1162,19 @@ example_risk_assessments_dict = {
         ],
     
     'Physical risks to individuals (data gathered from version 1 deployment)': [
-        RA_fire_alarm,
-        RA_mop_up_spill,
-        RA_syringe_with_cover,
-        RA_hot_water_in_cups,
-        RA_bigger_beaker,
-        RA_campfire,
-        RA_bouldering,
-        RA_hob_burn,
-        RA_crossing_road,
-        RA_cycling,
-        RA_ladder,
-        RA_cycling_high_viz,
-        RA_cycling_safer_routes
+        # RA_fire_alarm,
+        # RA_mop_up_spill,
+        # RA_syringe_with_cover,
+        # RA_hot_water_in_cups,
+        # RA_bigger_beaker,
+        # RA_campfire,
+        # RA_bouldering,
+        # RA_hob_burn,
+        # RA_crossing_road,
+        # RA_cycling,
+        # RA_ladder,
+        # RA_cycling_high_viz,
+        # RA_cycling_safer_routes
         ],
     
     'Finance Risks': [
@@ -833,6 +1197,45 @@ example_risk_assessments_dict = {
         # RA_volcano_zoning,
         # RA_volcano_emergency_response,
         # RA_volcano_post_disaster_recovery
+    ],
+
+    'Cybersecurity': [
+        RA_ransomware_NHS_isolation,
+        RA_ransomware_NHS_MFA,
+        RA_ransomware_NHS_data_backup,
+        RA_bank_cybersecurity_attack,
+        RA_transport_cyber_attack_specific,
+        RA_telecoms_cyber_attack,
+        RA_civil_nuclear_cyber_attack,
+        RA_electricity_infrastructure_cyber_attack,
+        RA_gas_infrastructure_cyber_attack,
+        RA_fuel_supply_cyber_attack,
+    ],
+
+    'Terrorism': [
+        RA_explosive_devices_sniffer_dogs,
+        RA_explosive_devices_security,
+        RA_terrorism_aviation_background_checks,
+        RA_terrorism_aviation_improving_standards,
+        RA_hostage_negotiation_teams,
+        RA_hostage_psychological_support,
+        RA_high_profile_assassination_protection,
+        RA_high_profile_assassination_security_measures,
+        RA_CBRN_attack_enhance_detection,
+        RA_CBRN_attack_securing_borders
+    ],
+
+    'Biohazard': [
+        RA_pandemic_resource_allocation,
+        RA_pandemic_scalable_treatment,
+        RA_pandemic_quarantine,
+        RA_pandemic_isolate_cases,
+        RA_pandemic_surge_capacity,
+        RA_pandemic_vaccines,
+        RA_foot_and_mouth_disease_culling,
+        RA_foot_and_mouth_disease_rapid_response,
+        RA_laboratory_biohazard,
+        RA_healthcare_biohazard
     ]
 }
 

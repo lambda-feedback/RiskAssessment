@@ -300,7 +300,7 @@ class WhoItHarmsInContext(PromptInput):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
 
 class HarmCausedAndHazardEvent(PromptInput):
-    def __init__(self, activity, hazard, how_it_harms):
+    def __init__(self, activity, hazard, how_it_harms, prevention):
         super().__init__()
         self.activity = activity
         self.hazard = hazard
@@ -316,32 +316,6 @@ class HarmCausedAndHazardEvent(PromptInput):
         '''
 
     def generate_prompt(self):
-
-        previous_examples = """        <EXAMPLE INSTRUCTIONS>
-        1. Describe the harm caused: "Clothes catch on fire and cause a burn" by the hazard: "Fire in a building" during the activity: "Smoking in a building".
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        2. From the above description, extract the harm caused.
-        2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
-        </EXAMPLE INSTRUCTIONS>
-
-        <EXAMPLE OUTPUT>
-        Description: Smoking in a building can lead to a fire, which causes clothes to catch on fire, causing a burn.
-        Harm caused: Burn
-        Event that leads to harm: Smoking in a building causes a fire
-        </EXAMPLE OUTPUT>
-
-        <EXAMPLE INSTRUCTIONS>
-        1. Describe the harm caused: "Volcanic eruptions can cause destruction of property, infrastructure, loss of life, and disruption of ecosystems" by the hazard: "Volcanic eruption" during the activity: "Seismic activity".
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        2. From the above description, extract the harm caused.
-        3. Describe the events which lead to the harm caused. Don't refer to the harm caused.
-        </EXAMPLE INSTRUCTIONS>
-
-        <EXAMPLE OUTPUT>
-        Description: Seismic activity can lead to volcanic eruptions, which can cause destruction of property, infrastructure, loss of life, and disruption of ecosystems.
-        Harm caused: Destruction of property, infrastructure, loss of life, and disruption of ecosystems
-        Event that leads to harm: Volcanic eruption
-        </EXAMPLE OUTPUT>"""
 
         return f'''
 
@@ -360,9 +334,9 @@ class HarmCausedAndHazardEvent(PromptInput):
 
         <EXAMPLE INSTRUCTIONS>
         1. Describe the harm caused: 'Mistakes by cyclists or motorists leading to crash' by the hazard: 'Head injury' during the activity: 'Cycle commuting'.
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
+        The harm caused by a hazard refers to the negative consequences resulting from the events which leads to the harm caused.
         2. From the above description, extract the harm caused.
-        3. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+        3. Describe the events which leads to the harm caused. Don't refer to the harm caused.
 
         <EXAMPLE OUTPUT>
         Description: Cycle commuting can lead to mistakes by cyclists or motorists leading to a crash, which can cause a head injury.
@@ -372,9 +346,10 @@ class HarmCausedAndHazardEvent(PromptInput):
 
         <INSTRUCTIONS>
         1. Describe the harm caused: '{self.how_it_harms}' by the hazard: '{self.hazard}' during the activity: '{self.activity}'.
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        1. From the above description, extract the harm caused.
-        2. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+        The harm caused by a hazard refers to the negative consequences resulting from the events which leads to the harm caused.
+        2. From the above description, extract the harm caused.
+        3. Describe the events which leads to the harm caused. Don't refer to the harm caused.
+        </INSTRUCTIONS>
 
         <OUTPUT>'''
     
@@ -421,7 +396,7 @@ class RiskDomainClassification(PromptInput):
         </EXAMPLE OUTPUT>
         '''
 
-class ControlMeasure(PromptInput):
+class ControlMeasureClassification(PromptInput):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
         self.control_measure = control_measure
@@ -439,7 +414,7 @@ class ControlMeasure(PromptInput):
         return f'''Follow these instructions:
         1. In one sentence, describe the hazard event: "<hazard event>" during the
         activity: '{self.activity}' given the harm caused: "<harm caused>" for {self.who_it_harms}.
-        2. Thinking step by step, explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
+        2. Thinking step by stepand thinking through all possible causes of the hazard event: "<hazard_event>", explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not '{self.control_measure}' removes or reduces the harm caused: "<harm caused>" for the '{self.who_it_harms}'.
         If so, it is a mitigation measure.
@@ -448,6 +423,9 @@ class ControlMeasure(PromptInput):
         prevention measure and a mitigation measure, answer 'Both'.'''
     
     def generate_prompt(self, hazard_event, harm_caused):
+
+        # TODO: Should alter the mitigation explanations - sometimes a mitigation measure is done to prepare for 
+        # the hazard event, not just to reduce the harm caused by the hazard event.
 
         all_few_shot_examples = """
         <EXAMPLE INSTRUCTIONS>
@@ -550,7 +528,7 @@ class ControlMeasure(PromptInput):
         <OUTPUT>
         Hazard Event Description: '''
 
-class PreventionPrompt(ControlMeasure):
+class PreventionPrompt(ControlMeasureClassification):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):
         super().__init__(control_measure, activity, hazard, how_it_harms, who_it_harms)
     
@@ -582,7 +560,7 @@ class PreventionPrompt(ControlMeasure):
         if recommendation_type == 'misclassification':
             return f"""A mitigation measure reduces the harm caused by the hazard event either while the hazard event is occurring or after it has occurred. On the other hand, a prevention measure reduces the likelihood of the hazard event occurring in the first place. Please use the above definitions to ammend your prevention input."""
     
-class MitigationPrompt(ControlMeasure):
+class MitigationPrompt(ControlMeasureClassification):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):
         super().__init__(control_measure, activity, hazard, how_it_harms, who_it_harms)
 

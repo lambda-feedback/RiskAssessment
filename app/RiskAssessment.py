@@ -146,7 +146,8 @@ class RiskAssessment:
         return HarmCausedAndHazardEvent(
                             activity=self.activity,
                             hazard=self.hazard,
-                          how_it_harms=self.how_it_harms)
+                          how_it_harms=self.how_it_harms,
+                          prevention=self.prevention)
     
     def get_prevention_prompt_input(self):
         return PreventionPrompt(

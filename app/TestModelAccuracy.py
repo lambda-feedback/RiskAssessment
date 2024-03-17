@@ -297,7 +297,7 @@ class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompt
 
         return expected_output, True, harm_caused_prompt_output
 
-class TestControlMeasurePrompt(TestModelAccuracyForCombinationOfPrompts):
+class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -345,7 +345,7 @@ class TestControlMeasurePrompt(TestModelAccuracyForCombinationOfPrompts):
 
         return expected_output, control_measure_prompt_with_prevention_pattern, prompt_output
 
-class TestPreventionPromptInput(TestControlMeasurePrompt):
+class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -362,7 +362,7 @@ class TestPreventionPromptInput(TestControlMeasurePrompt):
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'get_prevention_prompt_input')
     
-class TestMitigationPromptInput(TestControlMeasurePrompt):
+class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],

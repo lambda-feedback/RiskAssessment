@@ -6,16 +6,17 @@ from TestModelAccuracy import TestModelAccuracy
 from example_risk_assessments import unique_activities, unique_hazards, unique_how_it_harms, unique_who_it_harms, unique_control_measures
 
 no_information_provided_examples = [
-    "Leave blank",
-    "No data",
-    "Not provided",
-    "Not applicable at this time",
-    "Not applicable to me",
-    "Not applicable in this context",
-    "Nil",
-    "Blank",
-    "Unspecified",
-    "No content"
+    # "Leave blank",
+    # "No data",
+    # "Not provided",
+    # "Not applicable at this time",
+    # "Not applicable to me",
+    # "Not applicable in this context",
+    # "Nil",
+    # "Blank",
+    # "Unspecified",
+    # "No content",
+    "Reduces risk of head injury"
 ]
 
 information_provided_examples = [
@@ -32,12 +33,12 @@ information_provided_examples = [
     # "Climber and belayer",
 
     # Prevention
-    "Using safe climbing techniques",
-    "Maintaining safe distance in traffic",
+    # "Using safe climbing techniques",
+    # "Maintaining safe distance in traffic",
     
-    # Mitigation
-    "Using proper climbing gear",
-    "Wearing a helmet while biking",
+    # # Mitigation
+    # "Using proper climbing gear",
+    # "Wearing a helmet while biking",
 ]
 
 examples_dict = {
@@ -52,7 +53,7 @@ unique_examples = []
 # unique_examples.extend(unique_hazards)
 # unique_examples.extend(unique_how_it_harms)
 # unique_examples.extend(unique_who_it_harms)
-unique_examples.extend(unique_control_measures)
+# unique_examples.extend(unique_control_measures)
 
 examples = []
 
