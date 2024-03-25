@@ -464,9 +464,9 @@ RA_cycling = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Cyclist",
     how_it_harms="Mistakes by cyclists or motorists leading to crash",
     prevention="Helmet wearing",
-    mitigation="Reduces risk of head injury ",
+    mitigation="",
     prevention_prompt_expected_output="mitigation",
-    mitigation_prompt_expected_output="neither",
+    mitigation_prompt_expected_output="",
     risk_domain="physical risk to individuals"
 )
 
@@ -571,9 +571,9 @@ RA_cycling_safer_routes = RiskAssessmentWithoutNumberInputs(
     how_it_harms = "Could injure",
     who_it_harms = "The cyclist",
     prevention = "Take safer routes",
-    mitigation = "Wear high viz clothing",
+    mitigation = "",
     prevention_prompt_expected_output = "prevention",
-    mitigation_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "",
     risk_domain="physical risk to individuals"
 )
 
@@ -955,7 +955,7 @@ RA_hostage_psychological_support = RiskAssessmentWithoutNumberInputs(
     activity="Public gatherings or high-profile events",
     hazard="Strategic hostage taking",
     who_it_harms="Hostages, bystanders, law enforcement personnel",
-    how_it_harms="Risk of fatalities and casualties, psychological trauma",
+    how_it_harms="Psychological trauma",
     prevention="Enhancing intelligence gathering capabilities",
     mitigation="Providing psychological support",
     prevention_prompt_expected_output="prevention",
@@ -967,7 +967,7 @@ RA_high_profile_assassination_protection = RiskAssessmentWithoutNumberInputs(
     activity="Public appearances or events involving high-profile figures",
     hazard="Assassination of a high-profile public figure",
     who_it_harms="High-profile public figures",
-    how_it_harms="Loss of life, potential escalation of community tensions",
+    how_it_harms="Loss of life",
     prevention="Providing close protection for high-profile figures",
     mitigation="Apprehending perpetrators to prevent further attacks",
     prevention_prompt_expected_output="prevention",
@@ -979,7 +979,7 @@ RA_high_profile_assassination_security_measures = RiskAssessmentWithoutNumberInp
     activity="Public appearances or events involving high-profile figures",
     hazard="Assassination of a high-profile public figure",
     who_it_harms="High-profile public figures",
-    how_it_harms="Loss of life, potential escalation of community tensions",
+    how_it_harms="Loss of life",
     prevention="Implementing robust security measures for public appearances",
     mitigation="Managing public communications to prevent escalation of tensions",
     prevention_prompt_expected_output="prevention",
@@ -1018,7 +1018,7 @@ RA_pandemic_isolate_cases = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="Educating the public about disease transmission", # can help reduce the spread of pathogens
     mitigation="Rapid response to identify and isolate suspected cases",
     prevention_prompt_expected_output="prevention",
@@ -1031,7 +1031,7 @@ RA_pandemic_scalable_treatment = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="Addressing factors contributing to the spread of infectious diseases, such as climate change",
     mitigation="Scalable diagnostics and treatment options",
     prevention_prompt_expected_output="prevention",
@@ -1043,7 +1043,7 @@ RA_pandemic_vaccines = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="",
     mitigation="Rapid deployment and distribution of vaccines",
     prevention_prompt_expected_output="",
@@ -1055,7 +1055,7 @@ RA_pandemic_resource_allocation = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="",
     mitigation="Prioritizing allocation of resources",
     prevention_prompt_expected_output="",
@@ -1067,7 +1067,7 @@ RA_pandemic_quarantine = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="",
     mitigation="Contact tracing and quarantine measures",
     prevention_prompt_expected_output="",
@@ -1079,7 +1079,7 @@ RA_pandemic_surge_capacity = RiskAssessmentWithoutNumberInputs(
     activity="Public health and emergency response",
     hazard="Pandemic",
     who_it_harms="General population",
-    how_it_harms="Widespread illness, strain on healthcare systems, economic downturn",
+    how_it_harms="Loss of life",
     prevention="",
     mitigation="Implementing surge capacity plans in hospitals",
     prevention_prompt_expected_output="",
@@ -1091,7 +1091,7 @@ RA_foot_and_mouth_disease_rapid_response = RiskAssessmentWithoutNumberInputs(
     activity="Livestock farming operations",
     hazard="Major outbreak of foot and mouth disease",
     who_it_harms="Livestock",
-    how_it_harms="Economic losses in agriculture sector, disruption of food supply",
+    how_it_harms="Economic losses in agriculture sector",
     prevention="Implementing farm visitor management protocols",
     mitigation="Rapid response to detect and contain outbreaks",
     prevention_prompt_expected_output="prevention",
@@ -1103,7 +1103,7 @@ RA_foot_and_mouth_disease_culling = RiskAssessmentWithoutNumberInputs(
     activity="Livestock farming operations",
     hazard="Major outbreak of foot and mouth disease",
     who_it_harms="Livestock",
-    how_it_harms="Economic losses in agriculture sector, disruption of food supply",
+    how_it_harms="Economic losses in agriculture sector",
     prevention="Maintaining high standards of hygiene on the farm",
     mitigation="Conducting mass culling of infected animals",
     prevention_prompt_expected_output="prevention",
@@ -1115,7 +1115,7 @@ RA_laboratory_biohazard = RiskAssessmentWithoutNumberInputs(
     activity="Laboratory research involving biohazardous materials",
     hazard="Potential exposure to infectious agents or toxins",
     who_it_harms="Laboratory personnel, researchers, surrounding community",
-    how_it_harms="Infection, illness, accidental release of biohazardous materials",
+    how_it_harms="Infections",
     prevention="Providing training on biohazard handling",
     mitigation="Conducting decontamination procedures",
     prevention_prompt_expected_output="prevention",
@@ -1127,7 +1127,7 @@ RA_healthcare_biohazard = RiskAssessmentWithoutNumberInputs(
     activity="Healthcare facility operations involving infectious patients",
     hazard="Potential transmission of infectious diseases",
     who_it_harms="Patients, healthcare workers, visitors",
-    how_it_harms="Transmission of infections",
+    how_it_harms="Infections",
     prevention="Conducting regular disinfection",
     mitigation="Implementing quarantine measures",
     prevention_prompt_expected_output="prevention",
@@ -1135,84 +1135,98 @@ RA_healthcare_biohazard = RiskAssessmentWithoutNumberInputs(
     risk_domain="biohazard risk"
 )
 
-example_risk_assessments_dict = {
-    'Physical risks to individuals (original student data)': [
-        # RA_syringe_needle, 
-        # RA_syringe_needle_mitigation_prevention_switched, 
-        # RA_trombone_impact, 
-        # RA_hearing_damage, 
-        # RA_ink_spill_in_eye, 
-        # RA_wet_hands_electric_shock, 
-        # RA_tripping_on_belongings, 
-        # RA_water_tank,
+physical_risks_to_individuals__original_student_data = {
+    'risk_assessments': [
+        RA_syringe_needle, 
+        RA_trombone_impact, 
+        RA_hearing_damage, 
+        RA_ink_spill_in_eye, 
+        RA_wet_hands_electric_shock, 
+        RA_tripping_on_belongings, 
+        RA_water_tank,
+        RA_sharp_drone_propeller_blade, 
+        RA_battery_causes_fire, 
+        RA_heavy_weight_falls_on_demonstrator, 
+        RA_zip_tie_hits_audience,
+        RA_incorrect_prevention_and_mitigation, 
+        RA_mucking_out_horse,
+        RA_slitter_machine
+
         # RA_paper_plane_impact, 
-        # RA_climbing_gear_on_feet, 
-        # RA_sharp_drone_propeller_blade, 
-        # RA_battery_causes_fire, 
-        # RA_heavy_weight_falls_on_demonstrator, 
-        # RA_zip_tie_hits_audience,
         # RA_pencil_lead_projectile,
-        # RA_incorrect_prevention_and_mitigation, 
-        # RA_hearing_damage_mitigation_prevention_switched,
-        # RA_wet_hands_electric_shock_mitigation_prevention_switched, 
-        # RA_water_tank_mitigation_prevention_switched,
-        # RA_climbing_gear_on_feet_mitigation_prevention_switched,
-        # RA_mucking_out_horse,
-        # RA_slitter_machine
+        # RA_climbing_gear_on_feet, 
         ],
-    
-    'Physical risks to individuals (data gathered from version 1 deployment)': [
-        # RA_fire_alarm,
-        # RA_mop_up_spill,
-        # RA_syringe_with_cover,
-        # RA_hot_water_in_cups,
-        # RA_bigger_beaker,
-        # RA_campfire,
-        # RA_bouldering,
-        # RA_hob_burn,
-        # RA_crossing_road,
-        # RA_cycling,
-        # RA_ladder,
-        # RA_cycling_high_viz,
-        # RA_cycling_safer_routes
-        ],
-    
-    'Finance Risks': [
-        # RA_credit_risk,
-        # RA_interest_rate_risk,
-        # RA_liquidity_risk,
-        # RA_operational_risk,
-        # RA_market_risk
-    ],
+    'risk_domain': 'Physical risks to individuals (original student data)'
+}
 
-    'Natural Disaster': [
-        # RA_wildfire_early_detection,
-        # RA_wildfire_fire_resistant_infrastructure,
-        # RA_wildfire_community_preparedness,
-        # RA_earthquake_building_retrofit,
-        # RA_earthquake_public_education,
-        # RA_earthquake_early_warning_systems,
-        # RA_volcano_early_warning_systems,
-        # RA_volcano_causing_ash_cloud,
-        # RA_volcano_zoning,
-        # RA_volcano_emergency_response,
-        # RA_volcano_post_disaster_recovery
+physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
+    'risk_assessments': [
+        RA_fire_alarm,
+        RA_mop_up_spill,
+        RA_syringe_with_cover,
+        RA_hot_water_in_cups,
+        RA_bigger_beaker,
+        RA_campfire,
+        RA_bouldering,
+        RA_hob_burn,
+        RA_crossing_road,
+        RA_cycling,
+        RA_ladder,
+        RA_cycling_high_viz,
+        RA_cycling_safer_routes
     ],
+    'risk_domain': 'Physical risks to individuals (data gathered from version 1 deployment)'
+}
 
-    'Cybersecurity': [
+finance_risks = {
+    'risk_assessments': [
+        RA_credit_risk,
+        RA_interest_rate_risk,
+        RA_liquidity_risk,
+        RA_operational_risk,
+        RA_market_risk
+    ],
+    'risk_domain': 'Financial risks'
+}
+
+natural_disaster_risks = {
+    'risk_assessments': [
+        # MITIGATION ONLY
+        RA_wildfire_fire_resistant_infrastructure,
+        RA_wildfire_community_preparedness,
+        RA_earthquake_building_retrofit,
+        RA_earthquake_public_education,
+        RA_earthquake_early_warning_systems,
+        RA_volcano_early_warning_systems,
+        RA_volcano_causing_ash_cloud,
+        RA_volcano_zoning,
+        RA_volcano_emergency_response,
+        RA_volcano_post_disaster_recovery,
+
+        # PREVENTION AND MITIGATION
+        RA_wildfire_early_detection
+    ],
+    'risk_domain': 'Natural disaster risks'
+}
+
+cybersecurity_risks = {
+    'risk_assessments': [
         RA_ransomware_NHS_isolation,
-        RA_ransomware_NHS_MFA,
-        RA_ransomware_NHS_data_backup,
-        RA_bank_cybersecurity_attack,
-        RA_transport_cyber_attack_specific,
-        RA_telecoms_cyber_attack,
-        RA_civil_nuclear_cyber_attack,
-        RA_electricity_infrastructure_cyber_attack,
-        RA_gas_infrastructure_cyber_attack,
-        RA_fuel_supply_cyber_attack,
+        # RA_ransomware_NHS_MFA,
+        # RA_ransomware_NHS_data_backup,
+        # RA_bank_cybersecurity_attack,
+        # RA_transport_cyber_attack_specific,
+        # RA_telecoms_cyber_attack,
+        # RA_civil_nuclear_cyber_attack,
+        # RA_electricity_infrastructure_cyber_attack,
+        # RA_gas_infrastructure_cyber_attack,
+        # RA_fuel_supply_cyber_attack,
     ],
+    'risk_domain': 'Cybersecurity risks'
+}
 
-    'Terrorism': [
+terrorism_risks = {
+    'risk_assessments': [
         RA_explosive_devices_sniffer_dogs,
         RA_explosive_devices_security,
         RA_terrorism_aviation_background_checks,
@@ -1224,27 +1238,35 @@ example_risk_assessments_dict = {
         RA_CBRN_attack_enhance_detection,
         RA_CBRN_attack_securing_borders
     ],
-
-    'Biohazard': [
-        RA_pandemic_resource_allocation,
-        RA_pandemic_scalable_treatment,
-        RA_pandemic_quarantine,
-        RA_pandemic_isolate_cases,
-        RA_pandemic_surge_capacity,
-        RA_pandemic_vaccines,
-        RA_foot_and_mouth_disease_culling,
-        RA_foot_and_mouth_disease_rapid_response,
-        RA_laboratory_biohazard,
-        RA_healthcare_biohazard
-    ]
+    'risk_domain': 'Terrorism_risks'
 }
 
-example_risk_assessments = []
+biohazard_risks = {
+    'risk_assessments': [
+    # MITIGATION ONLY
+    RA_pandemic_resource_allocation,
+    RA_pandemic_surge_capacity,
+    RA_pandemic_quarantine,
+    RA_pandemic_vaccines,
 
-for risk_assessment_list in example_risk_assessments_dict.values():
-    example_risk_assessments.extend(risk_assessment_list)
+    # PREVENTION AND MITIGATION
+    RA_pandemic_isolate_cases,
+    RA_pandemic_scalable_treatment,
+    RA_foot_and_mouth_disease_culling,
+    RA_foot_and_mouth_disease_rapid_response,
+    RA_laboratory_biohazard,
+    RA_healthcare_biohazard
+    ],
 
-number_of_risk_assessments_in_each_domain = {key: len(value) for key, value in example_risk_assessments_dict.items()}
+    'risk_domain': 'biohazard_risks'
+}
+
+example_risk_assessments = physical_risks_to_individuals__original_student_data["risk_assessments"]
+example_risk_assessments += physical_risks_to_individuals__data_gathered_from_version_1_deployment["risk_assessments"]
+example_risk_assessments += natural_disaster_risks["risk_assessments"]
+example_risk_assessments += cybersecurity_risks["risk_assessments"]
+example_risk_assessments += terrorism_risks["risk_assessments"]
+example_risk_assessments += biohazard_risks["risk_assessments"]
 
 # Assuming you have a list of RiskAssessment objects named risk_assessments
 

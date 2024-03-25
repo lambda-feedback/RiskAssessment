@@ -469,9 +469,9 @@ class ControlMeasureClassification(PromptInput):
         <EXAMPLE INSTRUCTIONS>
         1. In one sentence, describe the hazard event: "Cut Zip tie flies and hits audience member" during the
         activity: 'Fluids laboratory' given the harm caused: "Impact injury" for Students.
-        2. Thinking step by step, explain whether or not 'Wash your eyes with clean water' reduces the likelihood that hazard event: "Cut Zip tie flies and hits audience member" occurs.
+        2. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' reduces the likelihood that hazard event: "Cut Zip tie flies and hits audience member" occurs.
         If so, it is a prevention measure.
-        3. Thinking step by step, explain whether or not 'Wash your eyes with clean water' removes or reduces the harm caused: "Impact injury" for the 'Students'.
+        3. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' removes or reduces the harm caused: "Impact injury" for the 'Students'.
         If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a

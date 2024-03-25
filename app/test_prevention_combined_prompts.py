@@ -1,22 +1,30 @@
 from TestModelAccuracy import TestPreventionPromptInput
-from LLMCaller import OpenAILLM, AnthropicLLM
-from example_risk_assessments import example_risk_assessments_dict, example_risk_assessments, number_of_risk_assessments_in_each_domain
+from LLMCaller import OpenAILLM, AnthropicLLM, MistralLLM
+from example_risk_assessments import example_risk_assessments, cybersecurity_risks
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
-if __name__ == '__main__':
-    
-    examples_generator = RiskAssessmentExamplesGeneratorForMultiplePrompts(risk_assessments=example_risk_assessments,
+def test_prevention_combined_prompts(risk_assessments_dict, LLM, is_first_test: bool = False):
+    risk_assessments = risk_assessments_dict['risk_assessments']
+    examples_generator = RiskAssessmentExamplesGeneratorForMultiplePrompts(risk_assessments=risk_assessments,
                                                           ground_truth_parameter='prevention_prompt_expected_output')
     
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
     test_accuracy = TestPreventionPromptInput(
-                                      LLM=AnthropicLLM(name='claude-3-sonnet-20240229', system_message=''),                    
+                                    LLM=LLM,
+                                    is_first_test=is_first_test,
+                                    domain=risk_assessments_dict['risk_domain'],       
                                     list_of_risk_assessment_and_expected_outputs=examples,
-                                    number_of_examples_in_each_domain=number_of_risk_assessments_in_each_domain,
                                     examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
                                     candidate_labels=['prevention', 'mitigation', 'neither', 'both'],
                                     sheet_name='Combined Prevention Prompts')
 
     test_accuracy.run_test()
+
+if __name__ == '__main__':
+    test_prevention_combined_prompts(
+        risk_assessments_dict=cybersecurity_risks,
+        LLM=MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300),
+        is_first_test=True
+    )

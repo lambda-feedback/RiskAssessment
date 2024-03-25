@@ -10,19 +10,21 @@ from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputA
 from GoogleSheetsWriter import GoogleSheetsWriter
 from RegexPatternMatcher import RegexPatternMatcher
 
-class TestModelAccuracy:
+class TestModelcorrectness_Accuracy:
     def __init__(self, 
                 LLM: LLMCaller,
                 list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
-                number_of_examples_in_each_domain: dict,
                 sheet_name: str,
-                examples_gathered_or_generated_message: str):
+                examples_gathered_or_generated_message: str,
+                domain: str = None,
+                is_first_test: bool = False):
         
         self.LLM = LLM
         self.list_of_input_and_expected_outputs = list_of_input_and_expected_outputs
-        self.number_of_examples_in_each_domain = number_of_examples_in_each_domain
         self.sheet_name = sheet_name
         self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
+        self.domain = domain
+        self.is_first_test = is_first_test
 
     def get_number_of_examples(self):
         return len(self.list_of_input_and_expected_outputs)
@@ -39,6 +41,10 @@ class TestModelAccuracy:
         return classes
     
     def update_confusion_matrix(self, confusion_matrix, classes, pattern_matched, expected_output):
+
+        if pattern_matched == 'No pattern found':
+            return confusion_matrix # Don't change confusion matrix if no pattern found
+        
         pattern_matched_index_in_class_list = classes.index(pattern_matched)
         expected_output_index_in_class_list = classes.index(expected_output)
         confusion_matrix[pattern_matched_index_in_class_list, expected_output_index_in_class_list] += 1
@@ -87,19 +93,22 @@ class TestModelAccuracy:
         
         return expected_output, pattern_matched, prompt_output
     
-    def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, example_index, count_correct):
-        if pattern_matched == expected_output:
-            count_correct += 1
-
-            binary_correct_list.append(1)
-
-            prompt_outputs_for_correct_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
-
+    def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched, example_index, count_correct, number_of_examples_where_pattern_in_prompt_output):
+        if pattern_matched == 'No pattern found':
+            prompt_outputs_where_pattern_was_not_matched += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+        
         else:
-            binary_correct_list.append(0)
-            prompt_outputs_for_incorrect_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+            number_of_examples_where_pattern_in_prompt_output += 1
 
-        return binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct
+            if pattern_matched == expected_output:
+                count_correct += 1
+
+                prompt_outputs_for_correct_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+            
+            else:
+                prompt_outputs_for_incorrect_responses += f'{example_index + 1}: {prompt_output}\nExpected output: {expected_output}\n\n'
+
+        return prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched, count_correct, number_of_examples_where_pattern_in_prompt_output
 
     def convert_list_of_lists_to_string(self, list_of_lists):
         # Convert each sublist to a string with newline
@@ -108,15 +117,20 @@ class TestModelAccuracy:
         # Join the sublist strings with a newline and add outer brackets
         return '[' + ',\n'.join(sublist_strings) + ']'
 
-    def get_model_accuracy_and_model_outputs(self):
-        purpose_of_test_input = input('Please enter the purpose of the test: ')
+    def get_model_correctness_accuracy_and_model_outputs(self):
+        if self.is_first_test == True:
+            purpose_of_test = input('Please enter the purpose of the test: ')
+        else:
+            purpose_of_test = ''
 
         print('Counting correct responses...')
         count_correct = 0
+        number_of_examples_where_pattern_in_prompt_output = 0
         
         output_string = ''
         prompt_outputs_for_correct_responses = ''
         prompt_outputs_for_incorrect_responses = ''
+        prompt_outputs_where_pattern_was_not_matched = ''
 
         classes = self.get_classes()
         n_classes = len(classes)
@@ -124,8 +138,6 @@ class TestModelAccuracy:
         confusion_matrix = np.zeros((n_classes, n_classes))
 
         n_examples = self.get_number_of_examples()
-
-        binary_correct_list = []
 
         for example_index in range(n_examples):
 
@@ -135,117 +147,101 @@ class TestModelAccuracy:
 
             output_string = self.update_output_string(output_string, example_index, pattern_matched, expected_output)
 
-            prompt_outputs_for_correct_responses, 
-            prompt_outputs_for_incorrect_responses, 
-            binary_correct_list, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, count_correct = self.update_prompt_output_strings(
+            prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched, count_correct, number_of_examples_where_pattern_in_prompt_output = self.update_prompt_output_strings(
                                                                                                                             prompt_output=prompt_output, 
                                                                                                                             expected_output=expected_output, 
                                                                                                                             pattern_matched=pattern_matched, 
-                                                                                                                            binary_correct_list=binary_correct_list,
                                                                                                                             prompt_outputs_for_correct_responses=prompt_outputs_for_correct_responses, 
                                                                                                                             prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses, 
+                                                                                                                            prompt_outputs_where_pattern_was_not_matched=prompt_outputs_where_pattern_was_not_matched,
                                                                                                                             example_index=example_index, 
-                                                                                                                            count_correct=count_correct)
+                                                                                                                            count_correct=count_correct,
+                                                                                                                            number_of_examples_where_pattern_in_prompt_output=number_of_examples_where_pattern_in_prompt_output)
             
             print(count_correct)
             time.sleep(self.LLM.delay_between_requests)
 
-        accuracy = round(count_correct / n_examples * 100, 2)
+        correctness_accuracy = round(count_correct / n_examples * 100, 2)
+        faithfulness_accuracy = round(number_of_examples_where_pattern_in_prompt_output / n_examples * 100, 2)
 
         confusion_matrix_string = self.generate_confusion_matrix_string(confusion_matrix, classes)
         
-        return purpose_of_test_input, binary_correct_list, accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses
+        return purpose_of_test, correctness_accuracy, faithfulness_accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
     
     def get_first_prompt_input(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
         first_prompt_input = first_input.generate_prompt()
 
         return first_prompt_input
-
-    def get_accuracy_in_different_domains(self, binary_correct_list):
-        domains = self.number_of_examples_in_each_domain.keys()
-        domain_accuracy_string = ''
-
-        starting_index_of_current_domain_in_binary_correct_list = 0
-        for domain in domains:
-            number_of_risk_assessments_in_domain = self.number_of_examples_in_each_domain[domain]
-
-            ending_index_of_current_domain_in_binary_correct_list = starting_index_of_current_domain_in_binary_correct_list + number_of_risk_assessments_in_domain
-            
-            number_of_risk_assessments_correctly_classified_in_domain = sum(binary_correct_list[starting_index_of_current_domain_in_binary_correct_list:ending_index_of_current_domain_in_binary_correct_list])
-
-            domain_accuracy_string += f'{domain}: {number_of_risk_assessments_correctly_classified_in_domain}/{number_of_risk_assessments_in_domain}\n\n'
-
-            starting_index_of_current_domain_in_binary_correct_list = ending_index_of_current_domain_in_binary_correct_list
-
-        return domain_accuracy_string
     
     def save_test_results(self, 
-                          purpose_of_test_input,
-                          accuracy, 
-                          accuracy_in_different_domains_string,
+                          purpose_of_test,
+                          correctness_accuracy,
+                          faithfulness_accuracy,
                           confusion_matrix,
                           output_string, 
                           prompt_outputs_for_correct_responses,
                           prompt_outputs_for_incorrect_responses,
+                          prompt_outputs_where_pattern_was_not_matched,
                           first_prompt_input):
 
         datetime_now = datetime.now().strftime("%d-%m_%H-%M")
 
-        if self.LLM.name.split('-')[0] in ['gpt', 'claude']:
-            model_parameters = f'Temp: {self.LLM.temperature}, Max tokens: {self.LLM.max_tokens}'
-        else:
-            model_parameters = ''
+        model_parameters = f'Temp: {self.LLM.temperature}, Max tokens: {self.LLM.max_tokens}'
         
         num_examples = self.get_number_of_examples()
 
-        new_line_data = [purpose_of_test_input, 
+        new_line_data = [purpose_of_test, 
+                        self.domain,
                          datetime_now, 
                          self.LLM.name, 
                         model_parameters, 
                         self.examples_gathered_or_generated_message,
-                        accuracy, 
-                        accuracy_in_different_domains_string,
+                        correctness_accuracy, 
+                        faithfulness_accuracy,
                         num_examples,
                         confusion_matrix,
                         output_string[:45000], # Google Sheets has a 50,000 character limit
                         first_prompt_input,
                         prompt_outputs_for_correct_responses[:45000],
-                        prompt_outputs_for_incorrect_responses[:45000]]
+                        prompt_outputs_for_incorrect_responses[:45000],
+                        prompt_outputs_where_pattern_was_not_matched[:45000]]
         
         sheets_writer = GoogleSheetsWriter(sheet_name=self.sheet_name)
         sheets_writer.write_to_sheets(new_line_data)
 
     # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
-        purpose_of_test_input, binary_correct_list, accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses = self.get_model_accuracy_and_model_outputs()
-
-        accuracy_in_different_domains_string = self.get_accuracy_in_different_domains(binary_correct_list)
+        purpose_of_test, correctness_accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_correctness_accuracy_and_model_outputs()
 
         first_prompt_input = self.get_first_prompt_input()
-        self.save_test_results(purpose_of_test_input=purpose_of_test_input,
-                               accuracy=accuracy, 
-                               accuracy_in_different_domains_string=accuracy_in_different_domains_string,
+        self.save_test_results(purpose_of_test=purpose_of_test,
+                               correctness_accuracy=correctness_accuracy,
+                               faithfulness_accuracy=faithfulness_accuracy,
                                confusion_matrix=confusion_matrix,
                                output_string=output_string, 
                                first_prompt_input=first_prompt_input,
                                prompt_outputs_for_correct_responses=prompt_outputs_for_correct_responses,
-                               prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses)
+                               prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses,
+                               prompt_outputs_where_pattern_was_not_matched=prompt_outputs_where_pattern_was_not_matched)
 
-class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
+class TestModelcorrectness_AccuracyForCombinationOfPrompts(TestModelcorrectness_Accuracy):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
+        
         self.LLM = LLM
         self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
-        self.number_of_examples_in_each_domain = number_of_examples_in_each_domain
         self.sheet_name = sheet_name
         self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
         self.candidate_labels = candidate_labels
+        self.domain = domain
+        self.is_first_test = is_first_test
 
     # Defined in children classes below
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
@@ -270,16 +266,17 @@ class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
 
         return output_string
 
-class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
+class TestHarmCausedAndHazardEventPrompt(TestModelcorrectness_AccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
 
     def get_first_prompt_input(self):
         first_RA = self.list_of_risk_assessment_and_expected_outputs[0].risk_assessment
@@ -297,16 +294,17 @@ class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompt
 
         return expected_output, True, harm_caused_prompt_output
 
-class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPrompts):
+class TestControlMeasureClassificationPrompt(TestModelcorrectness_AccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
     
     def get_classes(self):
         return ['prevention', 'mitigation', 'neither', 'both']
@@ -326,10 +324,14 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
 
         hazard_event, harm_caused, hazard_event_and_harm_caused_prompt, _  = self.get_hazard_event_and_harm_caused_and_prompt(first_RA)
 
-        control_measure_prompt_input = getattr(first_RA, risk_assessment_method_name)()
-        control_measure_prompt = control_measure_prompt_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
+        if hazard_event == 'No pattern found' or harm_caused == 'No pattern found':
+            return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\n No pattern found for hazard event or harm caused in prompt output.'''
+        
+        else:
+            control_measure_prompt_input = getattr(first_RA, risk_assessment_method_name)()
+            control_measure_prompt = control_measure_prompt_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
 
-        return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\Control Measure:\n{control_measure_prompt}'''
+            return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\Control Measure:\n{control_measure_prompt}'''
     
     def get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(self, i, risk_assessment_method_name):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
@@ -338,23 +340,31 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
 
         hazard_event, harm_caused, _, hazard_event_and_harm_caused_prompt_output  = self.get_hazard_event_and_harm_caused_and_prompt(RA)
 
+        if hazard_event == 'No pattern found' or harm_caused == 'No pattern found':
+            return expected_output, 'No pattern found', hazard_event_and_harm_caused_prompt_output
+
         control_measure_prompt_input = getattr(RA, risk_assessment_method_name)()
-        control_measure_prompt_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
+        control_measure_prompt_output, control_measure_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_input, self.LLM, harm_caused=harm_caused, hazard_event=hazard_event)
+
+        if control_measure_pattern == 'No pattern found':
+            return expected_output, 'No pattern found', hazard_event_and_harm_caused_prompt_output
 
         prompt_output = f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt_output}\n\nControl Measure:\n{control_measure_prompt_output}'''
 
-        return expected_output, control_measure_prompt_with_prevention_pattern, prompt_output
+        return expected_output, control_measure_pattern, prompt_output
 
 class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
+                    
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
     
     def get_first_prompt_input(self):
         return self.get_first_prompt_input_with_risk_assessment_method('get_prevention_prompt_input')
@@ -366,12 +376,13 @@ class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
-                    number_of_examples_in_each_domain: dict,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
-                    candidate_labels: list):
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, number_of_examples_in_each_domain, sheet_name, examples_gathered_or_generated_message, candidate_labels)
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
     
     def get_first_prompt_input(self):
         return self.get_first_prompt_input_with_risk_assessment_method('get_mitigation_prompt_input')

@@ -16,7 +16,7 @@ class RegexPatternMatcher:
             return match.group(1).lower() == "true"
         else:
             print(string)
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
     
     def check_string_for_true_or_false_with_no_overall_answer(self, string):
         pattern = re.compile(r"Answer: (true|false)", re.IGNORECASE)
@@ -24,7 +24,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower() == "true"
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
         
     def check_string_for_no_information_provided(self, string):
         pattern = re.compile(r"Answer: (control measure|no information provided)", re.IGNORECASE)
@@ -32,7 +32,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower()
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
         
     def check_string_for_classification(self, string):
         pattern = re.compile(r"Classification: (physical risk to individuals|environmental risk)", re.IGNORECASE)
@@ -40,7 +40,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower()
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
         
     def check_string_for_prevention_mitigation_or_neither(self, string):
         pattern = re.compile(r"Answer: (prevention|mitigation|neither|both)", re.IGNORECASE)
@@ -48,7 +48,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower()
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
     
     def check_string_for_type_of_input_field(self, string):
         pattern = re.compile(r"Answer: (activity|hazard|event that leads to harm|harm caused|who|control measure)", re.IGNORECASE)
@@ -56,7 +56,7 @@ class RegexPatternMatcher:
         if match:
             return match.group(1).lower()
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
         
     def extract_section_of_prompt_until_new_line_or_end_of_string(self, prompt_output, prompt_section_title):
         pattern = rf"{prompt_section_title}:\s*(.*?)(?=\n|$)"
@@ -65,7 +65,7 @@ class RegexPatternMatcher:
             explanation = match.group(1).strip()
             return explanation
         else:
-            raise Exception("Pattern not found in output prompt")
+            return 'No pattern found'
         
     def extract_harm_caused_and_hazard_event(self, prompt_output):
 
