@@ -140,7 +140,9 @@ class RiskAssessment:
     
     def get_who_it_harms_in_context_input(self):
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
-                            activity=self.activity)
+                            activity=self.activity,
+                            hazard=self.hazard,
+                            how_it_harms=self.how_it_harms)
     
     def get_harm_caused_and_hazard_event_input(self):
         return HarmCausedAndHazardEvent(

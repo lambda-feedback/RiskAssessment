@@ -5,28 +5,6 @@ except:
 
 class PromptInput:
     def __init__(self):
-        self.activity_definition = """an action or process that involves physical or mental effort."""
-
-        self.hazard_definition = """a dangerous phenomenon, object, human activity or condition. 
-        It may cause loss of life, injury or other health impacts, property damage, loss of livelihoods 
-        and services, social and economic disruption, or environmental damage."""
-
-        self.how_it_harms_entry_definition = """
-        the potential negative consequences of a hazard. It can outline the specific impacts on
-        human health, property, environment, economics, social structures, livelihoods, essential 
-        services, and the risk of loss of life. It must be specific, clear and precise."""
-
-        self.who_it_harms_entry_definition = """
-        specific individuals, groups, environmental components or infrastructure
-        likely to be negatively affected by identified risks, 
-        excluding abstract concepts, generic terms or vague terms."""
-
-        self.prevention_definition = f'an action which directly reduces the probability that the hazard occurs.'
-
-        # TODO: I changed the definition of mitigation. See if this has an effect.
-        self.mitigation_definition = f'''an action which directly reduces the harm caused by a hazard occurring
-        or reduces the harm caused by the hazard after it has occurred.''' 
-
         self.pattern_matching_method = 'check_string_for_true_or_false'
         self.candidate_labels = [True, False]
         self.labels_indicating_correct_input = [True]
@@ -171,40 +149,36 @@ class HowItHarmsInContext(PromptInput):
     def generate_prompt_without_few_shot_examples(self):
         return f'''
         Follow these instructions:
-        1. In one sentence, describe the hazard: '{self.hazard}' during the 
-        activity: '{self.activity}'.
-        2. In one sentence, explain whether or not '{self.how_it_harms}' is a way that this hazard causes harm. 
-        3. If '{self.how_it_harms}' is a way that this hazard causes harm, answer True, else answer False.
+        1. In one sentence, describe the hazard: '{self.hazard}' during the activity: '{self.activity}'.
+        2. In one sentence, explain whether or not '{self.how_it_harms}' is a way that this hazard directly causes harm. 
+        3. If it is, answer True, else answer False.
         '''
     
     def generate_prompt(self):
         example_of_correct_how_it_harms = f'''
         Example Input:
         Follow these instructions:
-        1. In one sentence, describe the hazard: 'Electrocution' during the 
-        activity: 'Fluids laboratory'.
-        2. In one sentence, explain whether or not 'Electrocuted by mains voltage' is a way that this hazard causes harm. 
-        3. If 'Electrocuted by mains voltage' is a way that this hazard causes harm, answer True, else answer False.
+        1. In one sentence, describe the hazard: 'Electrocution' during the activity: 'Fluids laboratory'.
+        2. In one sentence, explain whether or not 'Electrocuted by mains voltage' is a way that this hazard DIRECTLY causes harm. 
+        3. If it is, answer True, else answer False.
 
         Output:
-        Description: It is argued that wet hands during a fluids laboratory can cause harm through electrocution.
-        Explanation: As water is a conductor of electricity, touching electronics with wet hands can cause electrocution as
-        the water provides a path for electrical current to flow through the body.
+        Description: 'Electrocution' during a fluids laboratory can occur when an individual comes into contact with mains voltage.
+        Explanation: As water is a conductor of electricity, touching electronics with wet hands can DIRECTLY cause harm
+        through electrocution as the water provides a path for electrical current to flow through the body.
         Overall Answer: True
         '''
 
         example_of_incorrect_how_it_harms = f'''
         Example Input:
         Follow these instructions:
-        1. In one sentence, describe the hazard: 'Ink spillage' during the
-        activity: 'Fluids laboratory'.
-        2. In one sentence, explain whether or not 'Radiation exposure' is a way that this hazard causes harm.
-        3. If 'Radiation exposure' is a way that this hazard causes harm, answer True, else answer False.
+        1. In one sentence, describe the hazard: 'Volcanic eruption' during the activity: 'Volcano visit'.
+        2. In one sentence, explain whether or not "Heavy impact when falling onto a demonstrator and causing injury" is a way that this hazard DIRECTLY causes harm.
+        3. If it is, answer True, else answer False.
 
         Output:
-        Description: It is argued that an ink spillage during a fluids laboratory can cause radiation exposure.
-        Explanation: Radiation exposure is not a way that ink spillage during the fluids laboratory causes harm, 
-        as the hazard primarily involves physical contamination rather than radiation.
+        Description: A volcanic eruption during a volcano activity can lead to various hazards and risks.
+        Explanation: "Heavy impact when falling onto a demonstrator and causing injury" is not a DIRECT way that a volcanic eruption causes harm. The primary dangers of a volcanic eruption include lava flows, ash clouds, and pyroclastic flows.
         Overall Answer: False.
         '''
         return f'''
@@ -233,10 +207,12 @@ class HowItHarmsInContext(PromptInput):
         return f'For the "How it harms" input, enter how the hazard leads to harm, and the specific harm caused, e.g. an injury or illness.'
 
 class WhoItHarmsInContext(PromptInput):
-    def __init__(self, who_it_harms, activity):
+    def __init__(self, who_it_harms, activity, hazard, how_it_harms):
         super().__init__()
         self.who_it_harms = who_it_harms
         self.activity = activity
+        self.hazard = hazard
+        self.how_it_harms = how_it_harms
 
     def get_field_checked(self):
         return 'Who It Harms'
@@ -246,25 +222,25 @@ class WhoItHarmsInContext(PromptInput):
         example_of_correct_who_it_harms = f'''
         Example Input:
         Follow these instructions:
-        1. In one sentence, describe the activity: 'Mucking out stable'.
-        2. In one sentence, explain whether it is possible that a 'Stable hand' take part in this activity. 
+        1. In one sentence, describe the hazard: 'Getting kicked by a horse' during the activity: 'Mucking out stable', given how it harms: 'Impact injury'.
+        2. In one sentence, explain whether it is possible that a 'Stable hand' is harmed by this hazard.
         3. If it is possible, answer True, else answer False.
 
         Output:
-        Description: "Mucking out a stable" involves the process of cleaning and removing waste, such as manure and soiled bedding, from a horse's stall or stable.
-        Explanation: It is highly likely that a "Stable hand" would take part in this activity as it is a core responsibility associated with their role in maintaining the stable environment.
+        Description: When mucking out a stable, it is possible that the person mucking out is kicked by a horse, resulting in impact injuries.
+        Explanation: It is likely that a "Stable hand" would muck out a stable and therefore possible for the horse to kick the "Stable hand", causing an impact injury.
         Overall Answer: True
         '''
 
         example_of_incorrect_who_it_harms = f'''
         Example Input:
-        1. In one sentence, describe the activity: 'Fluids laboratory'.
-        2. In one sentence, explain whether it is possible that a 'Stable hand' take part in this activity.
+        1. In one sentence, describe the hazard: 'Ink spillage' during the activity 'Fluids laboratory', given how it harms: 'Serious eye damage.
+        2. In one sentence, explain whether it is possible that a 'Stable hand' is harmed by this hazard.
         3. If it is possible, answer True, else answer False.
 
         Output:
-        Description: A "Fluids laboratory" is a facility where controlled experiments and analyses are conducted to study the properties and behaviors of various fluids, including liquids and gases.
-        Explanation: It is highly unlikely that a "Stable hand" would take part in this activity, as their expertise typically lies in the care and maintenance of horses within a stable environment rather than laboratory work with fluids.
+        Description: Ink spillage during the fluids laboratory activity can cause serious eye damage if the ink comes into contact with the eyes.
+        Explanation: It is unlikely that a stable hand would be harmed by this hazard, as they typically work with horses in a stable environment and are not involved in laboratory activities involving fluids like ink.
         Overall Answer: False
         '''
         return f'''
@@ -273,8 +249,8 @@ class WhoItHarmsInContext(PromptInput):
         {example_of_incorrect_who_it_harms}
 
         Follow these instructions:
-        1. In one sentence, describe the activity: '{self.activity}'.
-        2. In one sentence, explain whether it is possible that {self.who_it_harms} take part in this activity.
+        1. In one sentence, describe the hazard: '{self.hazard}' during the activity: '{self.activity}', given how it harms: '{self.how_it_harms}'.
+        2. In one sentence, explain whether it is possible that '{self.who_it_harms}' is harmed by this hazard.
         3. If it is possible, answer True, else answer False.
 
         Your answer should be in the format:
@@ -428,7 +404,7 @@ class ControlMeasureClassification(PromptInput):
         return f'''Follow these instructions:
         1. In one sentence, describe the hazard event: "<hazard event>" during the
         activity: '{self.activity}' given the harm caused: "<harm caused>" for {self.who_it_harms}.
-        2. Thinking step by stepand thinking through all possible causes of the hazard event: "<hazard_event>", explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
+        2. Thinking step by step and thinking through all possible causes of the hazard event: "<hazard_event>", explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not '{self.control_measure}' removes or reduces the harm caused: "<harm caused>" for the '{self.who_it_harms}'.
         If so, it is a mitigation measure.

@@ -25,13 +25,13 @@ class BaseTestClass:
         self.expected_output = expected_output
         self.prompt_input_object = prompt_input_object
     
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, expected_output, input):
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, expected_output, prompt_input_object):
 
-        pattern_matching_method_string = input.pattern_matching_method
+        pattern_matching_method_string = prompt_input_object.pattern_matching_method
         regex_pattern_matcher = RegexPatternMatcher()
         pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
     
-        prompt_output = self.LLM.get_model_output(input.generate_prompt())
+        prompt_output = self.LLM.get_model_output(prompt_input_object.generate_prompt())
         print(prompt_output)
 
         pattern_matched = pattern_matching_method(prompt_output)
@@ -70,12 +70,12 @@ class TestModelAccuracy(BaseTestClass):
         return len(self.list_of_input_and_expected_outputs)
 
     def get_first_prompt_input(self):
-        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].input
+        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].prompt_input_object
         first_prompt_input = first_prompt_input_object.generate_prompt()
         return first_prompt_input
     
     def get_classes(self):
-        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].input
+        first_prompt_input_object = self.list_of_input_and_expected_outputs[0].prompt_input_object
 
         classes = first_prompt_input_object.candidate_labels
         return classes
@@ -110,7 +110,7 @@ class TestModelAccuracy(BaseTestClass):
         return confusion_matrix_string
 
     def update_output_string(self, output_string, example_index, pattern_matched, expected_output):
-        result_dict = {'input': self.list_of_input_and_expected_outputs[example_index].input.to_string(),
+        result_dict = {'input': self.list_of_input_and_expected_outputs[example_index].prompt_input_object.to_string(),
                 'pattern_matched': pattern_matched, 
                 'expected_output': expected_output}
 
@@ -167,9 +167,9 @@ class TestModelAccuracy(BaseTestClass):
         for example_index in range(n_examples):
 
             expected_output = self.list_of_input_and_expected_outputs[example_index].expected_output
-            input = self.list_of_input_and_expected_outputs[example_index].input
+            prompt_input_object = self.list_of_input_and_expected_outputs[example_index].prompt_input_object
 
-            pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(expected_output=expected_output, input=input)
+            pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(expected_output=expected_output, prompt_input_object=prompt_input_object)
 
             confusion_matrix = self.update_confusion_matrix(confusion_matrix, classes, pattern_matched, expected_output)
 
@@ -197,7 +197,7 @@ class TestModelAccuracy(BaseTestClass):
         return purpose_of_test, Accuracy, faithfulness_accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
     
     def get_first_prompt_input(self):
-        first_input = self.list_of_input_and_expected_outputs[0].input
+        first_input = self.list_of_input_and_expected_outputs[0].prompt_input_object
         first_prompt_input = first_input.generate_prompt()
 
         return first_prompt_input

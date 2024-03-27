@@ -42,7 +42,7 @@ for example in no_information_provided_examples:
 for example in information_provided_examples:
     examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
 
-def no_information_provided_prompts(risk_assessments_dict, examples, LLM, is_first_test: bool = False):
+def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is_first_test: bool = False):
     risk_assessments = risk_assessments_dict['risk_assessments']
 
     unique_control_measures_in_risk_domain = create_unique_set_of_control_measures(risk_assessments)
@@ -61,7 +61,7 @@ def no_information_provided_prompts(risk_assessments_dict, examples, LLM, is_fir
     test_accuracy.run_test()
 
 if __name__ == "__main__":
-    no_information_provided_prompts(risk_assessments_dict=cybersecurity_risks
+    test_no_information_provided_prompt(risk_assessments_dict=cybersecurity_risks
                                     , examples=examples
                                     , LLM=MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
                                     , is_first_test=True)
