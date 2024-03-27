@@ -9,16 +9,13 @@ from typing import Any, TypedDict
 import numpy as np
 
 try:
-    from .PromptInputs import *
-except:
     from PromptInputs import *
-
-try:
     from RiskAssessment import RiskAssessment
-    from LLMCaller import LLMWithGeneratedText
+    from LLMCaller import OpenAILLM
 except:
+    from .PromptInputs import *
     from .RiskAssessment import RiskAssessment
-    from .LLMCaller import LLMWithGeneratedText, OpenAILLM
+    from .LLMCaller import OpenAILLM
 
 class Result(TypedDict):
     is_correct: bool
@@ -131,6 +128,63 @@ def provide_feedback_on_risk_matrix(response):
 
         return Result(is_correct=is_correct, feedback=feedback)
 
+def run_control_measure_checks(RA, LLM):
+    no_information_provided_for_prevention_prompt_input = RA.get_no_information_provided_for_prevention_input()
+    no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
+
+    if no_information_provided_for_prevention_pattern == 'no information provided':
+        no_information_provided_message += f'''\n\n\n\n#### Prevention\n\n\n\n'''
+    else:
+        feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
+
+        # TODO: Avoid duplication of the following code:
+        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
+        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
+
+        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
+        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
+
+        control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
+        control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
+
+        longform_feedback = control_measure_prompt_with_prevention_input.get_longform_feedback(prompt_output=control_measure_prompt_with_prevention_output)
+
+        if control_measure_prompt_with_prevention_pattern == 'both':
+            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='both')
+            answers_for_which_feedback_cannot_be_given_message += f'''
+            \n\n\n\n#### {control_measure_prompt_with_prevention_input.get_shortform_feedback('both')}\n\n\n\n
+            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+            is_complete_feedback_given = False
+        
+        if control_measure_prompt_with_prevention_pattern == 'prevention':
+            feedback_for_correct_answers += f'''
+            {feedback_header}
+            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('positive')}\n\n\n\n
+            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
+
+        if control_measure_prompt_with_prevention_pattern == 'neither':
+            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='neither')
+            feedback_for_incorrect_answers += f'''
+            {feedback_header}
+            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('neither')}\n\n\n\n
+            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+            is_everything_correct = False
+
+        if control_measure_prompt_with_prevention_pattern == 'mitigation':
+            longform_feedback = control_measure_prompt_with_prevention_input.get_longform_feedback(prompt_output=control_measure_prompt_with_prevention_output, pattern_to_search_for='Mitigation Explanation')
+            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='misclassification')
+
+            feedback_for_incorrect_answers += f'''
+            {feedback_header}
+            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('misclassification')}\n\n\n\n
+            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
+            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
+
+            is_everything_correct = False
+
 def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
     Function used to evaluate a student response.
@@ -165,12 +219,12 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_risk_assessment"] == True:
         activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
+        # TODO: Do we need a risk domain?
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                             controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
-                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation'
-                            )
+                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation', risk_domain='')
 
         input_check_feedback_message = RA.get_input_check_feedback_message()
 
@@ -210,9 +264,12 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             is_everything_correct = True
             is_complete_feedback_given = True
 
-            first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
+            how_it_harms_in_context_prompt_input = RA.get_how_it_harms_in_context_input()
+            who_it_harms_in_context_prompt_input = RA.get_who_it_harms_in_context_input()
+
+            first_2_prompt_input_objects = [how_it_harms_in_context_prompt_input, who_it_harms_in_context_prompt_input]
             
-            for prompt_input_object in first_3_prompt_input_objects:
+            for prompt_input_object in first_2_prompt_input_objects:
                 if is_everything_correct == True:
                     prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
                     shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)

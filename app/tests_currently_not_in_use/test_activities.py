@@ -3,7 +3,7 @@
 # The -s option above is so you can see printouts even if the test fails
 
 from TestModelAccuracy import TestModelAccuracy
-from LLMCaller import OpenAILLM, LLMWithGeneratedText
+from LLMCaller import OpenAILLM
 
 import re
 
@@ -56,13 +56,3 @@ if __name__ == "__main__":
         test_description='Evaluating prompt on Chat GPT generated data for activities'
         )
     test_accuracy.run_test()
-
-    # Llama_model_name = 'Llama-2-7b-hf'
-    # test_accuracy = TestModelAccuracyForActivitiesWithLLAMA(
-    #     LLM=LLMWithGeneratedText(
-    #         LLM_API_ENDPOINT=f"https://api-inference.huggingface.co/models/meta-llama/{Llama_model_name}"
-    #         ),
-    #     LLM_name=Llama_model_name,
-    #     list_of_input_and_expected_outputs=activities,
-    #     folder_name='activities')
-    # test_accuracy.run_test()

@@ -2,6 +2,7 @@ from TestModelAccuracy import TestModelAccuracy
 from LLMCaller import OpenAILLM
 from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from PromptInputs import HowItHarmsInContext
+from example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
 
 class HowItHarmsInContextExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
@@ -10,16 +11,28 @@ class HowItHarmsInContextExamplesGenerator(ExamplesGeneratorFromCorrectExamples)
                 hazard=self.correct_examples_list[correct_index].hazard, 
                 how_it_harms=self.correct_examples_list[incorrect_index].how_it_harms)
 
+risk_assessments_list = []
+
+
+for i in range(10):
+    risk_assessments_list.append(physical_risks_to_individuals__original_student_data[i])
+    risk_assessments_list.append(natural_disaster_risks[i])
+
+
 correct_examples_list = [
-        HowItHarmsInContext(
-            hazard="Handling corrosive chemicals without protective gear",
-            how_it_harms="Chemical burns",
-            activity="Chemical handling"
-        ),
-        HowItHarmsInContext(
-            hazard="Presence of combustible materials near an open flame",
-            how_it_harms="Fires",
-            activity="Fire safety demonstration"),
+
+]
+
+# correct_examples_list = [
+#         HowItHarmsInContext(
+#             hazard="Handling corrosive chemicals without protective gear",
+#             how_it_harms="Chemical burns",
+#             activity="Chemical handling"
+#         ),
+#         HowItHarmsInContext(
+#             hazard="Presence of combustible materials near an open flame",
+#             how_it_harms="Fires",
+#             activity="Fire safety demonstration"),
         # HowItHarmsInContext(
         #     hazard="Frayed electrical cords or exposed wiring",
         #     how_it_harms="Electric shocks",
@@ -60,7 +73,7 @@ correct_examples_list = [
         #     how_it_harms="Asphyxiation",
         #     activity="Working in confined spaces"
         # )
-    ]
+    # ]
 
 if __name__ == "__main__":
     how_it_harms_examples_generator = HowItHarmsInContextExamplesGenerator(correct_examples_list=correct_examples_list)

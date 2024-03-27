@@ -5,12 +5,52 @@ import pandas as pd
 from tabulate import tabulate
 import time
 
-from LLMCaller import LLMCaller
-from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
-from GoogleSheetsWriter import GoogleSheetsWriter
-from RegexPatternMatcher import RegexPatternMatcher
+try:
+    from .LLMCaller import LLMCaller
+    from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+    from .GoogleSheetsWriter import GoogleSheetsWriter
+    from .RegexPatternMatcher import RegexPatternMatcher
+except:
+    from LLMCaller import LLMCaller
+    from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+    from GoogleSheetsWriter import GoogleSheetsWriter
+    from RegexPatternMatcher import RegexPatternMatcher
 
-class TestModelcorrectness_Accuracy:
+class BaseTestClass:
+    def __init__(self,
+                 LLM: LLMCaller,
+                 expected_output,
+                 prompt_input_object):
+        self.LLM = LLM
+        self.expected_output = expected_output
+        self.prompt_input_object = prompt_input_object
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, expected_output, input):
+
+        pattern_matching_method_string = input.pattern_matching_method
+        regex_pattern_matcher = RegexPatternMatcher()
+        pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
+    
+        prompt_output = self.LLM.get_model_output(input.generate_prompt())
+        print(prompt_output)
+
+        pattern_matched = pattern_matching_method(prompt_output)
+        
+        return pattern_matched, prompt_output
+
+class TestPromptOnSingleExample(BaseTestClass):
+    def __init__(self,
+                 LLM: LLMCaller,
+                 expected_output,
+                 prompt_input_object):
+        super().__init__(LLM, expected_output, prompt_input_object)
+    
+    def run_test(self):
+        pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(self.expected_output, self.prompt_input_object)
+        
+        return pattern_matched == self.expected_output
+
+class TestModelAccuracy(BaseTestClass):
     def __init__(self, 
                 LLM: LLMCaller,
                 list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
@@ -77,21 +117,6 @@ class TestModelcorrectness_Accuracy:
         output_string += f'{example_index + 1}: {str(result_dict)}\n\n'
 
         return output_string
-
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, example_index):
-        expected_output = self.list_of_input_and_expected_outputs[example_index].expected_output
-        input = self.list_of_input_and_expected_outputs[example_index].input
-
-        pattern_matching_method_string = input.pattern_matching_method
-        regex_pattern_matcher = RegexPatternMatcher()
-        pattern_matching_method = getattr(regex_pattern_matcher, pattern_matching_method_string)
-    
-        prompt_output = self.LLM.get_model_output(input.generate_prompt())
-        print(prompt_output)
-
-        pattern_matched = pattern_matching_method(prompt_output)
-        
-        return expected_output, pattern_matched, prompt_output
     
     def update_prompt_output_strings(self, prompt_output, expected_output, pattern_matched, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched, example_index, count_correct, number_of_examples_where_pattern_in_prompt_output):
         if pattern_matched == 'No pattern found':
@@ -117,7 +142,7 @@ class TestModelcorrectness_Accuracy:
         # Join the sublist strings with a newline and add outer brackets
         return '[' + ',\n'.join(sublist_strings) + ']'
 
-    def get_model_correctness_accuracy_and_model_outputs(self):
+    def get_model_Accuracy_and_model_outputs(self):
         if self.is_first_test == True:
             purpose_of_test = input('Please enter the purpose of the test: ')
         else:
@@ -141,7 +166,10 @@ class TestModelcorrectness_Accuracy:
 
         for example_index in range(n_examples):
 
-            expected_output, pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(example_index)
+            expected_output = self.list_of_input_and_expected_outputs[example_index].expected_output
+            input = self.list_of_input_and_expected_outputs[example_index].input
+
+            pattern_matched, prompt_output = self.get_expected_output_and_pattern_matched_and_prompt_output(expected_output=expected_output, input=input)
 
             confusion_matrix = self.update_confusion_matrix(confusion_matrix, classes, pattern_matched, expected_output)
 
@@ -161,12 +189,12 @@ class TestModelcorrectness_Accuracy:
             print(count_correct)
             time.sleep(self.LLM.delay_between_requests)
 
-        correctness_accuracy = round(count_correct / n_examples * 100, 2)
+        Accuracy = round(count_correct / n_examples * 100, 2)
         faithfulness_accuracy = round(number_of_examples_where_pattern_in_prompt_output / n_examples * 100, 2)
 
         confusion_matrix_string = self.generate_confusion_matrix_string(confusion_matrix, classes)
         
-        return purpose_of_test, correctness_accuracy, faithfulness_accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
+        return purpose_of_test, Accuracy, faithfulness_accuracy, confusion_matrix_string, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
     
     def get_first_prompt_input(self):
         first_input = self.list_of_input_and_expected_outputs[0].input
@@ -176,7 +204,7 @@ class TestModelcorrectness_Accuracy:
     
     def save_test_results(self, 
                           purpose_of_test,
-                          correctness_accuracy,
+                          Accuracy,
                           faithfulness_accuracy,
                           confusion_matrix,
                           output_string, 
@@ -197,7 +225,7 @@ class TestModelcorrectness_Accuracy:
                          self.LLM.name, 
                         model_parameters, 
                         self.examples_gathered_or_generated_message,
-                        correctness_accuracy, 
+                        Accuracy, 
                         faithfulness_accuracy,
                         num_examples,
                         confusion_matrix,
@@ -212,11 +240,11 @@ class TestModelcorrectness_Accuracy:
 
     # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
-        purpose_of_test, correctness_accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_correctness_accuracy_and_model_outputs()
+        purpose_of_test, Accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_Accuracy_and_model_outputs()
 
         first_prompt_input = self.get_first_prompt_input()
         self.save_test_results(purpose_of_test=purpose_of_test,
-                               correctness_accuracy=correctness_accuracy,
+                               Accuracy=Accuracy,
                                faithfulness_accuracy=faithfulness_accuracy,
                                confusion_matrix=confusion_matrix,
                                output_string=output_string, 
@@ -225,7 +253,7 @@ class TestModelcorrectness_Accuracy:
                                prompt_outputs_for_incorrect_responses=prompt_outputs_for_incorrect_responses,
                                prompt_outputs_where_pattern_was_not_matched=prompt_outputs_where_pattern_was_not_matched)
 
-class TestModelcorrectness_AccuracyForCombinationOfPrompts(TestModelcorrectness_Accuracy):
+class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -266,7 +294,7 @@ class TestModelcorrectness_AccuracyForCombinationOfPrompts(TestModelcorrectness_
 
         return output_string
 
-class TestHarmCausedAndHazardEventPrompt(TestModelcorrectness_AccuracyForCombinationOfPrompts):
+class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -294,7 +322,7 @@ class TestHarmCausedAndHazardEventPrompt(TestModelcorrectness_AccuracyForCombina
 
         return expected_output, True, harm_caused_prompt_output
 
-class TestControlMeasureClassificationPrompt(TestModelcorrectness_AccuracyForCombinationOfPrompts):
+class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
                     list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
@@ -331,7 +359,7 @@ class TestControlMeasureClassificationPrompt(TestModelcorrectness_AccuracyForCom
             control_measure_prompt_input = getattr(first_RA, risk_assessment_method_name)()
             control_measure_prompt = control_measure_prompt_input.generate_prompt(hazard_event=hazard_event, harm_caused=harm_caused)
 
-            return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\Control Measure:\n{control_measure_prompt}'''
+            return f'''Hazard Event/Harm Caused:\n{hazard_event_and_harm_caused_prompt}\n\nControl Measure:\n{control_measure_prompt}'''
     
     def get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(self, i, risk_assessment_method_name):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
@@ -389,3 +417,45 @@ class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     
     def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
         return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'get_mitigation_prompt_input')
+
+class TestIsFutureHarmReducedPromptInputWithPrevention(TestControlMeasureClassificationPrompt):
+    def __init__(self, 
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
+        
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+
+    def get_classes(self):
+        return [True, False]
+    
+    def get_first_prompt_input(self):
+        return self.get_first_prompt_input_with_risk_assessment_method('is_future_harm_reduced_prompt_input_with_prevention')
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'is_future_harm_reduced_prompt_input_with_prevention')
+
+class TestIsFutureHarmReducedPromptInputWithMitigation(TestControlMeasureClassificationPrompt):
+    def __init__(self, 
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
+        
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+
+    def get_classes(self):
+        return [True, False]
+    
+    def get_first_prompt_input(self):
+        return self.get_first_prompt_input_with_risk_assessment_method('is_future_harm_reduced_prompt_input_with_mitigation')
+    
+    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+        return self.get_expected_output_and_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'is_future_harm_reduced_prompt_input_with_mitigation')

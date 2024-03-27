@@ -1089,7 +1089,7 @@ RA_pandemic_surge_capacity = RiskAssessmentWithoutNumberInputs(
 
 RA_foot_and_mouth_disease_rapid_response = RiskAssessmentWithoutNumberInputs(
     activity="Livestock farming operations",
-    hazard="Major outbreak of foot and mouth disease",
+    hazard="An outbreak of foot and mouth disease",
     who_it_harms="Livestock",
     how_it_harms="Economic losses in agriculture sector",
     prevention="Implementing farm visitor management protocols",
@@ -1101,7 +1101,7 @@ RA_foot_and_mouth_disease_rapid_response = RiskAssessmentWithoutNumberInputs(
 
 RA_foot_and_mouth_disease_culling = RiskAssessmentWithoutNumberInputs(
     activity="Livestock farming operations",
-    hazard="Major outbreak of foot and mouth disease",
+    hazard="An outbreak of foot and mouth disease",
     who_it_harms="Livestock",
     how_it_harms="Economic losses in agriculture sector",
     prevention="Maintaining high standards of hygiene on the farm",
@@ -1119,7 +1119,7 @@ RA_laboratory_biohazard = RiskAssessmentWithoutNumberInputs(
     prevention="Providing training on biohazard handling",
     mitigation="Conducting decontamination procedures",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
+    mitigation_prompt_expected_output="both",
     risk_domain="biohazard risk"
 )
 
@@ -1211,16 +1211,16 @@ natural_disaster_risks = {
 
 cybersecurity_risks = {
     'risk_assessments': [
-        RA_ransomware_NHS_isolation,
-        # RA_ransomware_NHS_MFA,
-        # RA_ransomware_NHS_data_backup,
-        # RA_bank_cybersecurity_attack,
-        # RA_transport_cyber_attack_specific,
-        # RA_telecoms_cyber_attack,
-        # RA_civil_nuclear_cyber_attack,
-        # RA_electricity_infrastructure_cyber_attack,
-        # RA_gas_infrastructure_cyber_attack,
-        # RA_fuel_supply_cyber_attack,
+        # RA_ransomware_NHS_isolation,
+        RA_ransomware_NHS_MFA,
+        RA_ransomware_NHS_data_backup,
+        RA_bank_cybersecurity_attack,
+        RA_transport_cyber_attack_specific,
+        RA_telecoms_cyber_attack,
+        RA_civil_nuclear_cyber_attack,
+        RA_electricity_infrastructure_cyber_attack,
+        RA_gas_infrastructure_cyber_attack,
+        RA_fuel_supply_cyber_attack,
     ],
     'risk_domain': 'Cybersecurity risks'
 }
@@ -1244,7 +1244,7 @@ terrorism_risks = {
 biohazard_risks = {
     'risk_assessments': [
     # MITIGATION ONLY
-    RA_pandemic_resource_allocation,
+    # RA_pandemic_resource_allocation,
     RA_pandemic_surge_capacity,
     RA_pandemic_quarantine,
     RA_pandemic_vaccines,
@@ -1252,8 +1252,8 @@ biohazard_risks = {
     # PREVENTION AND MITIGATION
     RA_pandemic_isolate_cases,
     RA_pandemic_scalable_treatment,
-    RA_foot_and_mouth_disease_culling,
-    RA_foot_and_mouth_disease_rapid_response,
+    # RA_foot_and_mouth_disease_culling,
+    # RA_foot_and_mouth_disease_rapid_response,
     RA_laboratory_biohazard,
     RA_healthcare_biohazard
     ],
@@ -1261,34 +1261,15 @@ biohazard_risks = {
     'risk_domain': 'biohazard_risks'
 }
 
-example_risk_assessments = physical_risks_to_individuals__original_student_data["risk_assessments"]
-example_risk_assessments += physical_risks_to_individuals__data_gathered_from_version_1_deployment["risk_assessments"]
-example_risk_assessments += natural_disaster_risks["risk_assessments"]
-example_risk_assessments += cybersecurity_risks["risk_assessments"]
-example_risk_assessments += terrorism_risks["risk_assessments"]
-example_risk_assessments += biohazard_risks["risk_assessments"]
-
 # Assuming you have a list of RiskAssessment objects named risk_assessments
 
-# Initialize empty sets to store unique values for each field
-unique_activities = set()
-unique_hazards = set()
-unique_how_it_harms = set()
-unique_who_it_harms = set()
-unique_control_measures = set()
+def create_unique_set_of_control_measures(risk_assessments):
+    unique_control_measures = set()
 
-# Iterate through the list of risk assessments
-for risk_assessment in example_risk_assessments:
-    # Check and add unique values for each field that is not an empty string
-    if risk_assessment.activity != "":
-        unique_activities.add(risk_assessment.activity)
-    if risk_assessment.hazard != "":
-        unique_hazards.add(risk_assessment.hazard)
-    if risk_assessment.how_it_harms != "":
-        unique_how_it_harms.add(risk_assessment.how_it_harms)
-    if risk_assessment.who_it_harms != "":
-        unique_who_it_harms.add(risk_assessment.who_it_harms)
-    if risk_assessment.prevention != "":
-        unique_control_measures.add(risk_assessment.prevention)
-    if risk_assessment.mitigation != "":
-        unique_control_measures.add(risk_assessment.mitigation)
+    for risk_assessment in risk_assessments:
+        if risk_assessment.prevention != "":
+            unique_control_measures.add(risk_assessment.prevention)
+        if risk_assessment.mitigation != "":
+            unique_control_measures.add(risk_assessment.mitigation)
+    
+    return unique_control_measures

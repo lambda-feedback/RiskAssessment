@@ -60,8 +60,8 @@ class AnthropicLLM(LLMCaller):
         self.name = 'claude-3-sonnet-20240229'
         self.system_message = system_message
         self.update_api_key_from_env_file()
-        self.temperature = 0.1
-        self.max_tokens = 300
+        self.temperature = temperature
+        self.max_tokens = max_tokens
         self.delay_between_requests = 10
 
     def update_api_key_from_env_file(self):
@@ -93,6 +93,15 @@ class AnthropicLLM(LLMCaller):
     def get_model_output(self, prompt):
         LLM_output = self.get_JSON_output_from_API_call(prompt)
         return LLM_output.content[0].text
+    
+class ClaudeSonnetLLM(AnthropicLLM):
+    def __init__(self, system_message: str, temperature: float, max_tokens: int):
+        self.name = 'claude-3-sonnet-20240229'
+        self.system_message = system_message
+        self.update_api_key_from_env_file()
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.delay_between_requests = 10
 
 class MistralLLM(LLMCaller):
     def __init__(self, model, temperature, max_tokens):

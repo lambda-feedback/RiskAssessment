@@ -61,8 +61,6 @@ class NoInformationProvided(PromptInput):
     
     def generate_prompt(self):
         return f'''
-        <s> [INST]
-
         Follow these instructions:
         1. Classify the following input as either "No information provided" or "Control measure"
 
@@ -121,8 +119,6 @@ class NoInformationProvided(PromptInput):
         Answer: <your answer>
         </OUTPUT FORMAT>
 
-        [/INST]
- 
         Input: "{self.input}"'''
 
 class Activity(PromptInput):
@@ -300,18 +296,19 @@ class WhoItHarmsInContext(PromptInput):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
 
 class HarmCausedAndHazardEvent(PromptInput):
-    def __init__(self, activity, hazard, how_it_harms, prevention):
+    def __init__(self, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
         self.activity = activity
         self.hazard = hazard
         self.how_it_harms = how_it_harms
+        self.who_it_harms = who_it_harms
         self.pattern_matching_method = 'extract_harm_caused_and_hazard_event'
 
     def generate_prompt_without_few_shot_examples(self):
         return f'''
         1. Describe the harm caused: '{self.how_it_harms}' by the hazard: '{self.hazard}' during the activity: '{self.activity}'.
         The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        2. From the above description, extract the harm caused.
+        2. From the above description, infer the harm caused. NOTE: This is not an event, but a consequence of an event.
         3. Describe the events which lead to the harm caused. Don't refer to the harm caused.
         '''
 
@@ -320,23 +317,26 @@ class HarmCausedAndHazardEvent(PromptInput):
         return f'''
 
         <EXAMPLE INSTRUCTIONS>
-        1. Describe the harm caused: 'Could injure' by the hazard: 'Getting hit' during the activity: 'Riding a Bike'.
-        The harm caused by a hazard refers to the negative consequences resulting from the hazard event.
-        2. From the above description, extract the harm caused.
-        3. Describe the events which lead to the harm caused. Don't refer to the harm caused.
+        1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
+        Describe the harm caused: 'Could injure' for who it harms: 'Cyclists' by the hazard: 'Getting hit' during the activity: 'Riding a Bike' .
+        Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
+        2. Extract the harm caused.
+        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Description: Riding a bike can lead to getting hit by a car, which could lead to an impact injury.
+        Description: Riding a bike can lead to getting hit by a car, which could lead to an impact injury for cyclists.
         Harm caused: Impact injury
         Event that leads to harm: Getting hit by a car while riding a bike
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
-        1. Describe the harm caused: 'Mistakes by cyclists or motorists leading to crash' by the hazard: 'Head injury' during the activity: 'Cycle commuting'.
-        The harm caused by a hazard refers to the negative consequences resulting from the events which leads to the harm caused.
-        2. From the above description, extract the harm caused.
-        3. Describe the events which leads to the harm caused. Don't refer to the harm caused.
+        1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
+        Describe the harm caused: 'Mistakes by cyclists or motorists leading to crash' for who it harms: 'cyclists' by the hazard: 'Head injury' during the activity: 'Cycle commuting'.
+        Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
+        2. Extract the harm caused.
+        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
         Description: Cycle commuting can lead to mistakes by cyclists or motorists leading to a crash, which can cause a head injury.
@@ -344,11 +344,25 @@ class HarmCausedAndHazardEvent(PromptInput):
         Event that leads to harm: Mistakes by cyclists or motorists leading to a crash
         </EXAMPLE OUTPUT>
 
+        <EXAMPLE INSTRUCTIONS>
+        1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
+        Describe the harm caused: 'When cut the zip tie may hit an audience member' for who it harms: 'audience' by the hazard: 'Cut Zip tie may fly' during the activity: 'Using a spring contraption as a demonstration for a TPS presentation'.
+        Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
+        2. Extract the harm caused.
+        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        Description: Using a spring contraption as a demonstration for a TPS presentation can lead to a cut zip tie flying and hitting an audience member.
+        Harm caused: Impact injury to audience member
+        Event that leads to harm: Cut zip tie may fly and hit an audience member
+
         <INSTRUCTIONS>
-        1. Describe the harm caused: '{self.how_it_harms}' by the hazard: '{self.hazard}' during the activity: '{self.activity}'.
-        The harm caused by a hazard refers to the negative consequences resulting from the events which leads to the harm caused.
-        2. From the above description, extract the harm caused.
-        3. Describe the events which leads to the harm caused. Don't refer to the harm caused.
+        1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
+        Describe the harm caused: '{self.how_it_harms}' for '{self.who_it_harms}' by the hazard: '{self.hazard}' during the activity: '{self.activity}'.
+        Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
+        2. Extract the harm caused.
+        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
         </INSTRUCTIONS>
 
         <OUTPUT>'''
@@ -566,13 +580,13 @@ class MitigationPrompt(ControlMeasureClassification):
 
     def get_shortform_feedback(self, feedback_type):
         if feedback_type == 'positive':
-            return f"Correct! '{self.mitigation}' is a mitigation measure for the hazard: '{self.hazard}'."
+            return f"Correct! '{self.control_measure}' is a mitigation measure for the hazard: '{self.hazard}'."
         if feedback_type == 'both':
-            return f"Feedback cannot be provided for the prevention: '{self.mitigation}'"
+            return f"Feedback cannot be provided for the prevention: '{self.control_measure}'"
         if feedback_type == 'neither':
-            return f"Incorrect. '{self.mitigation}' is not a mitigation measure for the hazard: '{self.hazard}'."
+            return f"Incorrect. '{self.control_measure}' is not a mitigation measure for the hazard: '{self.hazard}'."
         if feedback_type == 'misclassification':
-            return f"Incorrect. '{self.mitigation}' is actually a prevention measure for the hazard: '{self.hazard}'."
+            return f"Incorrect. '{self.control_measure}' is actually a prevention measure for the hazard: '{self.hazard}'."
     
     def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Mitigation Explanation'):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -588,3 +602,87 @@ class MitigationPrompt(ControlMeasureClassification):
         
         if recommendation_type == 'misclassification':
             return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to ammend your mitigation input."""
+        
+class IsFutureHarmReduced(PromptInput):
+    def __init__(self, activity, who_it_harms, control_measure):
+        super().__init__()
+        self.activity = activity
+        self.control_measure = control_measure
+        self.who_it_harms = who_it_harms
+
+        self.pattern_matching_method = 'always_return_true'
+        self.candidate_labels = [True, False]
+        self.labels_indicating_correct_input = [True]
+
+    
+    def get_field_checked(self):
+        return 'Mitigation'
+    
+    def generate_prompt_without_few_shot_examples(self):
+        return f'''
+        Follow these instructions:
+        1. In one sentence, describe the hazard event: "<hazard_event>" during the
+        activity: "{self.activity}" given the harm caused: "<harm_caused>" for {self.who_it_harms}.
+        2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "<hazard_event>".
+        If so, answer True, else answer False.
+        '''
+    
+    def generate_prompt(self, hazard_event, harm_caused):
+        return f'''
+        <EXAMPLE INSTRUCTIONS>
+        1. In one sentence, describe the hazard event: "An outbreak of foot and mouth disease in livestock farming operations" during the
+        activity: "Livestock farming operations" given the harm caused: "Economic losses in agriculture sector" for Livestock.
+        2. Assuming that the hazard event occurs, explain whether or not "Rapid response to detect and contain outbreaks" reduces the future harm caused by the hazard event: "An outbreak of foot and mouth disease in livestock farming operations".
+        If so, answer True, else answer False.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        Hazard event Description. An outbreak of foot and mouth disease in livestock farming operations can lead to significant economic losses in the agriculture sector due to the highly contagious nature of the virus among livestock.
+        Future Harm Explanation: Assuming that there has been an outbreak of foot and mouth disease, a rapid response can limit the spread of the disease and minimize the overall economic impact on the livestock farming industry. Hence, rapid response to detect and contain outbreaks of foot and mouth disease can significantly reduce the future harm caused by the hazard event. 
+        Answer: True
+        </EXAMPLE OUTPUT>
+
+        <EXAMPLE INSTRUCTIONS>
+        1. In one sentence, describe the hazard event: "A pandemic spreading through the population" during the
+        activity: "Public health and emergency response" given the harm caused: "Loss of life" for General population.
+        2. Assuming that the hazard event occurs, explain whether or not "Contact tracing and quarantine measures" reduces the future harm caused by the hazard event: "A pandemic spreading through the population".
+        If so, answer True, else answer False.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        Hazard event description: A pandemic spreading through the population during public health and emergency response activities, causing loss of life in the general population.
+        Future Harm Explanation: Assuming a pandemic is spreading through the population, contact tracing involves identifying and isolating infected individuals and their close contacts; these measures limit further transmission of the disease, slowing its spread and ultimately reducing the loss of life. Hence, contact tracing and quarantine measures can help reduce the future harm caused by a pandemic spreading through the population. 
+        Answer: True
+        </EXAMPLE OUTPUT>
+
+        <EXAMPLE INSTRUCTIONS>
+        Follow these instructions:
+        1. In one sentence, describe the hazard event: "Cyclist getting hit by a car" during the
+        activity: "Riding a Bike" given the harm caused: "impact injury" for The cyclist.
+        2. Assuming that the hazard event occurs, explain whether or not "Wear high vis clothing" reduces the future harm caused by the hazard event: "Cyclist getting hit by a car".
+        If so, answer True, else answer False.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        Hazard event description: Cyclist getting hit by a car while riding a bike, resulting in impact injury to the cyclist.
+        Future Harm Explanation: Assuming the cyclist is hit by the car, high vis clothing does not provide any protection or lessen the injuries sustained from the impact with the vehicle. Hence, wearing high visibility clothing does not reduce the harm caused to the cyclist if they are hit by a car. 
+        Answer: False
+
+        <INSTRUCTIONS>
+        Follow these instructions:
+        1. In one sentence, describe the hazard event: "{hazard_event}" during the activity: "{self.activity}" given the harm caused: "{harm_caused}" for {self.who_it_harms}.
+        2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "{hazard_event}".
+        If so, answer True, else answer False.
+        </INSTRUCTIONS>
+
+        <OUTPUT FORMAT>
+        Use the following output format:
+        Hazard event description: <your hazard event description>
+        Future harm explanation: <your future harm explanation explanation>
+        Answer: <your answer>
+        </OUTPUT FORMAT>
+
+        <OUTPUT>
+        Hazard event description: '''
+    
+    
