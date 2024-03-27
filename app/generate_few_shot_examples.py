@@ -8,14 +8,14 @@ from example_risk_assessments import *
 # from example_risk_assessments import RA_6, RA_mucking_out_horse
 
 def get_prevention_prompt(risk_assessment, few_shot=False):
-    prevention = risk_assessment.get_prevention_prompt_input()
+    prevention = risk_assessment.get_control_measure_prompt_with_prevention_input()
     if few_shot:
         return prevention.generate_prompt()
     else:
         return prevention.generate_prompt_without_few_shot_examples()
 
 def get_mitigation_prompt(risk_assessment, few_shot=False):
-    mitigation = risk_assessment.get_mitigation_prompt_input()
+    mitigation = risk_assessment.get_control_measure_prompt_with_mitigation_input()
     if few_shot:
         return mitigation.generate_prompt()
     else:
@@ -61,14 +61,16 @@ if __name__ == "__main__":
     
     # # Mitigation
     # print(get_mitigation_prompt(RA_earthquake_building_retrofit)) # Preparation
-    print('\n\n\n')
+    # print('\n\n\n')
     # print(get_mitigation_prompt(RA_volcano_post_disaster_recovery)) # Aftermath
 
     # print(get_mitigation_prompt(RA_ink_spill_in_eye))
+    print(get_prevention_prompt(RA_cycling))
 
     # Future Mitigation
-    print(is_future_harm_reduced_prompt_input_with_mitigation(RA_foot_and_mouth_disease_rapid_response))
-    print('\n\n\n')
-    print(is_future_harm_reduced_prompt_input_with_mitigation(RA_pandemic_quarantine))
-    print('\n\n\n')
-    print(is_future_harm_reduced_prompt_input_with_prevention(RA_cycling_high_viz))
+    # print(is_future_harm_reduced_prompt_input_with_mitigation(RA_foot_and_mouth_disease_rapid_response))
+    # print('\n\n\n')
+    # print(is_future_harm_reduced_prompt_input_with_mitigation(RA_pandemic_quarantine))
+    # print('\n\n\n')
+    # print(is_future_harm_reduced_prompt_input_with_prevention(RA_cycling_high_viz))
+

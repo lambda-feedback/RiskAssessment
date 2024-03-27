@@ -583,7 +583,7 @@ RA_cycling = RiskAssessmentWithoutNumberInputs(
     hazard="Head injury",
     who_it_harms="Cyclist",
     how_it_harms="Mistakes by cyclists or motorists leading to crash",
-    prevention="Helmet wearing",
+    prevention="Wear a helmet",
     mitigation="",
     prevention_prompt_expected_output="mitigation",
     mitigation_prompt_expected_output="",
@@ -965,26 +965,26 @@ RA_volcano_post_disaster_recovery = RiskAssessmentWithoutNumberInputs(
 
 RA_ransomware_NHS_isolation = RiskAssessmentWithoutNumberInputs(
     activity="Delivering medical care",
-    threat="Ransomware attack",
-    affected_parties="Patients and medical staff",
-    impact="Interference with healthcare operations",
-    preventive_measures="Maintain up-to-date software patches.",
-    mitigative_actions="Isolate infected system from the rest of the network",
-    expected_output_prevention_prompt="prevention",
-    expected_output_mitigation_prompt="mitigation",
-    risk_area="cybersecurity risk"
+    hazard="Ransomware attack",
+    who_it_harms="Patients and medical staff",
+    how_it_harms="Interference with healthcare operations",
+    prevention="Maintain up-to-date software patches.",
+    mitigation="Isolate infected system from the rest of the network",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk"
 )
 
 RA_ransomware_NHS_isolation__neither = RiskAssessmentWithoutNumberInputs(
     activity="Delivering medical care",
-    threat="Ransomware attack",
-    affected_parties="Patients and medical staff",
-    impact="Interference with healthcare operations",
-    preventive_measures="Update software patches infrequently",
-    mitigative_actions="Connect the infected system from the rest of the network",
-    expected_output_prevention_prompt="neither",
-    expected_output_mitigation_prompt="neither",
-    risk_area="cybersecurity risk"
+    hazard="Ransomware attack",
+    who_it_harms="Patients and medical staff",
+    how_it_harms="Interference with healthcare operations",
+    prevention="Update software patches infrequently",
+    mitigation="Connect the infected system from the rest of the network",
+    prevention_prompt_expected_output="neither",
+    mitigation_prompt_expected_output="neither",
+    risk_domain="cybersecurity risk"
 )
 
 RA_ransomware_NHS_MFA = RiskAssessmentWithoutNumberInputs(
@@ -1049,14 +1049,14 @@ RA_transport_cyber_attack_specific = RiskAssessmentWithoutNumberInputs(
 
 RA_telecoms_cyber_attack = RiskAssessmentWithoutNumberInputs(
     activity="Operating telecommunications infrastructure",
-    threat="Cyber Attack Targeting Major UK Telecoms Network Provider",
-    affected_parties="Customers of the telecommunications service",
-    impact="Potential disruption of internet and voice services for millions",
-    preventive_measures="Perform routine security evaluations.",
-    mitigative_actions="Formulate and validate incident response strategies.",
-    expected_output_prevention_prompt="prevention",
-    expected_output_mitigation_prompt="mitigation",
-    risk_area="cybersecurity risk",
+    hazard="Cyber Attack Targeting Major UK Telecoms Network Provider",
+    who_it_harms="Customers of the telecommunications service",
+    how_it_harms="Potential disruption of internet and voice services for millions",
+    prevention="Perform routine security evaluations.",
+    mitigation="Formulate and validate incident response strategies.",
+    prevention_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
+    risk_domain="cybersecurity risk",
 )
 
 RA_civil_nuclear_cyber_attack = RiskAssessmentWithoutNumberInputs(

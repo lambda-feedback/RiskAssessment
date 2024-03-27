@@ -400,15 +400,15 @@ class ControlMeasureClassification(PromptInput):
         self.labels_indicating_correct_input = ['prevention', 'both']
     
     def generate_prompt_without_few_shot_examples(self):
-
+        # TODO: Decide whether it should be: 2. Thinking step by step and thinking through all possible causes of the hazard event: "<hazard_event>"
         return f'''Follow these instructions:
         1. In one sentence, describe the hazard event: "<hazard event>" during the
         activity: '{self.activity}' given the harm caused: "<harm caused>" for {self.who_it_harms}.
-        2. Thinking step by step and thinking through all possible causes of the hazard event: "<hazard_event>", explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
+        2. Thinking step by step, explain whether or not '{self.control_measure}' reduces the likelihood that hazard event: "<hazard event>" occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not '{self.control_measure}' removes or reduces the harm caused: "<harm caused>" for the '{self.who_it_harms}'.
         If so, it is a mitigation measure.
-        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.'''
     
@@ -421,30 +421,30 @@ class ControlMeasureClassification(PromptInput):
         <EXAMPLE INSTRUCTIONS>
         1. In one sentence, describe the hazard event: "Ink spillage on students face" during the
         activity: 'Fluids laboratory' given the harm caused: "Serious eye damage" for Students.
-        2. Thinking step by step, explain whether or not 'Do not move the water tank when it is full' reduces the likelihood that hazard event: "Ink spillage on students face" occurs.
+        2. Thinking step by step, explain whether or not 'Cleaning the eyes out with water' reduces the likelihood that hazard event: "Ink spillage on students face" occurs.
         If so, it is a prevention measure.
-        3. Thinking step by step, explain whether or not 'Do not move the water tank when it is full' removes or reduces the harm caused: "Serious eye damage" for the 'Students'.
+        3. Thinking step by step, explain whether or not 'Cleaning the eyes out with water' removes or reduces the harm caused: "Serious eye damage" for the 'Students'.
         If so, it is a mitigation measure.
-        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
         Hazard Event Description: The hazard event of 'Ink spillage on student's face' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
-        Prevention Explanation: 'First aid' is a reactive measure applied after the hazard event of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard event and is not a prevention measure.
-        Mitigation Explanation: If ink has been spilled onto a student's face, 'first aid' will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred; as it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
+        Prevention Explanation: 'Cleaning the eyes out with water' is a reactive measure applied after the hazard event of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard event and is not a prevention measure.
+        Mitigation Explanation: If ink has been spilled onto a student's face, 'Cleaning the eyes out with water' will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred; as it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
         Answer: Mitigation.
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
         1. In one sentence, describe the hazard event: "Water being spilt on the floor causing students to slip" during the
-        activity: 'Using a spring contraption as a demonstration for a TPS presentation' given the harm caused: "Impact injury" for Audience.
-        2. Thinking step by step, explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' reduces the likelihood that hazard event: "Water being spilt on the floor causing students to slip" occurs.
+        activity: 'Fluids laboratory' given the harm caused: "Injury caused by students slipping" for Audience.
+        2. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' reduces the likelihood that hazard event: "Water being spilt on the floor causing students to slip" occurs.
         If so, it is a prevention measure.
-        3. Thinking step by step, explain whether or not 'Keep hand around zip tie when cutting to stop it from flying' removes or reduces the harm caused: "Impact injury" for the 'Audience'.
+        3. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' removes or reduces the harm caused: "Impact injury" for the 'Audience'.
         If so, it is a mitigation measure.
-        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
         </EXAMPLE INSTRUCTIONS>
@@ -457,13 +457,38 @@ class ControlMeasureClassification(PromptInput):
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
+        1. In one sentence, describe the hazard event: "Cyclist gets hit by car" during the
+        activity: 'Cycle commuting' given the harm caused: "Head injury" for Cyclist.
+        2. Thinking step by step, explain whether or not 'Wear a helmet' reduces the likelihood that hazard event: "Cyclist gets hit by car" occurs.
+        If so, it is a prevention measure.
+        3. Thinking step by step, explain whether or not 'Wear a helmet' removes or reduces the harm caused: "Head injury" for the 'Cyclist'.
+        If so, it is a mitigation measure.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.   
+        If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
+        prevention measure and a mitigation measure, answer 'Both'.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        Hazard Event Description: A cyclist commuting to work gets hit by a car, resulting in a head injury.
+        Prevention Explanation: Thinking step by step:
+        - Wearing a helmet does not directly influence the likelihood of a cyclist getting hit by a car.
+        - A helmet does not change the behavior of the cyclist or the driver of the car.
+        - The presence or absence of a helmet does not affect the probability of the collision occurring. Therefore, wearing a helmet does not reduce the likelihood of the hazard event "Cyclist gets hit by car" from occurring. It is not a prevention measure.
+        Mitigation Explanation: Thinking step by step:
+        - In the event of a collision, a helmet can absorb some of the impact energy and protect the cyclist's head.
+        - By reducing the direct impact to the head, a helmet can lessen the severity of a head injury.
+        - While a helmet may not completely eliminate the risk of a head injury, it can significantly reduce the extent of the harm caused. Therefore, wearing a helmet reduces the harm caused by the "Head injury" for the cyclist. It is a mitigation measure.
+        Answer: Mitigation
+        </EXAMPLE OUTPUT>
+
+        <EXAMPLE INSTRUCTIONS>
         1. In one sentence, describe the hazard event: "Cut Zip tie flies and hits audience member" during the
         activity: 'Fluids laboratory' given the harm caused: "Impact injury" for Students.
         2. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' reduces the likelihood that hazard event: "Cut Zip tie flies and hits audience member" occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' removes or reduces the harm caused: "Impact injury" for the 'Students'.
         If so, it is a mitigation measure.
-        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
         </EXAMPLE INSTRUCTIONS>
@@ -503,7 +528,7 @@ class ControlMeasureClassification(PromptInput):
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not "{self.control_measure}" removes or reduces the harm caused: "{harm_caused}" for the "{self.who_it_harms}".
         If so, it is a mitigation measure.
-        4. If it is a prevention measure, answer 'Prevention'. If it is a migitation meausure, answer 'Mitigation'.
+        4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
 
