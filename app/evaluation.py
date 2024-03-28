@@ -246,8 +246,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback_for_incorrect_answers += feedback_header_to_add
                         feedback_for_incorrect_answers += feedback_to_add
 
-            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
-            LLM = OpenAILLM()
             if is_everything_correct == True:
                 # PREVENTION CHECKS
 
@@ -260,12 +258,14 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                     feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
 
                     # TODO: Avoid duplication of the following code:
+                    LLM = OpenAILLM()
                     harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
                     harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
 
                     hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
                     harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
+                    LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
                     control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
                     control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
@@ -316,12 +316,17 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 else:
                     feedback_header = f'''\n\n\n## Feedback for Input: Mitigation\n\n\n'''
 
-                    harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-                    harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
+                    # If harm_caused and hazard_event have not already been extracted.
+                    if no_information_provided_for_prevention_pattern == 'no information provided':
+                        LLM = OpenAILLM()
 
-                    hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-                    harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
+                        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
+                        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
 
+                        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
+                        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
+
+                    LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
                     control_measure_prompt_with_mitigation_input = RA.get_control_measure_prompt_with_mitigation_input()
                     control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_mitigation_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 

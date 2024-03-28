@@ -45,25 +45,25 @@ class TestEvaluationFunction(unittest.TestCase):
     """
 
     ### UNIT TESTS ON PROMPTS ###
-    # def test_no_information_provided_prompt(self):
-    #     LLM = OpenAILLM()
+    def test_no_information_provided_prompt(self):
+        LLM = OpenAILLM()
         
-    #     tests = []
+        tests = []
 
-    #     for example in no_information_provided_examples:
-    #         tests.append(TestPromptOnSingleExample(
-    #                                         LLM=LLM,
-    #                                         input_object=NoInformationProvided(input=example), 
-    #                                         expected_output='no information provided'))
+        for example in no_information_provided_examples:
+            tests.append(TestPromptOnSingleExample(
+                                            LLM=LLM,
+                                            input_object=NoInformationProvided(input=example), 
+                                            expected_output='no information provided'))
             
-    #     for example in information_provided_examples:
-    #         tests.append(TestPromptOnSingleExample(
-    #                                         LLM=LLM,
-    #                                         input_object=NoInformationProvided(input=example), 
-    #                                         expected_output='control measure'))
+        for example in information_provided_examples:
+            tests.append(TestPromptOnSingleExample(
+                                            LLM=LLM,
+                                            input_object=NoInformationProvided(input=example), 
+                                            expected_output='control measure'))
             
-    #     for test in tests:
-    #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
+        for test in tests:
+            self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_how_it_harms_in_context_prompt__input_field(self):
     #     # TODO: Should use same LLM for all of them
