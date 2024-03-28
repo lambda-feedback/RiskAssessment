@@ -54,7 +54,7 @@ class TestPromptOnSingleExample(BaseTestClass):
 class TestModelAccuracy(BaseTestClass):
     def __init__(self, 
                 LLM: LLMCaller,
-                list_of_input_and_expected_outputs: list[InputAndExpectedOutputForSinglePrompt],
+                list_of_input_and_expected_outputs: list,
                 sheet_name: str,
                 examples_gathered_or_generated_message: str,
                 domain: str = None,
@@ -261,7 +261,7 @@ class TestModelAccuracy(BaseTestClass):
 class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
@@ -307,7 +307,7 @@ class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
 class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
@@ -333,7 +333,7 @@ class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompt
 class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
@@ -389,7 +389,7 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
 class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
@@ -408,7 +408,7 @@ class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
 class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
@@ -454,7 +454,7 @@ class TestMitigationPromptOnSingleExample(TestMitigationPromptInput):
 class TestIsFutureHarmReducedPromptInputWithPrevention(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
@@ -475,7 +475,7 @@ class TestIsFutureHarmReducedPromptInputWithPrevention(TestControlMeasureClassif
 class TestIsFutureHarmReducedPromptInputWithMitigation(TestControlMeasureClassificationPrompt):
     def __init__(self, 
                     LLM: LLMCaller,
-                    list_of_risk_assessment_and_expected_outputs: list[InputAndExpectedOutputForCombinedPrompts],
+                    list_of_risk_assessment_and_expected_outputs: list,
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
