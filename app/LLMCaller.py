@@ -104,7 +104,7 @@ class ClaudeSonnetLLM(AnthropicLLM):
         self.update_api_key_from_env_file()
         self.temperature = temperature
         self.max_tokens = max_tokens
-        self.delay_between_requests = 10
+        self.delay_between_requests = 5
 
 class MistralLLM(LLMCaller):
     def __init__(self, model, temperature, max_tokens):
