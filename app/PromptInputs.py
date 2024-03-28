@@ -554,11 +554,11 @@ class PreventionPrompt(ControlMeasureClassification):
         if feedback_type == 'positive':
             return f"Correct! '{self.control_measure}' is a prevention measure for the hazard: '{self.hazard}'"
         if feedback_type == 'both':
-            return f"Feedback cannot be provided for the prevention: '{self.control_measure}'"
+            return f"The prevention you entered is both a mitigation and a prevention measure"
         if feedback_type == 'neither':
             return f"Incorrect. '{self.control_measure}' is not a prevention measure for the hazard: '{self.hazard}'."
         if feedback_type == 'misclassification':
-            return f"Incorrect. '{self.control_measure}' is actually a mitigation measure for the hazard: '{self.hazard}'."
+            return f"Incorrect. You entered a mitigation measure in the prevention field."
     
     def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Prevention Explanation'):
         regex_pattern_matcher = RegexPatternMatcher()
@@ -583,13 +583,13 @@ class MitigationPrompt(ControlMeasureClassification):
         if feedback_type == 'positive':
             return f"Correct! '{self.control_measure}' is a mitigation measure for the hazard: '{self.hazard}'."
         if feedback_type == 'both':
-            return f"Feedback cannot be provided for the prevention: '{self.control_measure}'"
+            return f"The mitigation measure you entered is both a prevention and a mitigation."
         if feedback_type == 'neither':
-            return f"Incorrect. '{self.control_measure}' is not a mitigation measure for the hazard: '{self.hazard}'."
+            return f"Incorrect."
         if feedback_type == 'misclassification':
-            return f"Incorrect. '{self.control_measure}' is actually a prevention measure for the hazard: '{self.hazard}'."
+            return f"Incorrect. You entered a prevention measure in the mitigation field."
     
-    def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Mitigation Explanation'):
+    def get_longform_feedback(self, prompt_output, pattern_to_search_for='Mitigation Explanation'):
         regex_pattern_matcher = RegexPatternMatcher()
         return regex_pattern_matcher.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, pattern_to_search_for)
     
@@ -603,7 +603,6 @@ class MitigationPrompt(ControlMeasureClassification):
         
         if recommendation_type == 'misclassification':
             return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to ammend your mitigation input."""
-        
 class IsFutureHarmReduced(PromptInput):
     def __init__(self, activity, who_it_harms, control_measure):
         super().__init__()
