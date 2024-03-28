@@ -128,63 +128,6 @@ def provide_feedback_on_risk_matrix(response):
 
         return Result(is_correct=is_correct, feedback=feedback)
 
-def run_control_measure_checks(RA, LLM):
-    no_information_provided_for_prevention_prompt_input = RA.get_no_information_provided_for_prevention_input()
-    no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
-
-    if no_information_provided_for_prevention_pattern == 'no information provided':
-        no_information_provided_message += f'''\n\n\n\n#### Prevention\n\n\n\n'''
-    else:
-        feedback_header = f'''\n\n\n## Feedback for Input: Prevention\n\n\n'''
-
-        # TODO: Avoid duplication of the following code:
-        harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-        harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
-
-        hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-        harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
-
-        control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
-        control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
-
-        longform_feedback = control_measure_prompt_with_prevention_input.get_longform_feedback(prompt_output=control_measure_prompt_with_prevention_output)
-
-        if control_measure_prompt_with_prevention_pattern == 'both':
-            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='both')
-            answers_for_which_feedback_cannot_be_given_message += f'''
-            \n\n\n\n#### {control_measure_prompt_with_prevention_input.get_shortform_feedback('both')}\n\n\n\n
-            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
-
-            is_complete_feedback_given = False
-        
-        if control_measure_prompt_with_prevention_pattern == 'prevention':
-            feedback_for_correct_answers += f'''
-            {feedback_header}
-            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('positive')}\n\n\n\n
-            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
-
-        if control_measure_prompt_with_prevention_pattern == 'neither':
-            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='neither')
-            feedback_for_incorrect_answers += f'''
-            {feedback_header}
-            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('neither')}\n\n\n\n
-            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
-
-            is_everything_correct = False
-
-        if control_measure_prompt_with_prevention_pattern == 'mitigation':
-            longform_feedback = control_measure_prompt_with_prevention_input.get_longform_feedback(prompt_output=control_measure_prompt_with_prevention_output, pattern_to_search_for='Mitigation Explanation')
-            recommendation = control_measure_prompt_with_prevention_input.get_recommendation(recommendation_type='misclassification')
-
-            feedback_for_incorrect_answers += f'''
-            {feedback_header}
-            \n\n\n\n#### Feedback: {control_measure_prompt_with_prevention_input.get_shortform_feedback('misclassification')}\n\n\n\n
-            \n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n
-            \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
-
-            is_everything_correct = False
-
 def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     """
     Function used to evaluate a student response.
@@ -407,7 +350,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         is_everything_correct = False
 
                     if control_measure_prompt_with_mitigation_pattern == 'prevention':
-                        longform_feedback = control_measure_prompt_with_mitigation_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation')
+                        longform_feedback = control_measure_prompt_with_mitigation_input.get_longform_feedback(prompt_output=control_measure_prompt_with_mitigation_output, pattern_to_search_for='Prevention Explanation')
                         recommendation = control_measure_prompt_with_mitigation_input.get_recommendation(recommendation_type='misclassification')
 
                         feedback_for_incorrect_answers += f'''

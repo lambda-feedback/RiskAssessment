@@ -101,12 +101,6 @@ incorrect_examples_list = [
                     who_it_harms="Secondhand smoke exposure"
                 ),
                 WhoItHarmsInContext(
-                    activity="Using headphones at high volumes",
-                    hazard="Hearing damage and loss",
-                    how_it_harms="Permanent damage to hearing structures and increased risk of deafness",
-                    who_it_harms="Permanent damage to hearing structures and increased risk of deafness"
-                ),
-                WhoItHarmsInContext(
                     activity="Working long hours without breaks",
                     hazard="Increased risk of burnout and mental health issues",
                     how_it_harms="Reduced overall well-being and productivity",

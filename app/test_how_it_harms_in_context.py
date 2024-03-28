@@ -1,9 +1,17 @@
-from TestModelAccuracy import TestModelAccuracy
-from LLMCaller import OpenAILLM
-from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
-from PromptInputs import HowItHarmsInContext
-from example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
-from LLMCaller import LLMCaller
+try:    
+    from .TestModelAccuracy import TestModelAccuracy
+    from .LLMCaller import OpenAILLM
+    from .ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
+    from .PromptInputs import HowItHarmsInContext
+    from .example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
+    from .LLMCaller import LLMCaller
+except:
+    from TestModelAccuracy import TestModelAccuracy
+    from LLMCaller import OpenAILLM
+    from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
+    from PromptInputs import HowItHarmsInContext
+    from example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
+    from LLMCaller import LLMCaller
 
 class HowItHarmsInContextExamplesGenerator(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):

@@ -1,5 +1,9 @@
-from PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
-from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+try:
+    from .PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
+    from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+except:
+    from PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
+    from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
 
 class ExamplesGenerator:
     def __init__(self):

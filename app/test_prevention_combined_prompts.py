@@ -1,6 +1,6 @@
 from TestModelAccuracy import TestPreventionPromptInput
 from LLMCaller import OpenAILLM, AnthropicLLM, MistralLLM
-from example_risk_assessments import example_risk_assessments, cybersecurity_risks
+from example_risk_assessments import cybersecurity_risks
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 

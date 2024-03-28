@@ -37,10 +37,10 @@ information_provided_examples = [
 examples = []
 
 for example in no_information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='no information provided'))
+    examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='no information provided'))
 
 for example in information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=example), expected_output='control measure'))
+    examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='control measure'))
 
 def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is_first_test: bool = False):
     risk_assessments = risk_assessments_dict['risk_assessments']
@@ -48,7 +48,7 @@ def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is
     unique_control_measures_in_risk_domain = create_unique_set_of_control_measures(risk_assessments)
     
     for control_measure in unique_control_measures_in_risk_domain:
-        examples.append(InputAndExpectedOutputForSinglePrompt(input=NoInformationProvided(input=control_measure), expected_output='control measure'))
+        examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=control_measure), expected_output='control measure'))
 
     test_accuracy = TestModelAccuracy(
                         LLM=LLM,
