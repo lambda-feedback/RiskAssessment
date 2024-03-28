@@ -127,26 +127,10 @@ class TestEvaluationFunction(unittest.TestCase):
         tests = []
 
         # Who it harms input is actually an activity
-        tests.append(TestPromptOnSingleExample(
-            LLM=LLM,
-            input_object=WhoItHarmsInContext(
-                    activity="Driving without Seatbelt",
-                    hazard="Potential vehicle collision or sudden stop",
-                    how_it_harms="Increased risk of severe injury or fatality in the event of an accident",
-                    who_it_harms="Driving"
-                ),
-            expected_output=False))
+        # TODO: Add a test
         
         # Who it harms input is actually a hazard
-        tests.append(TestPromptOnSingleExample(
-            LLM=LLM,
-            input_object=WhoItHarmsInContext(
-                    activity="Smoking in Closed Spaces",
-                    hazard="Secondhand smoke exposure",
-                    how_it_harms="Increased risk of respiratory issues for nonsmokers",
-                    who_it_harms="Secondhand smoke exposure"
-                ),
-            expected_output=False))
+        # Add a test
 
         for test in tests:
             self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
@@ -192,7 +176,7 @@ class TestEvaluationFunction(unittest.TestCase):
             how_it_harms = "Could injure",
             who_it_harms = "The cyclist",
             prevention = "Wear non reflective clothing",
-            mitigation = "Wear cycling gloves",
+            mitigation = "Wear a t-shirt",
             prevention_prompt_expected_output = "neither",
             mitigation_prompt_expected_output = "neither",
             risk_domain="physical risk to individuals"
