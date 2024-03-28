@@ -25,6 +25,8 @@ jobs:
       SCHEMAS_URL: https://raw.githubusercontent.com/lambda-feedback/request-response-schemas/master/
       HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
     
     steps:
       - name: Checkout
