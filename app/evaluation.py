@@ -9,16 +9,13 @@ from typing import Any, TypedDict
 import numpy as np
 
 try:
-    from .PromptInputs import *
-except:
     from PromptInputs import *
-
-try:
     from RiskAssessment import RiskAssessment
-    from LLMCaller import LLMWithGeneratedText
+    from LLMCaller import OpenAILLM
 except:
+    from .PromptInputs import *
     from .RiskAssessment import RiskAssessment
-    from .LLMCaller import LLMWithGeneratedText, OpenAILLM
+    from .LLMCaller import OpenAILLM
 
 class Result(TypedDict):
     is_correct: bool
@@ -165,12 +162,12 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_risk_assessment"] == True:
         activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
+        # TODO: Do we need a risk domain?
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                             controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
-                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation'
-                            )
+                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation', risk_domain='')
 
         input_check_feedback_message = RA.get_input_check_feedback_message()
 
@@ -210,9 +207,12 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             is_everything_correct = True
             is_complete_feedback_given = True
 
-            first_3_prompt_input_objects = RA.get_list_of_prompt_input_objects_for_first_3_prompts()
+            how_it_harms_in_context_prompt_input = RA.get_how_it_harms_in_context_input()
+            who_it_harms_in_context_prompt_input = RA.get_who_it_harms_in_context_input()
+
+            first_2_prompt_input_objects = [how_it_harms_in_context_prompt_input, who_it_harms_in_context_prompt_input]
             
-            for prompt_input_object in first_3_prompt_input_objects:
+            for prompt_input_object in first_2_prompt_input_objects:
                 if is_everything_correct == True:
                     prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
                     shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
@@ -350,7 +350,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         is_everything_correct = False
 
                     if control_measure_prompt_with_mitigation_pattern == 'prevention':
-                        longform_feedback = control_measure_prompt_with_mitigation_input.get_longform_feedback(prompt_output=mitigation_prompt_output, pattern_to_search_for='Prevention Explanation')
+                        longform_feedback = control_measure_prompt_with_mitigation_input.get_longform_feedback(prompt_output=control_measure_prompt_with_mitigation_output, pattern_to_search_for='Prevention Explanation')
                         recommendation = control_measure_prompt_with_mitigation_input.get_recommendation(recommendation_type='misclassification')
 
                         feedback_for_incorrect_answers += f'''

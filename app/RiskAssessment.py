@@ -141,15 +141,18 @@ class RiskAssessment:
     
     def get_who_it_harms_in_context_input(self):
         return WhoItHarmsInContext(who_it_harms=self.who_it_harms,
-                            activity=self.activity)
+                            activity=self.activity,
+                            hazard=self.hazard,
+                            how_it_harms=self.how_it_harms)
     
     def get_harm_caused_and_hazard_event_input(self):
         return HarmCausedAndHazardEvent(
                             activity=self.activity,
                             hazard=self.hazard,
-                          how_it_harms=self.how_it_harms)
+                          how_it_harms=self.how_it_harms,
+                            who_it_harms=self.who_it_harms)
     
-    def get_prevention_prompt_input(self):
+    def get_control_measure_prompt_with_prevention_input(self):
         return PreventionPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
@@ -157,13 +160,27 @@ class RiskAssessment:
             hazard=self.hazard,
             control_measure=self.prevention)
     
-    def get_mitigation_prompt_input(self):
+    def get_control_measure_prompt_with_mitigation_input(self):
         return MitigationPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
             hazard=self.hazard,
             control_measure=self.mitigation)
+    
+    def is_future_harm_reduced_prompt_input_with_prevention(self):
+        return IsFutureHarmReduced(
+            activity=self.activity,
+            control_measure=self.prevention,
+            who_it_harms = self.who_it_harms
+        )
+    
+    def is_future_harm_reduced_prompt_input_with_mitigation(self):
+        return IsFutureHarmReduced(
+            activity=self.activity,
+            control_measure=self.mitigation,
+            who_it_harms = self.who_it_harms
+        )
     
     def get_risk_domain_classification_input(self):
         return RiskDomainClassification(hazard=self.hazard,
@@ -245,13 +262,6 @@ class RiskAssessment:
                 self.who_it_harms_field_classification_input(),
                 self.get_prevention_field_classification_input(),
                 self.get_mitigation_field_classification_input()]
-
-    def get_list_of_prompt_input_objects_for_first_3_prompts(self):
-        return [
-            # self.get_activity_input(),
-                self.get_how_it_harms_in_context_input(),
-                self.get_who_it_harms_in_context_input(),
-                ]
 
     def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller], **kwargs):
         regex_pattern_matcher = RegexPatternMatcher()

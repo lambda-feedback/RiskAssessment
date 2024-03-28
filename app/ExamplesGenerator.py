@@ -1,5 +1,9 @@
-from PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
-from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+try:
+    from .PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
+    from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
+except:
+    from PromptInputs import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
+    from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
 
 class ExamplesGenerator:
     def __init__(self):
@@ -9,11 +13,11 @@ class ExamplesGenerator:
         input_and_expected_output_list = []
         
         for correct_example in self.correct_examples_list:
-            input_and_expected_output = InputAndExpectedOutputForSinglePrompt(input=correct_example, expected_output=True)
+            input_and_expected_output = InputAndExpectedOutputForSinglePrompt(prompt_input_object=correct_example, expected_output=True)
             input_and_expected_output_list.append(input_and_expected_output)
         
         for incorrext_example in self.incorrect_examples_list:
-            input_and_expected_output = InputAndExpectedOutputForSinglePrompt(input=incorrext_example, expected_output=False)
+            input_and_expected_output = InputAndExpectedOutputForSinglePrompt(prompt_input_object=incorrext_example, expected_output=False)
             input_and_expected_output_list.append(input_and_expected_output)
         
         return input_and_expected_output_list
@@ -28,13 +32,13 @@ class RiskAssessmentExamplesGeneratorForSinglePrompt:
         input_and_expected_output_list = []
         
         for risk_assessment in self.risk_assessments:
-            prompt_input = getattr(risk_assessment, self.method_to_get_prompt_input)()
+            prompt_input_object = getattr(risk_assessment, self.method_to_get_prompt_input)()
             expected_output = getattr(risk_assessment, self.ground_truth_parameter)
 
             if expected_output == '':
                 continue
             else:
-                input_and_expected_output_list.append(InputAndExpectedOutputForSinglePrompt(input=prompt_input, expected_output=expected_output))
+                input_and_expected_output_list.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=prompt_input_object, expected_output=expected_output))
 
         return input_and_expected_output_list
     

@@ -1,9 +1,13 @@
-from PromptInputs import PromptInput
-from RiskAssessment import RiskAssessment
+try:
+    from .PromptInputs import PromptInput
+    from .RiskAssessment import RiskAssessment
+except:
+    from PromptInputs import PromptInput
+    from RiskAssessment import RiskAssessment
 
 class InputAndExpectedOutputForSinglePrompt:
-    def __init__(self, input: PromptInput, expected_output):
-        self.input = input
+    def __init__(self, prompt_input_object: PromptInput, expected_output):
+        self.prompt_input_object = prompt_input_object
         self.expected_output = expected_output
 
 class InputAndExpectedOutputForCombinedPrompts:

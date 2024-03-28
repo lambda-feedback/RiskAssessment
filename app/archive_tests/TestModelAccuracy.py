@@ -30,7 +30,7 @@ class TestModelAccuracyForCompletePreventionPromptPipeline(TestModelAccuracyForC
 
         return f'''Harm Caused:\n{first_harm_caused_prompt}\n\nPrevention :\n{first_prevention_prompt_with_prevention_prompt}\n\nMitigation: {first_mitigation_prompt_with_prevention_prompt}'''
     
-    def get_expected_output_and_pattern_matched_and_prompt_output(self, i):
+    def get_pattern_matched_and_prompt_output(self, i):
         RA = self.list_of_risk_assessment_and_expected_outputs[i].risk_assessment
         expected_output = self.list_of_risk_assessment_and_expected_outputs[i].expected_output
 
