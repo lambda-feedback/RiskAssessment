@@ -11,11 +11,11 @@ import numpy as np
 try:
     from PromptInputs import *
     from RiskAssessment import RiskAssessment
-    from LLMCaller import OpenAILLM
+    from LLMCaller import OpenAILLM, ClaudeSonnetLLM
 except:
     from .PromptInputs import *
     from .RiskAssessment import RiskAssessment
-    from .LLMCaller import OpenAILLM
+    from .LLMCaller import OpenAILLM, ClaudeSonnetLLM
 
 class Result(TypedDict):
     is_correct: bool
@@ -197,7 +197,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback=f'Feedback: \n\n {likelihood_comparison_check}\n\n{severity_comparison_check}')
         
         else:
-            LLM = OpenAILLM()
+            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
 
             feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
             feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
@@ -245,7 +245,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback_for_incorrect_answers += feedback_header_to_add
                         feedback_for_incorrect_answers += feedback_to_add
 
-           
+            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
             if is_everything_correct == True:
                 # PREVENTION CHECKS
 
