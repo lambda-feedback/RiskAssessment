@@ -192,7 +192,6 @@ class TestModelAccuracy(BaseTestClass):
                                                                                                                             number_of_examples_where_pattern_in_prompt_output=number_of_examples_where_pattern_in_prompt_output)
             
             print(count_correct)
-            time.sleep(self.LLM.delay_between_requests)
 
         Accuracy = round(count_correct / n_examples * 100, 2)
         faithfulness_accuracy = round(number_of_examples_where_pattern_in_prompt_output / n_examples * 100, 2)
