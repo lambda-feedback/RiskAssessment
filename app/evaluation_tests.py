@@ -296,29 +296,29 @@ class TestEvaluationFunction(unittest.TestCase):
     #     self.assertEqual(regex.check_string_for_prevention_mitigation_or_neither('Thus, answer: Neither'), 'neither')
 
     # ###  INTEGRATION TESTS ON EVALUATION FUNCTION ###
-    # def test_evaluation_function_with_correct_prevention_and_mitigation(self):
-    #     response = [["Fluids laboratory"],
-    #                 ["Water being spilt on the floor"],
-    #                 ["Slipping on the water on the floor causing impact injuries"],
-    #                 ["Students"],
-    #                 ["4"],
-    #                 ["1"],
-    #                 ["4"],
-    #                 ["Do not move the water tank when it is full"],
-    #                 ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
-    #                 seek medical advice without delay."""],
-    #                 ["1"],
-    #                 ["1"], 
-    #                 ["1"]]
+    def test_evaluation_function_with_correct_prevention_and_mitigation(self):
+        response = [["Fluids laboratory"],
+                    ["Water being spilt on the floor"],
+                    ["Slipping on the water on the floor causing impact injuries"],
+                    ["Students"],
+                    ["4"],
+                    ["1"],
+                    ["4"],
+                    ["Do not move the water tank when it is full"],
+                    ["""If someone gets injured due to slipping, apply an ice pack to the injured area and 
+                    seek medical advice without delay."""],
+                    ["1"],
+                    ["1"], 
+                    ["1"]]
         
-    #     answer = None
-    #     params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+        answer = None
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
 
-    #     result = evaluation_function(response, answer, params)
+        result = evaluation_function(response, answer, params)
 
-    #     print(result.get("feedback"))
+        print(result.get("feedback"))
 
-    #     self.assertTrue(result.get("is_correct"))
+        self.assertTrue(result.get("is_correct"))
 
     # def test_evaluation_function_with_prevention_entered_in_mitigation_field(self):
     #     response = [["Fluids laboratory"],

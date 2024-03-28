@@ -11,11 +11,11 @@ import numpy as np
 try:
     from PromptInputs import *
     from RiskAssessment import RiskAssessment
-    from LLMCaller import OpenAILLM, ClaudeSonnetLLM
+    from LLMCaller import OpenAILLM, ClaudeSonnetLLM, MistralLLM
 except:
     from .PromptInputs import *
     from .RiskAssessment import RiskAssessment
-    from .LLMCaller import OpenAILLM, ClaudeSonnetLLM
+    from .LLMCaller import OpenAILLM, ClaudeSonnetLLM, MistralLLM
 
 class Result(TypedDict):
     is_correct: bool
@@ -265,6 +265,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                     hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
                     harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
+                    # LLM = MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
                     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
                     control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
                     control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
@@ -326,6 +327,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
                         harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
+                    # LLM = MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
                     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
                     control_measure_prompt_with_mitigation_input = RA.get_control_measure_prompt_with_mitigation_input()
                     control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_mitigation_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
