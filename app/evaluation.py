@@ -197,7 +197,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback=f'Feedback: \n\n {likelihood_comparison_check}\n\n{severity_comparison_check}')
         
         else:
-            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
+            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
+            LLM = OpenAILLM()
 
             feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
             feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
@@ -245,7 +246,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                         feedback_for_incorrect_answers += feedback_header_to_add
                         feedback_for_incorrect_answers += feedback_to_add
 
-            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+            LLM = OpenAILLM()
             if is_everything_correct == True:
                 # PREVENTION CHECKS
 
