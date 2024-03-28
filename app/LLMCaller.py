@@ -3,6 +3,7 @@ import requests
 import anthropic
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
+import time
 
 from typing import Type
 
@@ -52,6 +53,7 @@ class OpenAILLM(LLMCaller):
         return LLM_output
     
     def get_model_output(self, prompt):
+        time.sleep(self.delay_between_requests)
         LLM_output = self.get_JSON_output_from_API_call(prompt)
         return LLM_output.choices[0].message["content"]
 
@@ -91,6 +93,7 @@ class AnthropicLLM(LLMCaller):
         return message
     
     def get_model_output(self, prompt):
+        time.sleep(self.delay_between_requests)
         LLM_output = self.get_JSON_output_from_API_call(prompt)
         return LLM_output.content[0].text
     
@@ -132,6 +135,7 @@ class MistralLLM(LLMCaller):
         return chat_response
     
     def get_model_output(self, prompt):
+        time.sleep(self.delay_between_requests)
         LLM_output = self.get_JSON_output_from_API_call(prompt)
         return LLM_output.choices[0].message.content
 
