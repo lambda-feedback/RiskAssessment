@@ -11,7 +11,6 @@
 # Add option in RiskAssessment to specify whether prevention is misclassified as mitigation, 
 # is not a suitable prevention, or mitigation is misclassified as prevention, or is not a suitable mitigation
 
-from GoogleSheetsWriter import GoogleSheetsWriter
 import numpy as np
 from typing import Type, Any, TypedDict
 
