@@ -85,18 +85,6 @@ RA_hearing_damage = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_hearing_damage_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity="Using a trombone as a demonstration for a TPS presentation",
-    hazard="Loud noise",
-    who_it_harms="Everyone present",
-    how_it_harms="Loud noise from instrument can cause hearing damage.",
-    mitigation="Play quietly, at a volume suitable for the room", # reduces likelihood of loud noise
-    prevention="Keep a space between the player and audience", # reduces severity of loud noise
-    prevention_prompt_expected_output='mitigation', 
-    mitigation_prompt_expected_output='prevention',
-    risk_domain="physical risk to individuals"
-)
-
 
 # RA_3_water_from_instrument = RiskAssessmentWithoutNumberInputs(
 #     activity="Using a trombone as a demonstration for a TPS presentation",
@@ -109,18 +97,6 @@ RA_hearing_damage_mitigation_prevention_switched = RiskAssessmentWithoutNumberIn
 #     prevention_prompt_expected_output='prevention',
 #     mitigation_prompt_expected_output='prevention', # reduces likelihood that someone becomes ill
 #   risk_domain="physical risk to individuals"
-# )
-
-# RA_3_water_from_instrument_mitiagation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-#     activity="Using a trombone as a demonstration for a TPS presentation",
-#     hazard="Water from instrument",
-#     who_it_harms="Audience",
-#     how_it_harms="Condensation formed in instrument could spread germs if released",
-#     mitigation="Ensure water is not released during presentation", # Not very specific.
-#     # Should include feedback stating: "How would you ensure water is not released during presentation?"
-#     prevention="Keep a space between the player and audience", # Reduces severity of water being released
-#     prevention_prompt_expected_output='mitigation',
-#     mitigation_prompt_expected_output='prevention',
 # )
 
 RA_ink_spill_in_eye = RiskAssessmentWithoutNumberInputs(
@@ -195,30 +171,6 @@ RA_wet_hands_electric_shock__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_wet_hands_electric_shock_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity="Fluids laboratory",
-    hazard="Wet hands",
-    who_it_harms="Students",
-    how_it_harms="Electric shock of students when touching electronics (pump power supply) with wet hands",
-    mitigation="Students should make sure they touch electronics only with dry hands", # reduces likelihood of hazard occurring
-    prevention="Unplug the pump and call for urgent medical assistance", # reduces severity after hazard has occurred
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    risk_domain="physical risk to individuals"
-)
-
-RA_tripping_on_belongings = RiskAssessmentWithoutNumberInputs(
-    activity="Fluids laboratory",
-    hazard="Tripping over personal belongings",
-    who_it_harms="Students",
-    how_it_harms="Tripping can cause physical harm.",
-    prevention="Put all belongings away from footpaths", # This reduces likelihood of hazard occurring and is therefore a prevention measure
-    mitigation="Take care when walking around", # This reduces likelihood of hazard occurring and is therefore a prevention measure 
-    prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='neither', # This is not specific enough
-    risk_domain="physical risk to individuals"
-)
-
 RA_water_tank = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Water being spilt on the floor",
@@ -244,28 +196,15 @@ RA_water_tank__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_water_tank_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity="Fluids laboratory",
-    hazard="Water being spilt on the floor",
-    who_it_harms="Students",
-    how_it_harms="Injuries caused by possible slipping on wet floor",
-    mitigation="Do not move the water tank when it is full",
-    prevention="""If someone gets injured due to slipping, apply an ice pack to the injured area and 
-    seek medical advice without delay.""",
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    risk_domain="physical risk to individuals"
-)
-
 RA_syringe_needle = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Syringes with sharp needles",
     who_it_harms="Students",
     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
     prevention="Point needle away from yourself and others",
-    mitigation="Wear lab coat and PPE", # This is both prevention and mitigation
+    mitigation="Apply first aid to the affected area", # This is both prevention and mitigation
     prevention_prompt_expected_output='prevention',
-    mitigation_prompt_expected_output='both',
+    mitigation_prompt_expected_output='mitigation',
     risk_domain="physical risk to individuals"
 )
 
@@ -281,18 +220,6 @@ RA_syringe_needle__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity="Fluids laboratory",
-    hazard="Syringes with sharp needles",
-    who_it_harms="Students",
-    how_it_harms="Sharp needles can pierce the skin and cause bleeding",
-    mitigation="Point needle away from yourself and others",
-    prevention="Wear lab coat and PPE", # This is both prevention and mitigation
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    risk_domain="physical risk to individuals"
-)
-
 # RA_9 = RiskAssessmentWithoutNumberInputs(
 #     activity="Fluids laboratory",
 #     hazard="Electrocution",
@@ -304,16 +231,7 @@ RA_syringe_needle_mitigation_prevention_switched = RiskAssessmentWithoutNumberIn
 #     mitigation_prompt_expected_output='mitigation',
 # )
 
-# RA_9_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-#     activity="Fluids laboratory",
-#     hazard="Electrocution",
-#     who_it_harms="Students",
-#     how_it_harms="Electrocuted by mains voltage", # This is a description of the process not the harm on the students
-#     mitigation="Pump plug stays away from water",
-#     prevention="First aid on site", # There needs to be a description of how this will be used in the event of an electrocution.
-#     prevention_prompt_expected_output='mitigation',
-#     mitigation_prompt_expected_output='prevention',
-# )
+
 
 # RA_13 = RiskAssessmentWithoutNumberInputs(
 #     activity='Presentation Demonstration',
@@ -347,18 +265,6 @@ RA_climbing_gear_on_feet = RiskAssessmentWithoutNumberInputs(
     mitigation='First aid if necessary',
     prevention_prompt_expected_output='prevention',
     mitigation_prompt_expected_output='mitigation',
-    risk_domain="physical risk to individuals"
-)
-
-RA_climbing_gear_on_feet_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity='TPS presentation',
-    hazard='Climbing Protection Gear (Cams and Hexs)',
-    who_it_harms="Students and other individuals who would like to see how they work.",
-    how_it_harms="""Some equipment is heavy so could hurt if dropped on feet.""",
-    mitigation='Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly.',
-    prevention='First aid if necessary',
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
     risk_domain="physical risk to individuals"
 )
 
@@ -458,18 +364,6 @@ RA_mucking_out_horse__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_mucking_out_horse_mitigation_prevention_switched = RiskAssessmentWithoutNumberInputs(
-    activity='Mucking out a horse',
-    hazard='Horse kicks out',
-    who_it_harms='Horse rider',
-    how_it_harms='Impact injury',
-    mitigation='Keep a safe distance from the horse',
-    prevention='Wear a helmet and body protector',
-    prevention_prompt_expected_output='mitigation',
-    mitigation_prompt_expected_output='prevention',
-    risk_domain="physical risk to individuals"
-)
-
 RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
     activity="Slitter machine usage",
     hazard="Sharp blade",
@@ -479,18 +373,6 @@ RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
     mitigation="Metal gloves for maintenance",
     prevention_prompt_expected_output="prevention",
     mitigation_prompt_expected_output="mitigation",
-    risk_domain="physical risk to individuals"
-)
-
-RA_slitter_machine__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Slitter machine usage",
-    hazard="Sharp blade",
-    who_it_harms="Operator",
-    how_it_harms="Cut hazard",
-    prevention="Avoid using the guard",
-    mitigation="Wear rubber gloves for maintenance",
-    prevention_prompt_expected_output="neither",
-    mitigation_prompt_expected_output="neither",
     risk_domain="physical risk to individuals"
 )
 
@@ -927,7 +809,7 @@ RA_volcano_zoning = RiskAssessmentWithoutNumberInputs(
     risk_domain="environmental risk"
 )
 
-RA_volcano_zoning__niether = RiskAssessmentWithoutNumberInputs(
+RA_volcano_zoning__neither = RiskAssessmentWithoutNumberInputs(
     activity="Living near an active volcanoes",
     hazard="Volcanic Eruption",
     who_it_harms="Residents in the country",
@@ -1005,8 +887,8 @@ RA_ransomware_NHS_MFA__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Patients and healthcare providers",
     how_it_harms="Potential data loss",
     prevention="Avoid using multi-factor authentication",
-    mitigation="Use encryption tools for the specific ransomware variant", # should be decryption
-    prevention_prompt_expected_output="niether",
+    mitigation="Use manual handling tools (e.g. spanner) for the specific ransomware variant", # should be decryption
+    prevention_prompt_expected_output="neither",
     mitigation_prompt_expected_output="neither",
     risk_domain="cybersecurity risk"
 )
@@ -1149,7 +1031,7 @@ RA_fuel_supply_cyber_attack__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Energy consumers",
     how_it_harms="Disruption of fuel supply",
     prevention="", #  in fuel supply infrastructure
-    mitigation="Hire anti-terrorism experts to manage emergency responses", # to cyber attacks
+    mitigation="Hire earthquake response experts to manage emergency responses", # to cyber attacks
     prevention_prompt_expected_output="",
     mitigation_prompt_expected_output="neither",
     risk_domain="cybersecurity risk"
@@ -1471,18 +1353,6 @@ RA_foot_and_mouth_disease_culling__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="biohazard risk"
 )
 
-RA_laboratory_biohazard = RiskAssessmentWithoutNumberInputs(
-    activity="Laboratory research involving biohazardous materials",
-    hazard="Potential exposure to infectious agents or toxins",
-    who_it_harms="Laboratory personnel",
-    how_it_harms="Infections",
-    prevention="Providing training on biohazard handling",
-    mitigation="Conducting decontamination procedures",
-    prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="both",
-    risk_domain="biohazard risk"
-)
-
 RA_healthcare_biohazard = RiskAssessmentWithoutNumberInputs(
     activity="Healthcare facility operations involving infectious patients",
     hazard="Potential transmission of infectious diseases",
@@ -1523,7 +1393,6 @@ physical_risks_to_individuals__original_student_data = {
 
         # Additional examples
         RA_mucking_out_horse,
-        RA_tripping_on_belongings, 
         RA_battery_causes_fire, 
         RA_slitter_machine,
 
@@ -1534,7 +1403,6 @@ physical_risks_to_individuals__original_student_data = {
         RA_water_tank__neither,
         RA_mucking_out_horse__neither,
         RA_battery_causes_fire__neither,
-        RA_slitter_machine__neither,
         
         # RA_paper_plane_impact, 
         # RA_pencil_lead_projectile,
@@ -1602,7 +1470,7 @@ natural_disaster_risks = {
         RA_wildfire_early_detection__neither,
         RA_wildfire_fire_resistant_infrastructure__neither,
         RA_volcano_causing_ash_cloud__neither,
-        RA_volcano_zoning__niether,
+        RA_volcano_zoning__neither,
 
     ],
     'risk_domain': 'Natural disaster risks'
@@ -1668,7 +1536,6 @@ biohazard_risks = {
     RA_pandemic_scalable_treatment,
     RA_foot_and_mouth_disease_culling,
     RA_foot_and_mouth_disease_rapid_response,
-    RA_laboratory_biohazard,
     RA_healthcare_biohazard,
 
     # NEITHER EXAMPLES

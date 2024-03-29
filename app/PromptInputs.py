@@ -296,50 +296,83 @@ class HarmCausedAndHazardEvent(PromptInput):
         1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
         Describe the harm caused: 'Could injure' for who it harms: 'Cyclists' by the hazard: 'Getting hit' during the activity: 'Riding a Bike' .
         Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
-        2. Extract the harm caused.
-        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        2. Thinking step by step, what are the series of events which lead to harm.
+        3. The harm caused is the negative consequences from the hazard event. Infer the harm caused to 'Cyclists' by this series of events.
+        4. Now write the series of events that lead to harm without mentioning the harm caused.
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Description: Riding a bike can lead to getting hit by a car, which could lead to an impact injury for cyclists.
-        Harm caused: Impact injury
-        Event that leads to harm: Getting hit by a car while riding a bike
+        Description: Riding a bike can lead to getting hit, which could result in injuring cyclists.
+        Series of events with harm caused: 
+        - The cyclist is riding their bike
+        - A vehicle approaches the cyclist
+        - The vehicle collides with the cyclist
+        - The cyclist is injured in the collision
+        Harm caused: The cyclist is injured in the collision
+        Event that leads to harm: A cyclist is riding their bike, a vehicle approaches the cyclist, the vehicle collides with the cyclist.
+
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
         1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
         Describe the harm caused: 'Mistakes by cyclists or motorists leading to crash' for who it harms: 'cyclists' by the hazard: 'Head injury' during the activity: 'Cycle commuting'.
         Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
-        2. Extract the harm caused.
-        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        2. Thinking step by step, what are the series of events which lead to this harm caused. Don't refer to the harm caused.
+        3. The harm caused is the negative consequences from the hazard event. Infer the harm caused to 'cyclists' by this series of events.
+        4. Now write the series of events that lead to harm without mentioning the harm caused.
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Description: Cycle commuting can lead to mistakes by cyclists or motorists leading to a crash, which can cause a head injury.
-        Harm caused: Head injury
-        Event that leads to harm: Mistakes by cyclists or motorists leading to a crash
+        Description: Cycle commuting can lead to mistakes by cyclists or motorists leading to crash, which could result in head injury for cyclists.
+        Series of events with harm caused: 
+        - The cyclist is commuting by bike on the road
+        - A motorist or the cyclist makes a mistake while driving/riding
+        - This mistake leads to the cyclist and vehicle colliding
+        - The collision causes the cyclist to fall off their bike
+        - The cyclist's head impacts the ground or another hard surface
+        - The cyclist sustains a head injury
+        Harm caused: The cyclist sustains a head injury
+        Event that leads to harm: The cyclist is commuting by bike on the road, a motorist or the cyclist makes a mistake while driving/riding, this mistake leads to the cyclist and vehicle colliding, the collision causes the cyclist to fall off their bike, the cyclist's head impacts the ground or another hard surface.
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
         1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
         Describe the harm caused: 'When cut the zip tie may hit an audience member' for who it harms: 'audience' by the hazard: 'Cut Zip tie may fly' during the activity: 'Using a spring contraption as a demonstration for a TPS presentation'.
         Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
-        2. Extract the harm caused.
-        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        2. Thinking step by step, what are the series of events which lead to this harm caused. Don't refer to the harm caused.
+        3. The harm caused is the negative consequences from the hazard event. Infer the harm caused to 'audience member' by this series of events.
+        4. Now write the series of events that lead to harm without mentioning the harm caused.
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Description: Using a spring contraption as a demonstration for a TPS presentation can lead to a cut zip tie flying and hitting an audience member.
-        Harm caused: Impact injury to audience member
-        Event that leads to harm: Cut zip tie may fly and hit an audience member
+        Description: Using a spring contraption as a demonstration for a TPS presentation, cutting the zip tie might cause it to fly, which could result in the zip tie hitting an audience member.
+        Series of events with harm caused: 
+        - The presenter is using a spring contraption for a demonstration
+        - The spring contraption is held together by a zip tie
+        - The presenter cuts the zip tie to release the spring
+        - The cut zip tie flies off the contraption at high speed
+        - The zip tie projectile hits an audience member
+        - The audience member is injured by the impact
+        Harm caused: The audience member is injured by the impact
+        Event that leads to harm: The presenter is using a spring contraption for a demonstration, the spring contraption is held together by a zip tie, the presenter cuts the zip tie to release the spring, the cut zip tie flies off the contraption at high speed, the zip tie projectile hits an audience member.
+        </EXAMPLE OUTPUT>
 
         <INSTRUCTIONS>
         1. The harm caused by a hazard refers to the negative consequences resulting from the hazard event. 
         Describe the harm caused: '{self.how_it_harms}' for '{self.who_it_harms}' by the hazard: '{self.hazard}' during the activity: '{self.activity}'.
         Write your answer in the format: <activity> can lead to <hazard event>, which could result in <harm caused> for <who it harms>.
-        2. Extract the harm caused.
-        3. Describe the events which lead to this harm caused. Don't refer to the harm caused.
+        2. Thinking step by step, what are the series of events which lead to this harm caused. Don't refer to the harm caused.
+        3. Infer the harm caused  '{self.who_it_harms}' by this series of events.
+        4. Now write the series of events that lead to harm without mentioning the harm caused.
         </INSTRUCTIONS>
+
+        <OUTPUT FORMAT>
+        Use the following output format:
+        Description: <description>
+        Series of events with harm caused: <event that leads to harm>
+        Harm caused: <harm caused>
+        Event that leads to harm: <event that leads to harm>
+        </OUTPUT FORMAT>
 
         <OUTPUT>'''
     
@@ -419,9 +452,9 @@ class ControlMeasureClassification(PromptInput):
 
         all_few_shot_examples = """
         <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard event: "Ink spillage on students face" during the
+        1. In one sentence, describe the hazard event: "Students are conducting an experiment in the fluids laboratory, a container of ink is accidentally knocked over, the ink spills onto the work surface and splashes into the eyes of a student." during the
         activity: 'Fluids laboratory' given the harm caused: "Serious eye damage" for Students.
-        2. Thinking step by step, explain whether or not 'Cleaning the eyes out with water' reduces the likelihood that hazard event: "Ink spillage on students face" occurs.
+        2. Thinking step by step, explain whether or not 'Cleaning the eyes out with water' reduces the likelihood that the hazard event occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not 'Cleaning the eyes out with water' removes or reduces the harm caused: "Serious eye damage" for the 'Students'.
         If so, it is a mitigation measure.
@@ -431,18 +464,28 @@ class ControlMeasureClassification(PromptInput):
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Hazard Event Description: The hazard event of 'Ink spillage on student's face' during the activity 'Fluids laboratory' can lead to serious eye damage to students.
-        Prevention Explanation: 'Cleaning the eyes out with water' is a reactive measure applied after the hazard event of 'Ink spillage on student's face'; it therefore does not reduce the likelihood of the hazard event and is not a prevention measure.
-        Mitigation Explanation: If ink has been spilled onto a student's face, 'Cleaning the eyes out with water' will help to wash the ink out of the eyes and reduce eye damage after the hazard event has occurred; as it reduces the harm caused by the hazard event, it is therefore a mitigation measure.
-        Answer: Mitigation.
+        Hazard Event Description: During a fluids laboratory, ink spillage on a student's face causes serious eye damage.
+
+        Prevention Explanation: Thinking step by step:
+        - Cleaning the eyes out with water is an action taken after the ink spillage has already occurred.
+        - The act of cleaning the eyes with water does therefore not reduce the likelihood of the hazard event.
+        - It is therefore not a prevention measure.
+
+        Mitigation Explanation: Thinking step by step:
+        - If ink spills on a student's face and gets into their eyes, immediately cleaning the eyes out with water can help flush out the ink.
+        - Removing the ink from the eyes quickly can reduce the exposure time and minimize the potential for serious eye damage.
+        - While cleaning the eyes with water may not completely eliminate the risk of eye damage, it can significantly reduce the severity of the harm caused.
+        - It is therefore a mitigation measure.
+
+        Answer: Mitigation
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard event: "Water being spilt on the floor causing students to slip" during the
-        activity: 'Fluids laboratory' given the harm caused: "Injury caused by students slipping" for Audience.
-        2. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' reduces the likelihood that hazard event: "Water being spilt on the floor causing students to slip" occurs.
+        1. In one sentence, describe the hazard event: "Students are conducting experiments in the fluids laboratory, a container of water is accidentally knocked over, water spills onto the floor, the floor becomes wet and slippery, a student slips and falls." during the
+        activity: 'Fluids laboratory' given the harm caused: "Injury caused by students slipping" for Students.
+        2. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' reduces the likelihood that hazard event occurs.
         If so, it is a prevention measure.
-        3. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' removes or reduces the harm caused: "Impact injury" for the 'Audience'.
+        3. Thinking step by step, explain whether or not 'Keeping the water tank stationary when it's full' removes or reduces the harm caused: "Injury caused by students slipping" for the 'Students'.
         If so, it is a mitigation measure.
         4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
@@ -450,16 +493,25 @@ class ControlMeasureClassification(PromptInput):
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Hazard Event Description: The hazard event of 'Water being spilt on the floor causing students to slip' during the activity 'Fluids laboratory' can lead to impact injuries.
-        Prevention Explanation: 'Keeping the water tank stationary when it's full' means water cannot be spilled on to the floor by moving the water tank; no water on the floor reduces the likelihood of the hazard event of a student slipping; since it reduces the likelihood of the hazard event, it is a prevention measure.
-        Mitigation Explanation: If water has been spilled on the floor, 'not moving the water tank when it is full' does not remove or reduce the harm caused by the hazard event, as the water is already spilled to pose a slipping hazard; as it does not reduce the harm caused by the hazard event, it is not a mitigation measure.
-        Answer: Prevention.
-        </EXAMPLE OUTPUT>
+        Hazard Event Description: During a fluids laboratory, water spills on the floor, causing students to slip and suffer injuries.
+
+        Prevention Explanation: Thinking step by step:
+        - Keeping the water tank stationary when it's full prevents it from being accidentally knocked over or moved, which could cause water to spill.
+        - Therefore, keeping the water tank stationary reduces the likelihood of water spilling onto the floor is significantly reduced.
+        - Reducing the chances of water spillage reduces the likelihood of students slipping on the wet floor.
+        - Therefore, keeping the water tank stationary when it's full reduces the likelihood of the hazard event from occurring. It is a prevention measure.
+
+        Mitigation Explanation: Thinking step by step:
+        - Keeping the water tank stationary when it's full does not directly reduce the harm caused to students if they do slip on spilled water.
+        - The severity of the injuries sustained from slipping on a wet floor is not mitigated by the tank's stationary position.
+        - Therefore, keeping the water tank stationary when it's full does not remove or reduce the harm caused by "Injury caused by students slipping" for the students. It is not a mitigation measure.
+
+        Answer: Prevention
 
         <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard event: "Cyclist gets hit by car" during the
+        1. In one sentence, describe the hazard event: "The person is crossing Exhibition Road, a car approaches the road, the car fails to stop and crashes into the person, the person is thrown onto the road." during the
         activity: 'Cycle commuting' given the harm caused: "Head injury" for Cyclist.
-        2. Thinking step by step, explain whether or not 'Wear a helmet' reduces the likelihood that hazard event: "Cyclist gets hit by car" occurs.
+        2. Thinking step by step, explain whether or not 'Wear a helmet' reduces the likelihood that hazard event occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not 'Wear a helmet' removes or reduces the harm caused: "Head injury" for the 'Cyclist'.
         If so, it is a mitigation measure.
@@ -470,21 +522,24 @@ class ControlMeasureClassification(PromptInput):
 
         <EXAMPLE OUTPUT>
         Hazard Event Description: A cyclist commuting to work gets hit by a car, resulting in a head injury.
+        
         Prevention Explanation: Thinking step by step:
         - Wearing a helmet does not directly influence the likelihood of a cyclist getting hit by a car.
         - A helmet does not change the behavior of the cyclist or the driver of the car.
-        - The presence or absence of a helmet does not affect the probability of the collision occurring. Therefore, wearing a helmet does not reduce the likelihood of the hazard event "Cyclist gets hit by car" from occurring. It is not a prevention measure.
+        - The presence or absence of a helmet does not affect the probability of the collision occurring. Therefore, wearing a helmet does not reduce the likelihood of the hazard event from occurring. It is not a prevention measure.
+        
         Mitigation Explanation: Thinking step by step:
         - In the event of a collision, a helmet can absorb some of the impact energy and protect the cyclist's head.
         - By reducing the direct impact to the head, a helmet can lessen the severity of a head injury.
         - While a helmet may not completely eliminate the risk of a head injury, it can significantly reduce the extent of the harm caused. Therefore, wearing a helmet reduces the harm caused by the "Head injury" for the cyclist. It is a mitigation measure.
+        
         Answer: Mitigation
         </EXAMPLE OUTPUT>
 
         <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard event: "Cut Zip tie flies and hits audience member" during the
+        1. In one sentence, describe the hazard event: "The presenter is using a spring contraption for a demonstration, the spring contraption is held together by a zip tie, the presenter cuts the zip tie to release the spring, the cut zip tie flies off the contraption at high speed, the zip tie projectile hits an audience member." during the
         activity: 'Fluids laboratory' given the harm caused: "Impact injury" for Students.
-        2. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' reduces the likelihood that hazard event: "Cut Zip tie flies and hits audience member" occurs.
+        2. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' reduces the likelihood that hazard event occurs.
         If so, it is a prevention measure.
         3. Thinking step by step, explain whether or not 'Keeping hand around zip tie when cutting to stop it from flying' removes or reduces the harm caused: "Impact injury" for the 'Students'.
         If so, it is a mitigation measure.
@@ -494,11 +549,19 @@ class ControlMeasureClassification(PromptInput):
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        Hazard Event Description: The hazard event of 'Cut Zip tie flies and hits audience member' during the activity 'Using a spring contraption as a demonstration for a TPS presentation' can lead to impact injuries.
-        Prevention Explanation: 'Keeping hand around zip tie when cutting to stop it from flying' will stop the zip tie from flying and therefore stop the hazard event from occurring. Therefore, the likelihood of the hazard event occurring has been reduced to zero; since the likelihood of the hazard event has been reduced, it is therefore a prevention measure.
-        Mitigation Explanation: If the hazard event occurs and the zip tie flies and hits an audience member, 'keeping hand around zip tie when cutting to stop it from flying' does not remove or reduce the impact injury caused by the hazard, as the zip tie has already flown and caused harm; it is therefore not a mitigation measure.
-        Answer: Prevention.
-        </EXAMPLE OUTPUT>
+        Hazard Event Description: During a fluids laboratory, a cut zip tie flies and hits a student audience member, causing an impact injury.
+
+        Prevention Explanation: Thinking step by step:
+        - Keeping a hand around the zip tie while cutting it can physically prevent the cut piece from flying away.
+        - By containing the cut zip tie, the likelihood of it being launched towards the audience is greatly reduced.
+        - Therefore, keeping a hand around the zip tie when cutting it reduces the likelihood of the hazard event from occurring. It is a prevention measure.
+        
+        Mitigation Explanation: Thinking step by step:
+        - If a cut zip tie were to fly and hit a student, keeping a hand around it during cutting would not reduce the impact force.
+        - The hand around the zip tie does not provide any protective barrier for the student who might be hit.
+        - Therefore, keeping a hand around the zip tie when cutting does not remove or reduce the harm caused by the "Impact injury" for the students. It is not a mitigation measure.
+        
+        Answer: Prevention
         """
 
         return f'''
@@ -531,6 +594,7 @@ class ControlMeasureClassification(PromptInput):
         4. If it is a prevention measure, answer 'Prevention'. If it is a mitigation meausure, answer 'Mitigation'.
         If it is neither a prevention measure nor a mitigation measure, answer 'Neither'. If it is both a
         prevention measure and a mitigation measure, answer 'Both'.
+        </INSTRUCTIONS>
 
         <OUTPUT FORMAT>
         Use the following output format:
