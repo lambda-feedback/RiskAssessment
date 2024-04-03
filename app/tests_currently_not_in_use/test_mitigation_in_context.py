@@ -18,7 +18,7 @@ if __name__ == '__main__':
     test_accuracy = TestModelAccuracy(test_description="""Testing mitigation input in student Fluids Lab and TPS Risk Assessment examples.
                                       Changed my marking of the mitigations in the student risk assessments so if they reduce the severity of
                                       the hazard (not taking into account how it harms) then it is a mitigation.""",
-                                      LLM=OpenAILLM(),
+                                      LLM=OpenAILLM(temperature=0.1, max_tokens=400),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=examples,
                                                 sheet_name='Mitigation In Context')

@@ -5,12 +5,12 @@ from tabulate import tabulate
 import time
     
 try:
-    from .LLMCaller import LLMCaller
+    from .LLMCaller import LLMCaller, OpenAILLM
     from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
     from .GoogleSheetsWriter import GoogleSheetsWriter
     from .RegexPatternMatcher import RegexPatternMatcher
 except:
-    from LLMCaller import LLMCaller
+    from LLMCaller import LLMCaller, OpenAILLM
     from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
     from GoogleSheetsWriter import GoogleSheetsWriter
     from RegexPatternMatcher import RegexPatternMatcher
@@ -345,9 +345,12 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
         return ['prevention', 'mitigation', 'neither', 'both']
     
     def get_hazard_event_and_harm_caused_and_prompt(self, RA):
+
+        gpt_LLM = OpenAILLM(temperature=0.1, max_tokens=400)
+
         hazard_event_and_harm_caused_prompt_input = RA.get_harm_caused_and_hazard_event_input()
         hazard_event_and_harm_caused_prompt = hazard_event_and_harm_caused_prompt_input.generate_prompt()
-        hazard_event_and_harm_caused_prompt_output, hazard_event_and_harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(hazard_event_and_harm_caused_prompt_input, self.LLM)
+        hazard_event_and_harm_caused_prompt_output, hazard_event_and_harm_caused_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=hazard_event_and_harm_caused_prompt_input, LLM_caller=gpt_LLM)
 
         hazard_event = hazard_event_and_harm_caused_pattern.hazard_event
         harm_caused = hazard_event_and_harm_caused_pattern.harm_caused

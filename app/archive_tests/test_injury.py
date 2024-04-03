@@ -40,7 +40,7 @@
 # ]
 
 # test_accuracy = TestModelAccuracy(test_description="""Testing Injury prompt for examples generated using Chat GPT""",
-#                                     LLM=OpenAILLM(),
+#                                     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
 #                                             LLM_name='gpt-3.5-turbo',
 #                                             list_of_input_and_expected_outputs=examples,
 #                                             sheet_name='Injury')

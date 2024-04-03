@@ -46,7 +46,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
     ### UNIT TESTS ON PROMPTS ###
     # def test_no_information_provided_prompt(self):
-    #     LLM = OpenAILLM()
+    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
         
     #     tests = []
 
@@ -83,7 +83,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
     
     # def test_how_it_harms_in_context_prompt__risk_domain(self):
-    #     LLM = OpenAILLM()
+    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
     #     tests = []
 
@@ -123,7 +123,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
     
     # def test_who_it_harms_in_context_prompt__input_field(self):
-    #     LLM = OpenAILLM()
+    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
     #     tests = []
 
     #     # Who it harms input is actually an activity
@@ -164,7 +164,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_an_input_that_is_neither_prevention_nor_mitigation(self):
-    #     # LLM = OpenAILLM()
+    #     # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
     #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
 
     #     tests = []
@@ -198,7 +198,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_prevention_and_mitigation_are_switched(self):
-    #     # LLM = OpenAILLM()
+    #     # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
     #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
 
     #     tests = []

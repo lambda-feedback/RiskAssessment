@@ -49,7 +49,7 @@ if __name__ == '__main__':
     examples = prevention_classification_examples_generator.get_input_and_expected_output_list()
 
     test_accuracy = TestModelAccuracy(
-        LLM=OpenAILLM(),
+        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
         LLM_name='gpt-3.5-turbo',
         list_of_input_and_expected_outputs=examples,
         sheet_name='Prevention Classification',

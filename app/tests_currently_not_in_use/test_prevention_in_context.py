@@ -18,7 +18,7 @@ if __name__ == '__main__':
     test_accuracy = TestModelAccuracy(test_description="""Testing prevention input in student Fluids Lab and TPS presentation Risk Assessment examples.
                                       Removed definitions from prompt. Made it more clear that a mitigation reduces severity assuming hazard has led to harm.
                                        """,
-                                      LLM=OpenAILLM(),
+                                      LLM=OpenAILLM(temperature=0.1, max_tokens=400),
                                                 LLM_name='gpt-3.5-turbo',
                                                 list_of_input_and_expected_outputs=examples,
                                                 sheet_name='Prevention In Context')
