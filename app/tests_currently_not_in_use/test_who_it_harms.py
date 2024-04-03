@@ -150,7 +150,7 @@ if __name__ == '__main__':
                                                          incorrect_examples_list=incorrect_examples_list)
     
     who_it_harms_classification_examples = examples_generator.get_input_and_expected_output_list()
-    test_accuracy = TestModelAccuracy(LLM=OpenAILLM(),
+    test_accuracy = TestModelAccuracy(LLM=OpenAILLM(temperature=0.1, max_tokens=400),
                                             LLM_name='gpt-3.5-turbo',
                                             list_of_input_and_expected_outputs=who_it_harms_classification_examples,
                                             sheet_name='Who It Harms',

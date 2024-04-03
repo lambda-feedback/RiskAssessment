@@ -72,7 +72,7 @@
 # if __name__ == "__main__":
     
 #     test_accuracy = TestModelAccuracy(
-#         LLM=OpenAILLM(),
+#         LLM=OpenAILLM(temperature=0.1, max_tokens=400),
 #         LLM_name='gpt-3.5-turbo',
 #         list_of_input_and_expected_outputs=events,
 #         sheet_name='Events',

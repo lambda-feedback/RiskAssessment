@@ -346,7 +346,7 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
     
     def get_hazard_event_and_harm_caused_and_prompt(self, RA):
 
-        gpt_LLM = OpenAILLM()
+        gpt_LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
         hazard_event_and_harm_caused_prompt_input = RA.get_harm_caused_and_hazard_event_input()
         hazard_event_and_harm_caused_prompt = hazard_event_and_harm_caused_prompt_input.generate_prompt()

@@ -242,7 +242,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                                     \n\n\n\n\n## {likelihood_severity_risk_feedback_message}\n\n\n\n\n''')
         
         # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
-        LLM = OpenAILLM()
+        LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
         feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
         feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
@@ -295,7 +295,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         
         else:
             # TODO: Avoid duplication of the following code:
-            LLM = OpenAILLM()
+            LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
             harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
             harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
@@ -327,7 +327,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         else:
             # If harm_caused and hazard_event have not already been extracted.
             if no_information_provided_for_prevention_pattern == 'no information provided':
-                # LLM = OpenAILLM()
+                # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
                 harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
                 harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)

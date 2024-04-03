@@ -60,7 +60,7 @@ def test_how_it_harms_in_context(correct_examples_list, LLM, is_first_test: bool
     test_accuracy.run_test()
 
 if __name__ == "__main__":
-    LLM = OpenAILLM()
+    LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
     test_how_it_harms_in_context(correct_examples_list=correct_examples_list, 
                                  LLM=LLM, 

@@ -142,8 +142,11 @@ class MistralLLM(LLMCaller):
 class Mixtral8x7B(MistralLLM):
     def __init__(self, temperature, max_tokens):
         self.model = 'open-mixtral-8x7b'
+        self.name = self.model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.delay_between_requests = 0
+        self.update_api_key_from_env_file()
 
 class HuggingfaceLLMCaller(LLMCaller):
     def __init__(self, name, LLM_API_ENDPOINT):

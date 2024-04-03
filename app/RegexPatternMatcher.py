@@ -80,7 +80,7 @@ class RegexPatternMatcher:
 
         harm_caused = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Harm caused")
         hazard_event = self.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, "Event that leads to harm")
-        # hazard_event = self.extract_section_of_prompt_between_two_strings(prompt_output, "Event that leads to harm", 'Harm caused')
+        # hazard_event = self.extract_section_of_prompt_between_two_strings(prompt_output, "Series of events with harm caused", 'Harm caused')
         
         return HarmCausedAndHazardEventAndHazardEvent(harm_caused=harm_caused, hazard_event=hazard_event)
     

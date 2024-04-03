@@ -17,7 +17,7 @@ if __name__ == '__main__':
     examples = examples_generator.get_input_and_expected_output_list()
 
     test_accuracy = TestModelAccuracy(
-                                      LLM=OpenAILLM(),                      
+                                      LLM=OpenAILLM(temperature=0.1, max_tokens=400),                      
                                     list_of_input_and_expected_outputs=examples,
                                     number_of_examples_in_each_domain=number_of_risk_assessments_in_each_domain,
                                     examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',

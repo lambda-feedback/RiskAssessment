@@ -109,7 +109,7 @@ Output format:
 Answer: {your_answer}
 """
 
-LLM = OpenAILLM()
+LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
 prompt_output = LLM.get_model_output(prompt)
 

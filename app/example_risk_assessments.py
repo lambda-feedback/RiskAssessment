@@ -231,8 +231,6 @@ RA_syringe_needle__neither = RiskAssessmentWithoutNumberInputs(
 #     mitigation_prompt_expected_output='mitigation',
 # )
 
-
-
 # RA_13 = RiskAssessmentWithoutNumberInputs(
 #     activity='Presentation Demonstration',
 #     hazard='Demonstration with ruler, styrofoam and bbq sticks. I will be flicking the ruler while clamping it to a table. The bbq sticks will be stuck in the styrofoam and I will shake to show resonance',
@@ -424,17 +422,17 @@ RA_bouldering__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_hob_burn = RiskAssessmentWithoutNumberInputs(
-    activity="Cooking",
-    hazard="Fire/ heat",
-    who_it_harms="Chef",
-    how_it_harms="Burns",
-    prevention="Use induction stove,",
-    mitigation="wear insulated gloves and use insulated cooking equipment",
-    prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="mitigation",
-    risk_domain="physical risk to individuals"
-)
+# RA_hob_burn = RiskAssessmentWithoutNumberInputs(
+#     activity="Cooking",
+#     hazard="Fire/ heat",
+#     who_it_harms="Chef",
+#     how_it_harms="Burns",
+#     prevention="Use induction stove",
+#     mitigation="Wear insulated gloves",
+#     prevention_prompt_expected_output="prevention",
+#     mitigation_prompt_expected_output="mitigation",
+#     risk_domain="physical risk to individuals"
+# )
 
 RA_hob_burn__neither = RiskAssessmentWithoutNumberInputs(
     activity="Cooking",
@@ -442,7 +440,7 @@ RA_hob_burn__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Chef",
     how_it_harms="Burns",
     prevention="Use gas stove",
-    mitigation="Wear rubber gloves",
+    mitigation="Wearing no gloves",
     prevention_prompt_expected_output="neither",
     mitigation_prompt_expected_output="neither",
     risk_domain="physical risk to individuals"
@@ -454,9 +452,9 @@ RA_crossing_road = RiskAssessmentWithoutNumberInputs(
     who_it_harms="The person crossing the road",
     how_it_harms="Could cause potentially life threatening injury",
     prevention="Look left and right before crossing the road",
-    mitigation="One person at back and one at front",
+    mitigation="Call the emergency services",
     prevention_prompt_expected_output="prevention",
-    mitigation_prompt_expected_output="prevention",
+    mitigation_prompt_expected_output="mitigation",
     risk_domain="physical risk to individuals"
 )
 
@@ -573,7 +571,7 @@ RA_cycling_high_viz__neither = RiskAssessmentWithoutNumberInputs(
     how_it_harms = "Could injure",
     who_it_harms = "The cyclist",
     prevention = "Wear non reflective clothing",
-    mitigation = "Wear cycling gloves",
+    mitigation = "Wear a t-shirt",
     prevention_prompt_expected_output = "neither",
     mitigation_prompt_expected_output = "neither",
     risk_domain="physical risk to individuals"
@@ -600,6 +598,18 @@ RA_cycling_safer_routes__neither = RiskAssessmentWithoutNumberInputs(
     mitigation = "",
     prevention_prompt_expected_output = "neither",
     mitigation_prompt_expected_output = "",
+    risk_domain="physical risk to individuals"
+)
+
+RA_golf_swing = RiskAssessmentWithoutNumberInputs(
+    activity = "Playing Golf",
+    hazard = "Swinging golf club",
+    how_it_harms = "Impact injury",
+    who_it_harms = "Golfer's caddy",
+    prevention = "Only play shot when caddy is at a safe distance",
+    mitigation = "Apply first aid",
+    prevention_prompt_expected_output = "prevention",
+    mitigation_prompt_expected_output = "mitigation",
     risk_domain="physical risk to individuals"
 )
 
@@ -678,7 +688,7 @@ RA_wildfire_early_detection = RiskAssessmentWithoutNumberInputs(
 )
 
 RA_wildfire_early_detection__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Walking in the forest",
+    activity="Trip to forest",
     hazard="Wildfire",
     who_it_harms="Residents",
     how_it_harms="Wildfires can cause extensive damage to homes",
@@ -690,10 +700,10 @@ RA_wildfire_early_detection__neither = RiskAssessmentWithoutNumberInputs(
 )
 
 RA_wildfire_fire_resistant_infrastructure = RiskAssessmentWithoutNumberInputs(
-    activity="Camping near a forest",
+    activity="Trip to forest",
     hazard="Wildfire",
-    who_it_harms="Endangered species",
-    how_it_harms="Wildfires can cause extensive damage to wildlife habitats",
+    who_it_harms="Residents living near the forest",
+    how_it_harms="Wildfire spreading to nearby homes",
     prevention="",
     mitigation="Retrofit buildings with fire-resistant materials",
     prevention_prompt_expected_output="",
@@ -702,7 +712,7 @@ RA_wildfire_fire_resistant_infrastructure = RiskAssessmentWithoutNumberInputs(
 )
 
 RA_wildfire_fire_resistant_infrastructure__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Camping near a forest",
+    activity="Trip to forest",
     hazard="Wildfire",
     who_it_harms="Endangered species",
     how_it_harms="Wildfires can cause extensive damage to wildlife habitats",
@@ -719,7 +729,7 @@ RA_wildfire_community_preparedness = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Ecosystems",
     how_it_harms="Wildfires can cause extensive damage to the environment.",
     prevention="",
-    mitigation="Community wildfire protection plans",
+    mitigation="Community wildfire response plans",
     prevention_prompt_expected_output="",
     mitigation_prompt_expected_output="mitigation",
     risk_domain="environmental risk"
@@ -1420,12 +1430,12 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
         RA_bigger_beaker,
         RA_campfire,
         RA_bouldering,
-        RA_hob_burn,
         RA_crossing_road,
         RA_cycling,
         RA_ladder,
         RA_cycling_high_viz,
         RA_cycling_safer_routes,
+        RA_golf_swing,
 
         # Neither examples
         RA_campfire__neither,

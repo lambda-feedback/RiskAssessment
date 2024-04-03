@@ -1,7 +1,7 @@
 
 from TestModelAccuracy import TestHarmCausedAndHazardEventPrompt
 from LLMCaller import *
-from example_risk_assessments import biohazard_risks, physical_risks_to_individuals__data_gathered_from_version_1_deployment, physical_risks_to_individuals__original_student_data
+from example_risk_assessments import *
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
@@ -26,6 +26,6 @@ def test_harm_caused_and_hazard_event(risk_assessments_dict, LLM, is_first_test:
 if __name__ == '__main__':
     test_harm_caused_and_hazard_event(
         # LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300),
-        LLM=OpenAILLM(),
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+        risk_assessments_dict=biohazard_risks,
         is_first_test=True)
