@@ -59,3 +59,45 @@
         
 #         if prevention_prompt_with_prevention_pattern == False and mitigation_prompt_with_prevention_pattern == False:
 #             return expected_output, 'neither', prompt_output
+
+# class TestIsFutureHarmReducedPromptInputWithPrevention(TestControlMeasureClassificationPrompt):
+#     def __init__(self, 
+#                     LLM: LLMCaller,
+#                     list_of_risk_assessment_and_expected_outputs: list,
+#                     sheet_name: str,
+#                     examples_gathered_or_generated_message: str,
+#                     candidate_labels: list,
+#                     domain: str = None,
+#                     is_first_test: bool = False):
+        
+#         super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+
+#     def get_classes(self):
+#         return [True, False]
+    
+#     def get_first_prompt_input(self):
+#         return self.get_first_prompt_input_with_risk_assessment_method('is_future_harm_reduced_prompt_input_with_prevention')
+    
+#     def get_pattern_matched_and_prompt_output(self, i):
+#         return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'is_future_harm_reduced_prompt_input_with_prevention')
+
+# class TestIsFutureHarmReducedPromptInputWithMitigation(TestControlMeasureClassificationPrompt):
+#     def __init__(self, 
+#                     LLM: LLMCaller,
+#                     list_of_risk_assessment_and_expected_outputs: list,
+#                     sheet_name: str,
+#                     examples_gathered_or_generated_message: str,
+#                     candidate_labels: list,
+#                     domain: str = None,
+#                     is_first_test: bool = False):
+        
+#         super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+
+#     def get_classes(self):
+#         return [True, False]
+    
+#     def get_first_prompt_input(self):
+#         return self.get_first_prompt_input_with_risk_assessment_method('is_future_harm_reduced_prompt_input_with_mitigation')
+    
+#     def get_pattern_matched_and_prompt_output(self, i):
+#         return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(i, 'is_future_harm_reduced_prompt_input_with_mitigation')

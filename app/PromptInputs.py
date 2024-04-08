@@ -271,54 +271,6 @@ class WhoItHarmsInContext(PromptInput):
     def get_recommendation(self):
         return f"For the 'Who it harms' field, please enter the individuals or group at risk of harm from the hazard"  
 
-class DoesPhraseReferToEventOrHarmCaused(PromptInput):
-    def __init__(self, input):
-        self.input = input
-
-        self.candidate_labels = [True, False]
-        self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
-
-    def generate_prompt(self):
-        return f'''
-
-        <INSTRUCTIONS>
-        
-        "Harm caused" refers to the negative consequences or adverse effects resulting from an action, event, or situation
-        1. Explain whether the input: <input> contains reference to a harm caused.
-        2. If so, answer True, else answer False.
-        <INSTRUCTIONS>
-
-        <EXAMPLE>
-        Input: "The ground shakes and causes buildings to collapse".
-        Explanation: The phrase "causes buildings to collapse" refers to damage to buildings which is a negative consequence. It is therefore a harm caused.
-        Answer: True
-        </EXAMPLE>
-
-        <EXAMPLE>
-        Input: "A student or teacher smokes in the school building".
-        Explanation: The phrase "smokes in the school building" refers to an action or event. It is not a negative consequence or adverse effect. It is therefore an event.
-        Answer: False
-        </EXAMPLE>
-
-        <EXAMPLE>
-        Input: "The user starts bleeding from the wound"
-        Explanation: The phrase "starts bleeding from the wound" refers to a negative consequence or adverse effect. It is therefore a harm caused.
-        Answer: True
-        </EXAMPLE>
-
-        <EXAMPLE>
-        Input: "The boiling water comes into contact with a student's skin"
-        Explanation: The phrase "comes into contact with a student's skin" refers to an action or event. It is not a negative consequence or adverse effect. It is therefore an event.
-        Answer: False
-
-        <OUTPUT FORMAT>
-        Use the following output format:
-        Explanation: <your explanation>
-        Answer: <True/False>
-        </OUTPUT FORMAT>
-
-        Input: "{self.input}"'''
-
 class HarmCausedAndHazardEvent(PromptInput):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
@@ -693,7 +645,7 @@ class ControlMeasureClassification(PromptInput):
         </STYLE>
 
         <TONE>
-        Use a formal tone.
+        Use a formal tone in your outputs.
         </TONE>
 
         <AUDIENCE>
@@ -743,9 +695,9 @@ class PreventionPrompt(ControlMeasureClassification):
         if feedback_type == 'misclassification':
             return f"Incorrect. You entered a mitigation measure in the prevention field."
     
-    def get_longform_feedback(self, prompt_output='', pattern_to_search_for='Prevention Explanation'):
+    def get_longform_feedback(self, prompt_output, start_string='Prevention Explanation', end_string='Mitigation Explanation'):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, pattern_to_search_for)
+        return regex_pattern_matcher.extract_section_of_prompt_between_two_strings(prompt_output=prompt_output, start_string=start_string, end_string=end_string)
 
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):
@@ -772,9 +724,9 @@ class MitigationPrompt(ControlMeasureClassification):
         if feedback_type == 'misclassification':
             return f"Incorrect. You entered a prevention measure in the mitigation field."
     
-    def get_longform_feedback(self, prompt_output, pattern_to_search_for='Mitigation Explanation'):
+    def get_longform_feedback(self, prompt_output, start_string='Mitigation Explanation', end_string='Answer'):
         regex_pattern_matcher = RegexPatternMatcher()
-        return regex_pattern_matcher.extract_section_of_prompt_until_new_line_or_end_of_string(prompt_output, pattern_to_search_for)
+        return regex_pattern_matcher.extract_section_of_prompt_between_two_strings(prompt_output=prompt_output, start_string=start_string, end_string=end_string)
     
     # TODO: When you have hazard event input, can include in feedback.
     def get_recommendation(self, recommendation_type):
@@ -787,86 +739,68 @@ class MitigationPrompt(ControlMeasureClassification):
         if recommendation_type == 'misclassification':
             return f"""A prevention measure reduces the likelihood of the hazard event occurring in the first place. On the other hand, a mitigation measure reduces the harm caused by the hazard event while it is happening or after it has occurred. Please use the above definitions to ammend your mitigation input."""
 
-class IsFutureHarmReduced(PromptInput):
-    def __init__(self, activity, who_it_harms, control_measure):
-        super().__init__()
-        self.activity = activity
-        self.control_measure = control_measure
-        self.who_it_harms = who_it_harms
+class SummarizeControlMeasureFeedback(PromptInput):
+    def __init__(self):
 
-        self.pattern_matching_method = 'always_return_true'
         self.candidate_labels = [True, False]
-        self.labels_indicating_correct_input = [True]
+        self.pattern_matching_method = 'always_return_true'
 
+    def get_context_style_tone_audience(self):
+        return """<CONTEXT>
+        You are a Risk Assessment expert responsible for summarizing feedback on Risk Assessment inputs.
+        </CONTEXT>
+
+        <STYLE>
+        Follow the writing style of a secondary school teacher.
+        </STYLE>
+
+        <TONE>
+        Use a formal tone.
+        </TONE>
+
+        <AUDIENCE>
+        Your audience is a student who is learning how to write a risk assessment.
+        </AUDIENCE>"""
+        
+    def get_instructions(self, control_measure_type, feedback):
+        return f"""<INSTRUCTIONS>
+        Summarize the {control_measure_type} feedback: "{feedback}" in the following format.
+        In 2 sentences, provide an explanation as to why the control measure is or is not a {control_measure_type}. 
+        In the third sentence, provide a statement of whether or not control measure is {control_measure_type} measure.
+        </INSTRUCTIONS>"""
     
-    def get_field_checked(self):
-        return 'Mitigation'
-    
-    def generate_prompt_without_few_shot_examples(self):
+    def get_example(self, control_measure_type):
+        if control_measure_type == 'prevention':
+            return f"""<EXAMPLE INPUT>
+            Thinking step by step:
+            - Enhancing explosive detection capabilities, such as deploying advanced screening equipment or trained explosive detection canine units, increases the chances of identifying and intercepting explosives before they can be detonated.
+            - By detecting and preventing explosives from entering the event premises, the likelihood of an explosive terrorist attack occurring is significantly reduced.
+            - Therefore, enhancing explosive detection capabilities directly reduces the likelihood of the hazard event "Explosive terrorist attack during public gatherings or events" from occurring. It is a prevention measure.
+            </EXAMPLE INPUT>
+
+            <EXAMPLE OUTPUT>
+            Enhancing explosive detection capabilities, such as deploying advanced screening equipment or trained explosive detection canine units allows for the detection and prevention of explosives from entering the event premises.
+            Thus, the likelihood of an explosive terrorist attack occurring is significantly reduced. Hence, enhancing explosive detection capabilities is a prevention measure.
+            </EXAMPLE OUTPUT>"""
+        
+        if control_measure_type == 'mitigation':
+            return '''<EXAMPLE INPUT>
+            Thinking step by step:
+            - Loud noises can cause hearing damage, especially at close range and with prolonged exposure.
+            - By increasing the distance between the trombone player and the audience, the intensity of the sound reaching the audience is reduced.
+            - This reduced sound intensity can help reduce hearing damage caused by the loud noise.
+            - Therefore, keeping a space between the player and audience removes or reduces the harm caused by "Hearing damage" for everyone present. It is a mitigation measure.
+            </EXAMPLE INPUT>
+
+            <EXAMPLE OUTPUT>
+            Increasing the distance between the trombone player and the audience reduces the intensity of the sound reaching the audience.
+            This helps reduce potential hearing damage from the loud noise. Hence, increasing distance between the trombone player and the audience is a mitigation measure.
+            </EXAMPLE OUTPUT>'''
+
+    def generate_prompt(self, control_measure_type, feedback):
         return f'''
-        Follow these instructions:
-        1. In one sentence, describe the hazard given the hazard event: "<hazard_event>" during the
-        activity: "{self.activity}" given the harm caused: "<harm_caused>" for {self.who_it_harms}.
-        2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "<hazard_event>".
-        If so, answer True, else answer False.
-        '''
-    
-    def generate_prompt(self, hazard_event, harm_caused):
-        return f'''
-        <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard given the hazard event: "An outbreak of foot and mouth disease in livestock farming operations" during the
-        activity: "Livestock farming operations" given the harm caused: "Economic losses in agriculture sector" for Livestock.
-        2. Assuming that the hazard event occurs, explain whether or not "Rapid response to detect and contain outbreaks" reduces the future harm caused by the hazard event: "An outbreak of foot and mouth disease in livestock farming operations".
-        If so, answer True, else answer False.
-        </EXAMPLE INSTRUCTIONS>
+        {self.get_context_style_tone_audience()}
 
-        <EXAMPLE OUTPUT>
-        Hazard event Description. An outbreak of foot and mouth disease in livestock farming operations can lead to significant economic losses in the agriculture sector due to the highly contagious nature of the virus among livestock.
-        Future Harm Explanation: Assuming that there has been an outbreak of foot and mouth disease, a rapid response can limit the spread of the disease and minimize the overall economic impact on the livestock farming industry. Hence, rapid response to detect and contain outbreaks of foot and mouth disease can significantly reduce the future harm caused by the hazard event. 
-        Answer: True
-        </EXAMPLE OUTPUT>
+        {self.get_example(control_measure_type=control_measure_type)}
 
-        <EXAMPLE INSTRUCTIONS>
-        1. In one sentence, describe the hazard given the hazard event: "A pandemic spreading through the population" during the
-        activity: "Public health and emergency response" given the harm caused: "Loss of life" for General population.
-        2. Assuming that the hazard event occurs, explain whether or not "Contact tracing and quarantine measures" reduces the future harm caused by the hazard event: "A pandemic spreading through the population".
-        If so, answer True, else answer False.
-        </EXAMPLE INSTRUCTIONS>
-
-        <EXAMPLE OUTPUT>
-        Hazard description: A pandemic spreading through the population during public health and emergency response activities, causing loss of life in the general population.
-        Future Harm Explanation: Assuming a pandemic is spreading through the population, contact tracing involves identifying and isolating infected individuals and their close contacts; these measures limit further transmission of the disease, slowing its spread and ultimately reducing the loss of life. Hence, contact tracing and quarantine measures can help reduce the future harm caused by a pandemic spreading through the population. 
-        Answer: True
-        </EXAMPLE OUTPUT>
-
-        <EXAMPLE INSTRUCTIONS>
-        Follow these instructions:
-        1. In one sentence, describe the hazard given the hazard event: "Cyclist getting hit by a car" during the
-        activity: "Riding a Bike" given the harm caused: "impact injury" for The cyclist.
-        2. Assuming that the hazard event occurs, explain whether or not "Wear high vis clothing" reduces the future harm caused by the hazard event: "Cyclist getting hit by a car".
-        If so, answer True, else answer False.
-        </EXAMPLE INSTRUCTIONS>
-
-        <EXAMPLE OUTPUT>
-        Hazard description: Cyclist getting hit by a car while riding a bike, resulting in impact injury to the cyclist.
-        Future Harm Explanation: Assuming the cyclist is hit by the car, high vis clothing does not provide any protection or lessen the injuries sustained from the impact with the vehicle. Hence, wearing high visibility clothing does not reduce the harm caused to the cyclist if they are hit by a car. 
-        Answer: False
-
-        <INSTRUCTIONS>
-        Follow these instructions:
-        1. In one sentence, describe the hazard given the hazard event: "{hazard_event}" during the activity: "{self.activity}" given the harm caused: "{harm_caused}" for {self.who_it_harms}.
-        2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "{hazard_event}".
-        If so, answer True, else answer False.
-        </INSTRUCTIONS>
-
-        <OUTPUT FORMAT>
-        Use the following output format:
-        Hazard description: <your hazard event description>
-        Future harm explanation: <your future harm explanation explanation>
-        Answer: <your answer>
-        </OUTPUT FORMAT>
-
-        <OUTPUT>
-        Hazard description: '''
-    
-    
+        {self.get_instructions(control_measure_type=control_measure_type, feedback=feedback)}'''

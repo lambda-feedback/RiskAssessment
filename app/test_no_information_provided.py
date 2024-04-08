@@ -54,7 +54,7 @@ def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is
                         LLM=LLM,
                         is_first_test=is_first_test,
                         domain=risk_assessments_dict['risk_domain'],       
-                        list_of_risk_assessment_and_expected_outputs=examples,
+                        list_of_input_and_expected_outputs=examples,
                         examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
                         sheet_name='No Information Provided')
     
