@@ -7,7 +7,7 @@ from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 def test_prevention_combined_prompts(risk_assessments_dict, LLM, is_first_test: bool = False):
     risk_assessments = risk_assessments_dict['risk_assessments']
     examples_generator = RiskAssessmentExamplesGeneratorForMultiplePrompts(risk_assessments=risk_assessments,
-                                                          ground_truth_parameter='prevention_prompt_expected_output')
+                                                          ground_truth_parameter='prevention_prompt_expected_class')
     
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
@@ -24,7 +24,7 @@ def test_prevention_combined_prompts(risk_assessments_dict, LLM, is_first_test: 
 
 def test_mitigation_combined_prompts(risk_assessments_dict, LLM, is_first_test: bool = False):
     examples_generator = RiskAssessmentExamplesGeneratorForMultiplePrompts(risk_assessments=risk_assessments_dict['risk_assessments'],
-                                                          ground_truth_parameter='mitigation_prompt_expected_output')
+                                                          ground_truth_parameter='mitigation_prompt_expected_class')
     
     examples = examples_generator.get_risk_assessment_and_expected_output_list()
 
@@ -41,61 +41,61 @@ def test_mitigation_combined_prompts(risk_assessments_dict, LLM, is_first_test: 
 
 if __name__ == '__main__':
     ### Mixtral8x7B TESTS ###
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=True
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=True
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_prevention_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
+        is_first_test=True
     )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_mitigation_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=Mixtral8x7B(temperature=0.1, max_tokens=400),
@@ -103,61 +103,61 @@ if __name__ == '__main__':
     )
 
     # ### GPT-3.5 TESTS ###
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_prevention_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=OpenAILLM(temperature=0.1, max_tokens=400),
         is_first_test=False
     )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_mitigation_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=OpenAILLM(temperature=0.1, max_tokens=400),
@@ -165,61 +165,61 @@ if __name__ == '__main__':
     )
 
     ### CLAUDE SONNET TESTS
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
-    test_prevention_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_prevention_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
         is_first_test=False
     )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     # test_mitigation_combined_prompts(
     #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
     #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
     #     is_first_test=False
     # )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     # test_mitigation_combined_prompts(
     #     risk_assessments_dict=cybersecurity_risks,
     #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
     #     is_first_test=False
     # )
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
-        is_first_test=False
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),
+    #     is_first_test=False
+    # )
     test_mitigation_combined_prompts(
         risk_assessments_dict=terrorism_risks,
         LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400),

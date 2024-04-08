@@ -320,3 +320,134 @@
         
 #         <OUTPUT>
 #         Hazard Description: '''
+
+# class DoesPhraseReferToEventOrHarmCaused(PromptInput):
+#     def __init__(self, input):
+#         self.input = input
+
+#         self.candidate_labels = [True, False]
+#         self.pattern_matching_method = 'check_string_for_true_or_false_with_no_overall_answer'
+
+#     def generate_prompt(self):
+#         return f'''
+
+#         <INSTRUCTIONS>
+        
+#         "Harm caused" refers to the negative consequences or adverse effects resulting from an action, event, or situation
+#         1. Explain whether the input: <input> contains reference to a harm caused.
+#         2. If so, answer True, else answer False.
+#         <INSTRUCTIONS>
+
+#         <EXAMPLE>
+#         Input: "The ground shakes and causes buildings to collapse".
+#         Explanation: The phrase "causes buildings to collapse" refers to damage to buildings which is a negative consequence. It is therefore a harm caused.
+#         Answer: True
+#         </EXAMPLE>
+
+#         <EXAMPLE>
+#         Input: "A student or teacher smokes in the school building".
+#         Explanation: The phrase "smokes in the school building" refers to an action or event. It is not a negative consequence or adverse effect. It is therefore an event.
+#         Answer: False
+#         </EXAMPLE>
+
+#         <EXAMPLE>
+#         Input: "The user starts bleeding from the wound"
+#         Explanation: The phrase "starts bleeding from the wound" refers to a negative consequence or adverse effect. It is therefore a harm caused.
+#         Answer: True
+#         </EXAMPLE>
+
+#         <EXAMPLE>
+#         Input: "The boiling water comes into contact with a student's skin"
+#         Explanation: The phrase "comes into contact with a student's skin" refers to an action or event. It is not a negative consequence or adverse effect. It is therefore an event.
+#         Answer: False
+
+#         <OUTPUT FORMAT>
+#         Use the following output format:
+#         Explanation: <your explanation>
+#         Answer: <True/False>
+#         </OUTPUT FORMAT>
+
+#         Input: "{self.input}"'''
+
+
+# class IsFutureHarmReduced(PromptInput):
+#     def __init__(self, activity, who_it_harms, control_measure):
+#         super().__init__()
+#         self.activity = activity
+#         self.control_measure = control_measure
+#         self.who_it_harms = who_it_harms
+
+#         self.pattern_matching_method = 'always_return_true'
+#         self.candidate_labels = [True, False]
+#         self.labels_indicating_correct_input = [True]
+
+    
+#     def get_field_checked(self):
+#         return 'Mitigation'
+    
+#     def generate_prompt_without_few_shot_examples(self):
+#         return f'''
+#         Follow these instructions:
+#         1. In one sentence, describe the hazard given the hazard event: "<hazard_event>" during the
+#         activity: "{self.activity}" given the harm caused: "<harm_caused>" for {self.who_it_harms}.
+#         2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "<hazard_event>".
+#         If so, answer True, else answer False.
+#         '''
+    
+#     def generate_prompt(self, hazard_event, harm_caused):
+#         return f'''
+#         <EXAMPLE INSTRUCTIONS>
+#         1. In one sentence, describe the hazard given the hazard event: "An outbreak of foot and mouth disease in livestock farming operations" during the
+#         activity: "Livestock farming operations" given the harm caused: "Economic losses in agriculture sector" for Livestock.
+#         2. Assuming that the hazard event occurs, explain whether or not "Rapid response to detect and contain outbreaks" reduces the future harm caused by the hazard event: "An outbreak of foot and mouth disease in livestock farming operations".
+#         If so, answer True, else answer False.
+#         </EXAMPLE INSTRUCTIONS>
+
+#         <EXAMPLE OUTPUT>
+#         Hazard event Description. An outbreak of foot and mouth disease in livestock farming operations can lead to significant economic losses in the agriculture sector due to the highly contagious nature of the virus among livestock.
+#         Future Harm Explanation: Assuming that there has been an outbreak of foot and mouth disease, a rapid response can limit the spread of the disease and minimize the overall economic impact on the livestock farming industry. Hence, rapid response to detect and contain outbreaks of foot and mouth disease can significantly reduce the future harm caused by the hazard event. 
+#         Answer: True
+#         </EXAMPLE OUTPUT>
+
+#         <EXAMPLE INSTRUCTIONS>
+#         1. In one sentence, describe the hazard given the hazard event: "A pandemic spreading through the population" during the
+#         activity: "Public health and emergency response" given the harm caused: "Loss of life" for General population.
+#         2. Assuming that the hazard event occurs, explain whether or not "Contact tracing and quarantine measures" reduces the future harm caused by the hazard event: "A pandemic spreading through the population".
+#         If so, answer True, else answer False.
+#         </EXAMPLE INSTRUCTIONS>
+
+#         <EXAMPLE OUTPUT>
+#         Hazard description: A pandemic spreading through the population during public health and emergency response activities, causing loss of life in the general population.
+#         Future Harm Explanation: Assuming a pandemic is spreading through the population, contact tracing involves identifying and isolating infected individuals and their close contacts; these measures limit further transmission of the disease, slowing its spread and ultimately reducing the loss of life. Hence, contact tracing and quarantine measures can help reduce the future harm caused by a pandemic spreading through the population. 
+#         Answer: True
+#         </EXAMPLE OUTPUT>
+
+#         <EXAMPLE INSTRUCTIONS>
+#         Follow these instructions:
+#         1. In one sentence, describe the hazard given the hazard event: "Cyclist getting hit by a car" during the
+#         activity: "Riding a Bike" given the harm caused: "impact injury" for The cyclist.
+#         2. Assuming that the hazard event occurs, explain whether or not "Wear high vis clothing" reduces the future harm caused by the hazard event: "Cyclist getting hit by a car".
+#         If so, answer True, else answer False.
+#         </EXAMPLE INSTRUCTIONS>
+
+#         <EXAMPLE OUTPUT>
+#         Hazard description: Cyclist getting hit by a car while riding a bike, resulting in impact injury to the cyclist.
+#         Future Harm Explanation: Assuming the cyclist is hit by the car, high vis clothing does not provide any protection or lessen the injuries sustained from the impact with the vehicle. Hence, wearing high visibility clothing does not reduce the harm caused to the cyclist if they are hit by a car. 
+#         Answer: False
+
+#         <INSTRUCTIONS>
+#         Follow these instructions:
+#         1. In one sentence, describe the hazard given the hazard event: "{hazard_event}" during the activity: "{self.activity}" given the harm caused: "{harm_caused}" for {self.who_it_harms}.
+#         2. Assuming that the hazard event occurs, explain whether or not "{self.control_measure}" reduces the future harm caused by the hazard event: "{hazard_event}".
+#         If so, answer True, else answer False.
+#         </INSTRUCTIONS>
+
+#         <OUTPUT FORMAT>
+#         Use the following output format:
+#         Hazard description: <your hazard event description>
+#         Future harm explanation: <your future harm explanation explanation>
+#         Answer: <your answer>
+#         </OUTPUT FORMAT>
+
+#         <OUTPUT>
+#         Hazard description: '''

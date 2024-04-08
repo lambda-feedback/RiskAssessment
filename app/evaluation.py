@@ -142,44 +142,65 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
                                               control_measure_prompt_pattern: str,
                                               feedback_for_correct_answers: str,
                                               feedback_for_incorrect_answers: str,
-                                              is_everything_correct: bool):
+                                              is_everything_correct: bool,
+                                              risk_assessment: RiskAssessment,
+                                              LLM: Type[LLMCaller]):
     
-    control_measures = ['prevention', 'mitigation']
-    other_control_measure_input_field = [control_measure for control_measure in control_measures if control_measure != control_measure_input_field][0]
+    prevention_prompt_feedback = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output, start_string='Prevention Explanation', end_string='Mitigation Explanation')
+    mitigation_prompt_feedback = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output, start_string='Mitigation Explanation', end_string='Answer')
 
-    control_measure_prompt_explanation = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output)
-    other_control_measure_prompt_explanation = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output, pattern_to_search_for=f'{other_control_measure_input_field.capitalize()} Explanation')
+    if control_measure_input_field == 'prevention':
+        other_control_measure_input_field = 'mitigation'
+        control_measure_prompt_feedback = prevention_prompt_feedback
+        other_control_measure_prompt_feedback = mitigation_prompt_feedback
 
+    if control_measure_input_field == 'mitigation':
+        other_control_measure_input_field = 'prevention'
+        control_measure_prompt_feedback = mitigation_prompt_feedback
+        other_control_measure_prompt_feedback = prevention_prompt_feedback
+    
     feedback_header = f'\n\n\n\n\n## Feedback for Input: {control_measure_input_field.capitalize()}\n\n\n\n'
     
     if control_measure_prompt_pattern == 'both':
+        prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
+
         feedback_for_correct_answers += f'''
         {feedback_header}
         \n\n\n\n#### Feedback: {control_measure_prompt_input.get_shortform_feedback('both')}\n\n\n\n
-        #### {control_measure_input_field.capitalize()} Explanation: {control_measure_prompt_explanation}\n\n\n\n
-        #### {other_control_measure_input_field.capitalize()} Explanation: {other_control_measure_prompt_explanation}\n\n\n\n'''
+        #### {control_measure_input_field.capitalize()} Explanation: {summary_of_control_measure_prompt_feedback}\n\n\n\n
+        #### {other_control_measure_input_field.capitalize()} Explanation: {summary_of_other_control_measure_prompt_feedback}\n\n\n\n'''
 
     if control_measure_prompt_pattern == control_measure_input_field:
+        prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+
         feedback_for_correct_answers += f'''
         {feedback_header}
-        \n\n\n\n#### Explanation: {control_measure_prompt_explanation}\n\n\n\n'''
+        \n\n\n\n#### Explanation: {summary_of_control_measure_prompt_feedback}\n\n\n\n'''
 
     if control_measure_prompt_pattern == 'neither':
+        prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+
         recommendation = control_measure_prompt_input.get_recommendation(recommendation_type='neither')
         feedback_for_incorrect_answers += f'''
         {feedback_header}
-        \n\n\n\n#### Explanation: {control_measure_prompt_explanation}\n\n\n\n
+        \n\n\n\n#### Explanation: {summary_of_control_measure_prompt_feedback}\n\n\n\n
         \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
         is_everything_correct = False
 
     if control_measure_prompt_pattern == other_control_measure_input_field:
-        recommendation = control_measure_prompt_input.get_recommendation(recommendation_type='misclassification')
+        prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
+        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
 
+        recommendation = control_measure_prompt_input.get_recommendation(recommendation_type='misclassification')
         feedback_for_incorrect_answers += f'''
         {feedback_header}
         \n\n\n\n#### Feedback: {control_measure_prompt_input.get_shortform_feedback('misclassification')}\n\n\n\n
-        \n\n\n\n#### Explanation: {other_control_measure_prompt_explanation}\n\n\n\n
+        \n\n\n\n#### Explanation: {summary_of_other_control_measure_prompt_feedback}\n\n\n\n
         \n\n\n\n#### Recommendation: {recommendation}\n\n\n\n'''
 
         is_everything_correct = False
@@ -225,7 +246,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,
                             controlled_likelihood=controlled_likelihood, controlled_severity=controlled_severity, controlled_risk=controlled_risk,
-                            prevention_prompt_expected_output='prevention', mitigation_prompt_expected_output='mitigation', risk_domain='')
+                            prevention_prompt_expected_class='prevention', mitigation_prompt_expected_class='mitigation', risk_domain='')
 
         input_check_feedback_message = RA.get_input_check_feedback_message()
 
@@ -304,7 +325,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
             # LLM = MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
-            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400)
             control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
             control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
 
@@ -315,7 +336,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 control_measure_prompt_pattern=control_measure_prompt_with_prevention_pattern,
                 feedback_for_correct_answers=feedback_for_correct_answers,
                 feedback_for_incorrect_answers=feedback_for_incorrect_answers,
-                is_everything_correct=is_everything_correct
+                is_everything_correct=is_everything_correct,
+                risk_assessment=RA,
+                LLM=LLM
             )
 
         # MITIGATION CHECKS
@@ -336,7 +359,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
             
             # LLM = MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
-            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+            LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400)
             
             control_measure_prompt_with_mitigation_input = RA.get_control_measure_prompt_with_mitigation_input()
             control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_mitigation_input, LLM, harm_caused=harm_caused, hazard_event=hazard_event)
@@ -349,6 +372,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 feedback_for_correct_answers=feedback_for_correct_answers,
                 feedback_for_incorrect_answers=feedback_for_incorrect_answers,
                 is_everything_correct=is_everything_correct,
+                risk_assessment=RA,
+                LLM=LLM
             )
 
         if is_everything_correct == True:

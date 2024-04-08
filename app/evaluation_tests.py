@@ -177,8 +177,8 @@ class TestEvaluationFunction(unittest.TestCase):
     #         who_it_harms = "The cyclist",
     #         prevention = "Wear non reflective clothing",
     #         mitigation = "Wear a t-shirt",
-    #         prevention_prompt_expected_output = "neither",
-    #         mitigation_prompt_expected_output = "neither",
+    #         prevention_prompt_expected_class = "neither",
+    #         mitigation_prompt_expected_class = "neither",
     #         risk_domain="physical risk to individuals"
     #     )
 
@@ -186,13 +186,13 @@ class TestEvaluationFunction(unittest.TestCase):
     #     tests.append(TestPreventionPromptOnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz__neither,
-    #         expected_output=RA_cycling_high_viz__neither.prevention_prompt_expected_output))
+    #         expected_output=RA_cycling_high_viz__neither.prevention_prompt_expected_class))
         
     #     # Test mitigation input
     #     tests.append(TestMitigationPromptOnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz__neither,
-    #         expected_output=RA_cycling_high_viz__neither.mitigation_prompt_expected_output))
+    #         expected_output=RA_cycling_high_viz__neither.mitigation_prompt_expected_class))
         
     #     for test in tests:
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
@@ -211,8 +211,8 @@ class TestEvaluationFunction(unittest.TestCase):
     #         who_it_harms = "The cyclist",
     #         prevention = "Wear helmet",
     #         mitigation = "Wear high viz clothing", 
-    #         prevention_prompt_expected_output = "mitigation",
-    #         mitigation_prompt_expected_output = "prevention",
+    #         prevention_prompt_expected_class = "mitigation",
+    #         mitigation_prompt_expected_class = "prevention",
     #         risk_domain="physical risk to individuals"
     #     )
 
@@ -220,13 +220,13 @@ class TestEvaluationFunction(unittest.TestCase):
     #     tests.append(TestPreventionPromptOnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz,
-    #         expected_output=RA_cycling_high_viz.prevention_prompt_expected_output))
+    #         expected_output=RA_cycling_high_viz.prevention_prompt_expected_class))
         
     #     # Test mitigation input
     #     tests.append(TestMitigationPromptOnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz,
-    #         expected_output=RA_cycling_high_viz.mitigation_prompt_expected_output))
+    #         expected_output=RA_cycling_high_viz.mitigation_prompt_expected_class))
         
     #     for test in tests:
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())

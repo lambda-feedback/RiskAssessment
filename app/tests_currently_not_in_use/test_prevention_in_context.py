@@ -10,7 +10,7 @@ from ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 if __name__ == '__main__':
     # examples_generator = PreventionExamplesGenerator(correct_examples_list=correct_prevention_examples_list)
     examples_generator = RiskAssessmentExamplesGeneratorForSinglePrompt(risk_assessments=example_risk_assessments,
-                                                         ground_truth_parameter='prevention_prompt_expected_output',
+                                                         ground_truth_parameter='prevention_prompt_expected_class',
                                                         method_to_get_prompt_input='get_prevention_input')
     
     examples = examples_generator.get_input_and_expected_output_list()
