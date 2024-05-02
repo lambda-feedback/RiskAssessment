@@ -283,27 +283,27 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
 
                 field = prompt_input_object.get_field_checked()
-                
-                feedback_header_to_add = f''' 
-                \n\n\n## Feedback for Input: {field}\n\n\n
-                '''
 
                 if pattern not in prompt_input_object.labels_indicating_correct_input:
-                    feedback_to_add = f'''
+                    feedback_header = f''' 
+                    \n\n\n## Feedback for Input: {field}\n\n\n
+                    '''
+                    
+                    feedback = f'''
                     \n\n\n\n#### Feedback: {shortform_feedback}\n\n\n\n'''
 
                     longform_feedback = prompt_input_object.get_longform_feedback(prompt_output=prompt_output)
                     
                     if longform_feedback != '':
-                        feedback_to_add += f'''\n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
+                        feedback += f'''\n\n\n\n#### Explanation: {longform_feedback}\n\n\n\n'''
                     
                     is_everything_correct = False
                     recommendation = prompt_input_object.get_recommendation()
 
-                    feedback_to_add += f'''\n\n\n\n#### Recommendation: {recommendation}'''
+                    feedback += f'''\n\n\n\n#### Recommendation: {recommendation}'''
 
-                    feedback_for_incorrect_answers += feedback_header_to_add
-                    feedback_for_incorrect_answers += feedback_to_add
+                    feedback_for_incorrect_answers += feedback_header
+                    feedback_for_incorrect_answers += feedback
 
                     return Result(is_correct=is_everything_correct, feedback=feedback_for_incorrect_answers)
 
@@ -395,4 +395,9 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         feedback_for_correct_answers += f'''
         \n\n\n\n### There are no errors in your likelihood, severity, and risk values.\n\n\n\n'''
 
-        return Result(is_correct=is_everything_correct, feedback=hazard_event_and_harm_caused_inferred_message + '\n\n\n\n\n' + feedback_for_incorrect_answers + '\n\n\n\n\n' + feedback_for_correct_answers + '\n\n\n\n\n' + no_information_provided_message)
+        feedback=f'''{hazard_event_and_harm_caused_inferred_message} \n\n\n\n\n
+        {feedback_for_incorrect_answers} \n\n\n\n\n
+        {feedback_for_correct_answers} \n\n\n\n\n
+        {no_information_provided_message}'''
+
+        return Result(is_correct=is_everything_correct, feedback=feedback)
