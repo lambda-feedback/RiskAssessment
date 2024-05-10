@@ -29,6 +29,7 @@ class RiskAssessment:
 
         self.prevention_prompt_expected_class = prevention_prompt_expected_class
         self.mitigation_prompt_expected_class = mitigation_prompt_expected_class
+        self.prevention_and_mitigation_expected_class_combined = f'{prevention_prompt_expected_class}, {mitigation_prompt_expected_class}'
         self.risk_domain = risk_domain
 
         # TODO: Remove these parameters
