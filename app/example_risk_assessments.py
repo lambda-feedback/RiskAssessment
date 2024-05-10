@@ -338,150 +338,6 @@ RA_pencil_lead_projectile = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
-RA_mucking_out_horse = RiskAssessmentWithoutNumberInputs(
-    activity='Mucking out a horse',
-    hazard='Horse kicks out',
-    who_it_harms='Horse rider',
-    how_it_harms='Impact injury',
-    prevention='Keep a safe distance from the horse',
-    mitigation='Wear a helmet and body protector',
-    prevention_prompt_expected_class='prevention',
-    mitigation_prompt_expected_class='mitigation',
-    risk_domain="physical risk to individuals"
-)
-
-RA_mucking_out_horse__neither = RiskAssessmentWithoutNumberInputs(
-    activity='Mucking out a horse',
-    hazard='Horse kicks out',
-    who_it_harms='Horse rider',
-    how_it_harms='Impact injury',
-    prevention='Stand directly behind the horse',
-    mitigation='Wear gloves',
-    prevention_prompt_expected_class='neither',
-    mitigation_prompt_expected_class='neither',
-    risk_domain="physical risk to individuals"
-)
-
-RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
-    activity="Slitter machine usage",
-    hazard="Sharp blade",
-    who_it_harms="Operator",
-    how_it_harms="Cut hazard",
-    prevention="Guard",
-    mitigation="Metal gloves for maintenance",
-    prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="mitigation",
-    risk_domain="physical risk to individuals"
-)
-
-RA_campfire = RiskAssessmentWithoutNumberInputs(
-    activity="Building a campfire",
-    hazard="Flame",
-    who_it_harms="People or property ",
-    how_it_harms="Burns or damage",
-    prevention="Safe distance from fire to be adhered to",
-    mitigation="Flameproof clothing/insulation",
-    prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="mitigation",
-    risk_domain="physical risk to individuals"
-)
-
-RA_campfire__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Building a campfire",
-    hazard="Flame",
-    who_it_harms="People or property ",
-    how_it_harms="Burns or damage",
-    prevention="Stand close to the fire",
-    mitigation="Wear a hat",
-    prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="neither",
-    risk_domain="physical risk to individuals"
-)
-
-RA_bouldering = RiskAssessmentWithoutNumberInputs(
-    activity="Climbing (Bouldering)",
-    hazard="Not landing Safely",
-    who_it_harms="Climbers",
-    how_it_harms="Landing in a awkward way can cause injury",
-    prevention="Make sure to climb down before you come off the wall",
-    mitigation="Make sure to always land of two feet",
-    prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="prevention",
-    risk_domain="physical risk to individuals"
-)
-
-RA_bouldering__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Climbing (Bouldering)",
-    hazard="Not landing Safely",
-    who_it_harms="Climbers",
-    how_it_harms="Landing in a awkward way can cause injury",
-    prevention="Jump off the wall",
-    mitigation="Land on one foot",
-    prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="neither",
-    risk_domain="physical risk to individuals"
-)
-
-# RA_hob_burn = RiskAssessmentWithoutNumberInputs(
-#     activity="Cooking",
-#     hazard="Fire/ heat",
-#     who_it_harms="Chef",
-#     how_it_harms="Burns",
-#     prevention="Use induction stove",
-#     mitigation="Wear insulated gloves",
-#     prevention_prompt_expected_class="prevention",
-#     mitigation_prompt_expected_class="mitigation",
-#     risk_domain="physical risk to individuals"
-# )
-
-RA_hob_burn__neither = RiskAssessmentWithoutNumberInputs(
-    activity="Cooking",
-    hazard="Fire/ heat",
-    who_it_harms="Chef",
-    how_it_harms="Burns",
-    prevention="Use gas stove",
-    mitigation="Wearing no gloves",
-    prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="neither",
-    risk_domain="physical risk to individuals"
-)
-
-RA_crossing_road = RiskAssessmentWithoutNumberInputs(
-    activity="Crossing Exhibition Road",
-    hazard="A car crashing into you",
-    who_it_harms="The person crossing the road",
-    how_it_harms="Could cause potentially life threatening injury",
-    prevention="Look left and right before crossing the road",
-    mitigation="Call the emergency services",
-    prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="mitigation",
-    risk_domain="physical risk to individuals"
-)
-
-RA_cycling = RiskAssessmentWithoutNumberInputs(
-    activity="Cycle commuting",
-    hazard="Head injury",
-    who_it_harms="Cyclist",
-    how_it_harms="Mistakes by cyclists or motorists leading to crash",
-    prevention="Wear a helmet",
-    mitigation="",
-    prevention_prompt_expected_class="mitigation",
-    mitigation_prompt_expected_class="",
-    risk_domain="physical risk to individuals"
-)
-
-RA_ladder = RiskAssessmentWithoutNumberInputs(
-    activity="Climbing a tall ladder",
-    hazard="Falling, slipping",
-    who_it_harms="the person on the ladder, people below the ladder",
-    how_it_harms="The impact of hitting the ground ",
-    prevention="Have someone hold the ladder. Make sure the ladder is locked and the ground in even. ",
-    mitigation="Wear helment and padded clothes.",
-    prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="mitigation",
-    risk_domain="physical risk to individuals"
-)
-
 # RA = RiskAssessmentWithoutNumberInputs(
 #     activity = "",
 #     hazard = "",
@@ -577,15 +433,219 @@ RA_cycling_high_viz__neither = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
+RA_mucking_out_horse = RiskAssessmentWithoutNumberInputs(
+    activity='Mucking out a horse',
+    hazard='Horse kicks out',
+    who_it_harms='Horse rider',
+    how_it_harms='Impact injury',
+    prevention='Keep a safe distance from the horse',
+    mitigation='Wear a helmet and body protector',
+    prevention_prompt_expected_class='prevention',
+    mitigation_prompt_expected_class='mitigation',
+    risk_domain="physical risk to individuals"
+)
+
+RA_mucking_out_horse__neither = RiskAssessmentWithoutNumberInputs(
+    activity='Mucking out a horse',
+    hazard='Horse kicks out',
+    who_it_harms='Horse rider',
+    how_it_harms='Impact injury',
+    prevention='Stand directly behind the horse',
+    mitigation='Wear gloves',
+    prevention_prompt_expected_class='neither',
+    mitigation_prompt_expected_class='neither',
+    risk_domain="physical risk to individuals"
+)
+
+RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
+    activity="Slitter machine usage",
+    hazard="Sharp blade",
+    who_it_harms="Operator",
+    how_it_harms="Cut hazard",
+    prevention="Guard",
+    mitigation="Metal gloves for maintenance",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_campfire = RiskAssessmentWithoutNumberInputs(
+    activity="Building a campfire",
+    hazard="Flame",
+    who_it_harms="People or property ",
+    how_it_harms="Burns or damage",
+    prevention="Safe distance from fire to be adhered to",
+    mitigation="Flameproof clothing/insulation",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_campfire__neither = RiskAssessmentWithoutNumberInputs(
+    activity="Building a campfire",
+    hazard="Flame",
+    who_it_harms="People or property ",
+    how_it_harms="Burns or damage",
+    prevention="Stand close to the fire",
+    mitigation="Wear a hat",
+    prevention_prompt_expected_class="neither",
+    mitigation_prompt_expected_class="neither",
+    risk_domain="physical risk to individuals"
+)
+
+RA_bouldering = RiskAssessmentWithoutNumberInputs(
+    activity="Climbing (Bouldering)",
+    hazard="Not landing Safely",
+    who_it_harms="Climbers",
+    how_it_harms="Landing in a awkward way can cause injury",
+    prevention="Make sure to climb down before you come off the wall",
+    mitigation="Make sure to always land of two feet",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="prevention",
+    risk_domain="physical risk to individuals"
+)
+
+RA_bouldering__neither = RiskAssessmentWithoutNumberInputs(
+    activity="Climbing (Bouldering)",
+    hazard="Not landing Safely",
+    who_it_harms="Climbers",
+    how_it_harms="Landing in a awkward way can cause injury",
+    prevention="Jump off the wall",
+    mitigation="Land on one foot",
+    prevention_prompt_expected_class="neither",
+    mitigation_prompt_expected_class="neither",
+    risk_domain="physical risk to individuals"
+)
+
+RA_hob_burn = RiskAssessmentWithoutNumberInputs(
+    activity="Cooking",
+    hazard="Fire/ heat",
+    who_it_harms="Chef",
+    how_it_harms="Burns",
+    prevention="Use induction stove",
+    mitigation="Wear insulated gloves",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_hob_burn__neither = RiskAssessmentWithoutNumberInputs(
+    activity="Cooking",
+    hazard="Fire/ heat",
+    who_it_harms="Chef",
+    how_it_harms="Burns",
+    prevention="Use gas stove",
+    mitigation="Wearing no gloves",
+    prevention_prompt_expected_class="neither",
+    mitigation_prompt_expected_class="neither",
+    risk_domain="physical risk to individuals"
+)
+
+RA_crossing_road = RiskAssessmentWithoutNumberInputs(
+    activity="Crossing Exhibition Road",
+    hazard="A car crashing into you",
+    who_it_harms="The person crossing the road",
+    how_it_harms="Could cause potentially life threatening injury",
+    prevention="Look left and right before crossing the road",
+    mitigation="Call the emergency services",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_cycling = RiskAssessmentWithoutNumberInputs(
+    activity="Cycle commuting",
+    hazard="Head injury",
+    who_it_harms="Cyclist",
+    how_it_harms="Mistakes by cyclists or motorists leading to crash",
+    prevention="Wear a helmet",
+    mitigation="Immediately call the emergency services",
+    prevention_prompt_expected_class="mitigation",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_ladder = RiskAssessmentWithoutNumberInputs(
+    activity="Climbing a tall ladder",
+    hazard="Falling, slipping",
+    who_it_harms="the person on the ladder, people below the ladder",
+    how_it_harms="The impact of hitting the ground ",
+    prevention="Have someone hold the ladder. Make sure the ladder is locked and the ground in even. ",
+    mitigation="Wear helment and padded clothes.",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
+
+RA_stable_ladder = RiskAssessmentWithoutNumberInputs(
+            activity="Going up a ladder",
+            hazard="Dangerous height",
+            who_it_harms="Person climbing",
+            how_it_harms="Falling",
+            prevention="Someone hold ladder",
+            mitigation="Buy stable ladder",
+            prevention_prompt_expected_class="prevention",
+            mitigation_prompt_expected_class="mitigation",
+            risk_domain="physical risk to individuals"
+        )
+
+RA_cooking_gas_hob = RiskAssessmentWithoutNumberInputs(
+            activity="cooking on gas hob",
+            hazard="leaving gas",
+            who_it_harms="people living in the building",
+            how_it_harms="explosion",
+            prevention="electric hob / gas detector",
+            mitigation="Use a fire extinguisher",
+            prevention_prompt_expected_class="prevention",
+            mitigation_prompt_expected_class="mitigation",
+            risk_domain="physical risk to individuals"
+        )
+
+RA_zebra_crossing = RiskAssessmentWithoutNumberInputs(
+            activity="Crossing the road",
+            hazard="Careless drivers ",
+            who_it_harms="Pedestrians",
+            how_it_harms="Injury",
+            prevention="Use zebra crossing",
+            mitigation="Call emergency services",
+            prevention_prompt_expected_class="prevention",
+            mitigation_prompt_expected_class="mitigation",
+            risk_domain="physical risk to individuals"
+        )
+
+RA_swimming_riptides = RiskAssessmentWithoutNumberInputs(
+            activity="Swimming",
+            hazard="Getting caught in riptides",
+            who_it_harms="Potentially any swimmers in the sea ",
+            how_it_harms="People can get caught in riptides and dragged out to see putting them at a very high risk of drowing",
+            prevention="Only swim within marked areas that lifeguards can spot you",
+            mitigation="Swim wearing a bright coloured swim cap",
+            prevention_prompt_expected_class='prevention',
+            mitigation_prompt_expected_class='prevention',
+            risk_domain="physical risk to individuals"
+        )
+
+RA_careless_drivers = RiskAssessmentWithoutNumberInputs(
+            activity="Cycling",
+            hazard="Careless and dangerous drivers generally ",
+            who_it_harms="The cyclists",
+            how_it_harms="By colliding with cyclists",
+            prevention="Ensure you are visible and obeying rules of the road.",
+            mitigation="Wear a helmet",
+            prevention_prompt_expected_class='prevention',
+            mitigation_prompt_expected_class='mitigation',
+            risk_domain="physical risk to individuals"
+        )
+
 RA_cycling_safer_routes = RiskAssessmentWithoutNumberInputs(
     activity = "Riding a Bike",
     hazard = "Getting hit",
     how_it_harms = "Could injure",
     who_it_harms = "The cyclist",
     prevention = "Take safer routes",
-    mitigation = "",
+    mitigation = "Wear elbow padding and a helmet",
     prevention_prompt_expected_class = "prevention",
-    mitigation_prompt_expected_class = "",
+    mitigation_prompt_expected_class = "mitigation",
     risk_domain="physical risk to individuals"
 )
 
@@ -595,9 +655,9 @@ RA_cycling_safer_routes__neither = RiskAssessmentWithoutNumberInputs(
     how_it_harms = "Could injure",
     who_it_harms = "The cyclist",
     prevention = "Cycle along busy roads",
-    mitigation = "",
+    mitigation = "Call an ambulance",
     prevention_prompt_expected_class = "neither",
-    mitigation_prompt_expected_class = "",
+    mitigation_prompt_expected_class = "mitigation",
     risk_domain="physical risk to individuals"
 )
 
@@ -612,6 +672,162 @@ RA_golf_swing = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_class = "mitigation",
     risk_domain="physical risk to individuals"
 )
+
+thermo_lab_hot_equipment = RiskAssessmentWithoutNumberInputs(
+    activity = "thermo lab",
+    hazard = "hot equipment",
+    who_it_harms = "students",
+    how_it_harms = "skin burn",
+    prevention = "avoid touching the hot equipment",
+    mitigation = "wear a lab coat",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+crossing_road_getting_hit_green_lights = RiskAssessmentWithoutNumberInputs(
+    activity = "Crossing road",
+    hazard = "getting hit",
+    who_it_harms = "pedestrian",
+    how_it_harms = "fatal crash",
+    prevention = "stop lights",
+    mitigation = "cross when light is green only",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "prevention",
+    risk_domain="physical risk to individuals"
+    )
+
+crossing_road_getting_hit_call_ambulance = RiskAssessmentWithoutNumberInputs(
+    activity = "Crossing road",
+    hazard = "getting hit",
+    who_it_harms = "pedestrian",
+    how_it_harms = "fatal crash",
+    prevention = "stop lights",
+    mitigation = "call ambulance",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+lab_experiment_spilled_chemicals_lab_techs = RiskAssessmentWithoutNumberInputs(
+    activity = "Lab Experiment",
+    hazard = "Spilled Chemicals",
+    who_it_harms = "Students",
+    how_it_harms = "Irritates Skin",
+    prevention = "Only let lab techs handle dangerous chemicals",
+    mitigation = "Wear gloves",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+lab_experiment_spilled_chemicals_no_dangerous_chemicals = RiskAssessmentWithoutNumberInputs(
+    activity = "Lab Experiment",
+    hazard = "Spilled Chemicals",
+    who_it_harms = "Students",
+    how_it_harms = "Irritates Skin",
+    prevention = "Do not use dangerous chemicals",
+    mitigation = "Wear gloves",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+heat_engine_lab_burning_yourself_dont_run = RiskAssessmentWithoutNumberInputs(
+    activity = "participating in or conducting the ME2 heat engine lab",
+    hazard = "burning yourself or other people (different degrees)",
+    who_it_harms = "yourself or other people around you",
+    how_it_harms = "the surface of the very hot pipes carrying the fluid could come into contact with your skin and burn it",
+    prevention = "don't run in the lab",
+    mitigation = "wear a lab coat",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+heat_engine_lab_burning_yourself_cold_water = RiskAssessmentWithoutNumberInputs(
+    activity = "participating in or conducting the ME2 heat engine lab",
+    hazard = "burning yourself or other people (different degrees)",
+    who_it_harms = "yourself or other people around you",
+    how_it_harms = "the surface of the very hot pipes carrying the fluid could come into contact with your skin and burn it",
+    prevention = "be aware of your surroundings",
+    mitigation = "have a cold water supply available and accessible",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+fluids_lab_water_spill_slippery = RiskAssessmentWithoutNumberInputs(
+    activity = "Fluids lab experiment",
+    hazard = "Water spill out and cause slippery",
+    who_it_harms = "Users",
+    how_it_harms = "Spilled water can make floor slippery and people may fall over",
+    prevention = "Be careful",
+    mitigation = "Mop up using a cloth immediately",
+    prevention_prompt_expected_class = "neither",
+    mitigation_prompt_expected_class = "prevention",
+    risk_domain="physical risk to individuals"
+    )
+
+heat_transfer_lab_boiling_water = RiskAssessmentWithoutNumberInputs(
+    activity = "HEAT TRANSFER LAB",
+    hazard = "Boiling (hot) water",
+    who_it_harms = "Students",
+    how_it_harms = "Burns",
+    prevention = "Do not carry cups around",
+    mitigation = "Cold water tap nearby",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+running_pump_water_spillage = RiskAssessmentWithoutNumberInputs(
+    activity = "Running pump in fluids lab",
+    hazard = "Water spilage",
+    who_it_harms = "Users",
+    how_it_harms = "Water coming into contact with electronics",
+    prevention = "Cheeck for leakage before running the pump",
+    mitigation = "Wear a lab coat and PPE",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+fluids_lab_water_spilt_slipping = RiskAssessmentWithoutNumberInputs(
+    activity = "Fluids laboratory",
+    hazard = "Water being spilt on the floor",
+    who_it_harms = "Students",
+    how_it_harms = "Slipping on the water on the floor causing impact injuries",
+    prevention = "Do not move the water tank when it is full",
+    mitigation = "If someone gets injured due to slipping apply an ice pack to the injured area and seek medical advice without delay",      
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+syringe_injecting_fuel_place_syringe_in_middle_of_table = RiskAssessmentWithoutNumberInputs(
+    activity = "Using syringe for injecting fuel",
+    hazard = "Stabbing yourself",
+    who_it_harms = "The user ",
+    how_it_harms = "Sharp blade cuts skin and causes bleeding",
+    prevention = "Place syringe in the middle of the table",
+    mitigation = "Wear gloves",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
+
+dunking_in_3v3_basketball_stop_dunking = RiskAssessmentWithoutNumberInputs(
+    activity = "dunking in a 3v3 game of basketball",
+    hazard = "falling",
+    who_it_harms = "me",
+    how_it_harms = "injury of impact",
+    prevention = "stop dunking",
+    mitigation = "wear full body armour",
+    prevention_prompt_expected_class = "prevention",
+    mitigation_prompt_expected_class = "mitigation",
+    risk_domain="physical risk to individuals"
+    )
 
 RA_credit_risk = RiskAssessmentWithoutNumberInputs(
     activity='Extending credit to customers',
@@ -1400,11 +1616,7 @@ physical_risks_to_individuals__original_student_data = {
         RA_incorrect_prevention_and_mitigation,
         RA_heavy_weight_falls_on_demonstrator, 
         RA_zip_tie_hits_audience,
-
-        # Additional examples
-        RA_mucking_out_horse,
         RA_battery_causes_fire, 
-        RA_slitter_machine,
 
         # Neither examples
         RA_syringe_needle__neither,
@@ -1428,15 +1640,38 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
         RA_syringe_with_cover,
         RA_hot_water_in_cups,
         RA_bigger_beaker,
+        RA_cycling_high_viz,
+        RA_mucking_out_horse,
+        RA_slitter_machine,
         RA_campfire,
         RA_bouldering,
+        RA_hob_burn,
         RA_crossing_road,
         RA_cycling,
         RA_ladder,
-        RA_cycling_high_viz,
+        RA_stable_ladder,
+        RA_cooking_gas_hob,
+        RA_zebra_crossing,
+        RA_swimming_riptides,
+        RA_careless_drivers,
         RA_cycling_safer_routes,
         RA_golf_swing,
-
+        
+        
+        thermo_lab_hot_equipment,
+        crossing_road_getting_hit_green_lights,
+        crossing_road_getting_hit_call_ambulance,
+        lab_experiment_spilled_chemicals_lab_techs,
+        lab_experiment_spilled_chemicals_no_dangerous_chemicals,
+        heat_engine_lab_burning_yourself_dont_run,
+        heat_engine_lab_burning_yourself_cold_water,
+        fluids_lab_water_spill_slippery,
+        heat_transfer_lab_boiling_water,
+        running_pump_water_spillage,
+        fluids_lab_water_spilt_slipping,
+        syringe_injecting_fuel_place_syringe_in_middle_of_table,
+        dunking_in_3v3_basketball_stop_dunking,
+        
         # Neither examples
         RA_campfire__neither,
         RA_bouldering__neither,

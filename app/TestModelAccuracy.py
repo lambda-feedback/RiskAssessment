@@ -342,7 +342,7 @@ class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPr
         super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
     
     def get_classes(self):
-        return ['prevention', 'mitigation', 'neither', 'both']
+        return self.candidate_labels
     
     def get_hazard_event_and_harm_caused_and_prompt(self, RA):
 
@@ -401,10 +401,10 @@ class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
         super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
     
     def get_first_prompt_input(self):
-        return self.get_first_prompt_input_with_risk_assessment_method('get_control_measure_prompt_with_prevention_input')
+        return self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
     
     def get_pattern_matched_and_prompt_output(self, input_object):
-        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object, 'get_control_measure_prompt_with_prevention_input')
+        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
     
 class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
@@ -423,6 +423,32 @@ class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     
     def get_pattern_matched_and_prompt_output(self, input_object):
         return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object, 'get_control_measure_prompt_with_mitigation_input')
+
+class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPrompt):
+    def __init__(self, 
+                    LLM: LLMCaller,
+                    list_of_risk_assessment_and_expected_outputs: list,
+                    sheet_name: str,
+                    examples_gathered_or_generated_message: str,
+                    candidate_labels: list,
+                    domain: str = None,
+                    is_first_test: bool = False):
+        
+        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+    
+    def get_first_prompt_input(self):
+
+        prevention_prompt = self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
+        mitigation_prompt = self.get_first_prompt_input_with_risk_assessment_method('get_control_measure_prompt_with_mitigation_input')
+        return f'{prevention_prompt}\n\n{mitigation_prompt}'
+    
+    def get_pattern_matched_and_prompt_output(self, input_object):
+        prevention_pattern, prevention_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
+        mitigation_pattern, mitigation_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_mitigation_input')
+        
+        prevention_and_mitigation_pattern = f'{prevention_pattern}, {mitigation_pattern}'
+        prevention_and_mitigation_prompt_output = f'{prevention_prompt_output}\n\n{mitigation_prompt_output}'
+        return prevention_and_mitigation_pattern, prevention_and_mitigation_prompt_output
 
 class TestPreventionPromptOnSingleExample(TestPreventionPromptInput):
     def __init__(self,
