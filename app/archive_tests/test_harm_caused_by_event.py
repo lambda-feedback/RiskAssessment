@@ -1,6 +1,6 @@
 # from PromptInputs import HarmCausedAndHazardEventByEvent
 # from TestModelAccuracy import TestModelAccuracy
-# from LLMCaller import OpenAILLM
+# from LLMCaller import GPT_3_point_5_turbo
 
 # from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 
@@ -28,7 +28,7 @@
 # examples = examples_generator.get_input_and_expected_output_list()
 
 # test_accuracy = TestModelAccuracy(test_description="""Testing EventCausedByHazard prompt for examples generated using Chat GPT""",
-#                                     LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+#                                     LLM=GPT_3_point_5_turbo(temperature=0.1, max_tokens=400),
 #                                             LLM_name='gpt-3.5-turbo',
 #                                             list_of_input_and_expected_outputs=examples,
 #                                             sheet_name='Harm Caused By Event')

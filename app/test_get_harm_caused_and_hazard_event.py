@@ -26,6 +26,6 @@ def test_harm_caused_and_hazard_event(risk_assessments_dict, LLM, is_first_test:
 if __name__ == '__main__':
     test_harm_caused_and_hazard_event(
         # LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300),
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+        LLM=GPT_3_point_5_turbo(temperature=0.1),
         risk_assessments_dict=biohazard_risks,
         is_first_test=True)

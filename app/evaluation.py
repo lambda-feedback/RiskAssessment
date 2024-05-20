@@ -33,6 +33,7 @@ class Params(TypedDict):
     is_feedback_text: bool
     is_risk_matrix: bool
     is_risk_assessment: bool
+    LLM: str
 
 def provide_feedback_on_risk_matrix(response):
         risk_matrix = np.array(response)
@@ -144,7 +145,7 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
                                               feedback_for_incorrect_answers: str,
                                               is_everything_correct: bool,
                                               risk_assessment: RiskAssessment,
-                                              LLM: Type[LLMCaller]):
+                                              LLM_caller: Type[LLMCaller]):
     
     prevention_prompt_feedback = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output, start_string='Prevention Explanation', end_string='Mitigation Explanation')
     mitigation_prompt_feedback = control_measure_prompt_input.get_longform_feedback(prompt_output=control_measure_prompt_output, start_string='Mitigation Explanation', end_string='Answer')
@@ -163,8 +164,8 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
     
     if control_measure_prompt_pattern == 'both':
         prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
-        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
-        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM_caller, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM_caller, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
 
         feedback_for_correct_answers += f'''
         {feedback_header}
@@ -174,7 +175,7 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
 
     if control_measure_prompt_pattern == control_measure_input_field:
         prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
-        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM_caller, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
 
         feedback_for_correct_answers += f'''
         {feedback_header}
@@ -182,7 +183,7 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
 
     if control_measure_prompt_pattern == 'neither':
         prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
-        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
+        summary_of_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM_caller, control_measure_type=control_measure_input_field, feedback=control_measure_prompt_feedback)
 
         recommendation = control_measure_prompt_input.get_recommendation(recommendation_type='neither')
         feedback_for_incorrect_answers += f'''
@@ -194,7 +195,7 @@ def provide_feedback_on_control_measure_input(control_measure_input_field: str,
 
     if control_measure_prompt_pattern == other_control_measure_input_field:
         prompt_input_for_summarizing_control_measure_prompt_feedback = risk_assessment.get_feedback_summary_input()
-        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
+        summary_of_other_control_measure_prompt_feedback, _ = risk_assessment.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_for_summarizing_control_measure_prompt_feedback, LLM_caller=LLM_caller, control_measure_type=other_control_measure_input_field, feedback=other_control_measure_prompt_feedback)
 
         recommendation = control_measure_prompt_input.get_recommendation(recommendation_type='misclassification')
         feedback_for_incorrect_answers += f'''
@@ -241,6 +242,8 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_risk_assessment"] == True:
         activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
+        LLM_name = params["LLM"]
+        LLM = LLM_dictionary[LLM_name]
         # TODO: Do we need a risk domain?
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
@@ -261,9 +264,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             return Result(is_correct=False,
                         feedback=f'''\n\n\n\n\n # Feedback:\n\n\n\n\n
                                     \n\n\n\n\n## {likelihood_severity_risk_feedback_message}\n\n\n\n\n''')
-        
-        # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
-        LLM = OpenAILLM(temperature=0.1, max_tokens=200)
 
         feedback_for_incorrect_answers = '\n\n\n\n# Feedback for Incorrect Answers\n\n\n\n'
         feedback_for_correct_answers = '\n\n\n\n# Feedback for Correct Answers\n\n\n\n'
@@ -279,7 +279,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         
         for prompt_input_object in first_2_prompt_input_objects:
             if is_everything_correct == True:
-                prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object, LLM)
+                prompt_output, pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=prompt_input_object, LLM_caller=LLM)
                 shortform_feedback = RA.get_shortform_feedback_from_regex_match(prompt_input_object, pattern)
 
                 field = prompt_input_object.get_field_checked()
@@ -309,23 +309,22 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
         # PREVENTION CHECKS
         no_information_provided_for_prevention_prompt_input = RA.get_no_information_provided_for_prevention_input()
-        no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_prevention_prompt_input, LLM)
+        no_information_provided_for_prevention_prompt_output, no_information_provided_for_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=no_information_provided_for_prevention_prompt_input, LLM_caller=LLM)
 
-        if no_information_provided_for_prevention_pattern == 'no information provided':
+        if no_information_provided_for_prevention_pattern == 'no information provided' or RA.prevention == '':
             fields_for_which_no_information_provided.append('Prevention')
         
         else:
             # TODO: Avoid duplication of the following code:
             harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-            harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, OpenAILLM(temperature=0.1, max_tokens=300))
+            harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=harm_caused_and_hazard_event_prompt_input, LLM_caller=LLM)
 
             hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
             harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
-            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400)
             control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
-            control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_prevention_input, 
-                                                                                                                                                     OpenAILLM(temperature=0.1, max_tokens=400), 
+            control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=control_measure_prompt_with_prevention_input, 
+                                                                                                                                                     LLM_caller=LLM,
                                                                                                                                                      harm_caused=harm_caused, 
                                                                                                                                                      hazard_event=hazard_event)
 
@@ -338,31 +337,28 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 feedback_for_incorrect_answers=feedback_for_incorrect_answers,
                 is_everything_correct=is_everything_correct,
                 risk_assessment=RA,
-                LLM=OpenAILLM(temperature=0.1, max_tokens=300)
+                LLM_caller=LLM
             )
 
         # MITIGATION CHECKS
         no_information_provided_for_mitigation_prompt_input = RA.get_no_information_provided_for_mitigation_input()
-        no_information_provided_for_mitigation_prompt_output, no_information_provided_for_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(no_information_provided_for_mitigation_prompt_input, LLM)
+        no_information_provided_for_mitigation_prompt_output, no_information_provided_for_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=no_information_provided_for_mitigation_prompt_input, LLM_caller=LLM)
 
-        if no_information_provided_for_mitigation_pattern == 'no information provided':
+        if no_information_provided_for_mitigation_pattern == 'no information provided' or RA.mitigation == '':
             fields_for_which_no_information_provided.append('Mitigation')
         else:
             # If harm_caused and hazard_event have not already been extracted.
             if no_information_provided_for_prevention_pattern == 'no information provided':
-                # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
 
                 harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-                harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(harm_caused_and_hazard_event_prompt_input, LLM)
+                harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=harm_caused_and_hazard_event_prompt_input, LLM_caller=LLM)
 
                 hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
                 harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
             
-            # LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400)
-            
             control_measure_prompt_with_mitigation_input = RA.get_control_measure_prompt_with_mitigation_input()
-            control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(control_measure_prompt_with_mitigation_input, 
-                                                                                                                                                     OpenAILLM(temperature=0.1, max_tokens=400), 
+            control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=control_measure_prompt_with_mitigation_input, 
+                                                                                                                                                     LLM_caller=LLM, 
                                                                                                                                                      harm_caused=harm_caused, 
                                                                                                                                                      hazard_event=hazard_event)
             
@@ -375,7 +371,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
                 feedback_for_incorrect_answers=feedback_for_incorrect_answers,
                 is_everything_correct=is_everything_correct,
                 risk_assessment=RA,
-                LLM=OpenAILLM(temperature=0.1, max_tokens=300)
+                LLM_caller=LLM
             )
 
         if is_everything_correct == True:

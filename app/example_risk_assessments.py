@@ -2,6 +2,8 @@
 # 1. Keeping a safe distance away from a possible projectile is a prevention measure.
 # The hazard event is therefore the projectile hitting someone, not the projectile being released.
 
+import numpy as np
+
 try:
     from .RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
 except ImportError:
@@ -55,9 +57,9 @@ RA_incorrect_prevention_and_mitigation = RiskAssessmentWithoutNumberInputs(
     how_it_harms="Inhaling welding fumes can lead to respiratory problems, lung damage, and long-term health issues.",
     who_it_harms="Welders and individuals in the vicinity of the welding area.",
     prevention="Using the welding equipment in an enclosed space without proper ventilation.",
-    mitigation='',
+    mitigation='Get a dog with rabies to lick the wound',
     prevention_prompt_expected_class='neither',
-    mitigation_prompt_expected_class='',
+    mitigation_prompt_expected_class='neither',
     risk_domain="physical risk to individuals"
 )
 
@@ -67,9 +69,9 @@ RA_trombone_impact = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Audience",
     how_it_harms="Slide could hit audience member, causing impact injury.",
     prevention="Keep safe distance between the player and audience",
-    mitigation="",
+    mitigation="Apply first aid on the injured area",
     prevention_prompt_expected_class='prevention',
-    mitigation_prompt_expected_class='',
+    mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
 )
 
@@ -84,7 +86,6 @@ RA_hearing_damage = RiskAssessmentWithoutNumberInputs(
     mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
 )
-
 
 # RA_3_water_from_instrument = RiskAssessmentWithoutNumberInputs(
 #     activity="Using a trombone as a demonstration for a TPS presentation",
@@ -248,9 +249,9 @@ RA_paper_plane_impact = RiskAssessmentWithoutNumberInputs(
     who_it_harms='Audience',
     how_it_harms='Impact injury.',
     prevention='Throw the paper plane to a direction without anyone',
-    mitigation='',
+    mitigation='Apply first aid on the injured area',
     prevention_prompt_expected_class='prevention',
-    mitigation_prompt_expected_class='',
+    mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
 )
 
@@ -272,9 +273,9 @@ RA_sharp_drone_propeller_blade = RiskAssessmentWithoutNumberInputs(
     who_it_harms='Whoever pokes the propellor blade at the tip',
     how_it_harms='Is sharp to the touch to cause pain but not sharp enough to pierce skin',
     prevention='Make them aware the tip is sharp',
-    mitigation='',
+    mitigation='Apply a plaster if necessary',
     prevention_prompt_expected_class='prevention',
-    mitigation_prompt_expected_class='',
+    mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
 )
 
@@ -332,9 +333,9 @@ RA_pencil_lead_projectile = RiskAssessmentWithoutNumberInputs(
     who_it_harms='Anyone present',
     how_it_harms='May enter one\'s eye',
     prevention='Keep safe distance between the audience when demonstrating lead breakage',
-    mitigation='',
+    mitigation='Apply first aid if necessary',
     prevention_prompt_expected_class='prevention',
-    mitigation_prompt_expected_class='',
+    mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
 )
 
@@ -620,8 +621,8 @@ RA_swimming_riptides = RiskAssessmentWithoutNumberInputs(
             how_it_harms="People can get caught in riptides and dragged out to see putting them at a very high risk of drowing",
             prevention="Only swim within marked areas that lifeguards can spot you",
             mitigation="Swim wearing a bright coloured swim cap",
-            prevention_prompt_expected_class='prevention',
-            mitigation_prompt_expected_class='prevention',
+            prevention_prompt_expected_class='both',
+            mitigation_prompt_expected_class='mitigation',
             risk_domain="physical risk to individuals"
         )
 
@@ -762,7 +763,7 @@ fluids_lab_water_spill_slippery = RiskAssessmentWithoutNumberInputs(
     hazard = "Water spill out and cause slippery",
     who_it_harms = "Users",
     how_it_harms = "Spilled water can make floor slippery and people may fall over",
-    prevention = "Be careful",
+    prevention = "Handle containers of water with care",
     mitigation = "Mop up using a cloth immediately",
     prevention_prompt_expected_class = "neither",
     mitigation_prompt_expected_class = "prevention",
@@ -909,9 +910,9 @@ RA_wildfire_early_detection__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Residents",
     how_it_harms="Wildfires can cause extensive damage to homes",
     prevention="Use highly-flammable plants",
-    mitigation="",
+    mitigation="Use a flame thrower to extinguish the fire",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="environmental risk"
 )
 
@@ -1185,9 +1186,9 @@ RA_civil_nuclear_cyber_attack__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Energy consumers",
     how_it_harms="Temporary loss of power supply",
     prevention="Avoid sector-wide collaboration against cyber-threats",
-    mitigation="",
+    mitigation="Destroy incident response plans",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="cybersecurity risk"
 )
 
@@ -1209,9 +1210,9 @@ RA_electricity_infrastructure_cyber_attack__neither = RiskAssessmentWithoutNumbe
     who_it_harms="Energy consumers",
     how_it_harms="Instantaneous loss of mains electricity supply",
     prevention="Teach employees how to perform a cyber attack",
-    mitigation="", # to limit the spread of a cybersecurity attack
+    mitigation="Keep the NETS infrastructure as a single segment",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="cybersecurity risk"
 )
 
@@ -1233,9 +1234,9 @@ RA_gas_infrastructure_cyber_attack__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Energy consumers",
     how_it_harms="Disruption of gas supply",
     prevention="Avoid use of multi-factor authentication", # and access controls to protect critical systems and data
-    mitigation="Develop and test incident response plans", #  to enable rapid detection, containment, and recovery from cyber attacks
+    mitigation="Destroy incident response plans", #  to enable rapid detection, containment, and recovery from cyber attacks
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="cybersecurity risk"
 )
 
@@ -1256,9 +1257,9 @@ RA_fuel_supply_cyber_attack__neither = RiskAssessmentWithoutNumberInputs(
     hazard="Cyber Attack on system critical to UK fuel distribution and supply",
     who_it_harms="Energy consumers",
     how_it_harms="Disruption of fuel supply",
-    prevention="", #  in fuel supply infrastructure
+    prevention="Disinfect the computers using disinfectant", #  in fuel supply infrastructure
     mitigation="Hire earthquake response experts to manage emergency responses", # to cyber attacks
-    prevention_prompt_expected_class="",
+    prevention_prompt_expected_class="neither",
     mitigation_prompt_expected_class="neither",
     risk_domain="cybersecurity risk"
 )
@@ -1317,10 +1318,10 @@ RA_terrorism_aviation_background_checks__neither = RiskAssessmentWithoutNumberIn
     hazard="Terrorist attack targeting aircraft",
     who_it_harms="Passengers",
     how_it_harms="Significant loss of life",
-    prevention="Conducting thorough background checks on restaurant waiter.",
-    mitigation="",
+    prevention="Neglecting thorough background checks on airport staff",
+    mitigation="Throwing the injured personnel into the sea",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="terrorism risk"
 )
 
@@ -1377,9 +1378,9 @@ RA_high_profile_assassination_protection__neither = RiskAssessmentWithoutNumberI
     hazard="Assassination of a high-profile public figure",
     who_it_harms="High-profile public figures",
     how_it_harms="Loss of life",
-    prevention="",
+    prevention="Shoot the high-profile figure",
     mitigation="Releasing perpetrators",
-    prevention_prompt_expected_class="",
+    prevention_prompt_expected_class="neither",
     mitigation_prompt_expected_class="neither",
     risk_domain="terrorism risk"
 )
@@ -1429,9 +1430,9 @@ RA_CBRN_attack_enhance_detection__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Emergency responders",
     how_it_harms="Potential for significant casualties and fatalities",
     prevention="Enhancing detection methods of phishing emails",
-    mitigation="",
+    mitigation="Yelling at those injured",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="terrorism risk"
 )
 
@@ -1549,9 +1550,9 @@ RA_foot_and_mouth_disease_rapid_response__neither = RiskAssessmentWithoutNumberI
     who_it_harms="Livestock",
     how_it_harms="Economic losses in agriculture sector",
     prevention="Implementing overly relaxed visitor management protocols",
-    mitigation="",
+    mitigation="Increasing taxes on farmers",
     prevention_prompt_expected_class="neither",
-    mitigation_prompt_expected_class="",
+    mitigation_prompt_expected_class="neither",
     risk_domain="biohazard risk"
 )
 
@@ -1597,7 +1598,7 @@ RA_healthcare_biohazard__neither = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Patients",
     how_it_harms="Infections",
     prevention="Conducting disinfection once a year",
-    mitigation="",
+    mitigation="Giving the infected patients peanut butter",
     prevention_prompt_expected_class="neither",
     mitigation_prompt_expected_class="",
     risk_domain="biohazard risk"
@@ -1626,9 +1627,9 @@ physical_risks_to_individuals__original_student_data = {
         RA_mucking_out_horse__neither,
         RA_battery_causes_fire__neither,
         
-        # RA_paper_plane_impact, 
-        # RA_pencil_lead_projectile,
-        # RA_climbing_gear_on_feet, 
+        RA_paper_plane_impact, 
+        RA_pencil_lead_projectile,
+        RA_climbing_gear_on_feet, 
         ],
     'risk_domain': 'Physical risks to individuals (original student data)'
 }
@@ -1657,7 +1658,6 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
         RA_cycling_safer_routes,
         RA_golf_swing,
         
-        
         thermo_lab_hot_equipment,
         crossing_road_getting_hit_green_lights,
         crossing_road_getting_hit_call_ambulance,
@@ -1672,7 +1672,7 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
         syringe_injecting_fuel_place_syringe_in_middle_of_table,
         dunking_in_3v3_basketball_stop_dunking,
         
-        # Neither examples
+        # # Neither examples
         RA_campfire__neither,
         RA_bouldering__neither,
         RA_hob_burn__neither,
@@ -1707,7 +1707,6 @@ natural_disaster_risks = {
         RA_volcano_emergency_response,
         RA_volcano_post_disaster_recovery,
 
-
         # PREVENTION AND MITIGATION
         RA_wildfire_early_detection,
 
@@ -1724,23 +1723,23 @@ natural_disaster_risks = {
 cybersecurity_risks = {
     'risk_assessments': [
         RA_ransomware_NHS_isolation,
-        # RA_ransomware_NHS_MFA,
-        # RA_ransomware_NHS_data_backup,
-        # RA_bank_cybersecurity_attack,
-        # RA_transport_cyber_attack_specific,
-        # RA_telecoms_cyber_attack,
-        # RA_civil_nuclear_cyber_attack,
-        # RA_electricity_infrastructure_cyber_attack,
-        # RA_gas_infrastructure_cyber_attack,
-        # RA_fuel_supply_cyber_attack,
+        RA_ransomware_NHS_MFA,
+        RA_ransomware_NHS_data_backup,
+        RA_bank_cybersecurity_attack,
+        RA_transport_cyber_attack_specific,
+        RA_telecoms_cyber_attack,
+        RA_civil_nuclear_cyber_attack,
+        RA_electricity_infrastructure_cyber_attack,
+        RA_gas_infrastructure_cyber_attack,
+        RA_fuel_supply_cyber_attack,
 
         # NEITHER EXAMPLES
-        # RA_ransomware_NHS_isolation__neither,
+        RA_ransomware_NHS_isolation__neither,
         RA_ransomware_NHS_MFA__neither,
-        # RA_civil_nuclear_cyber_attack__neither,
-        # RA_electricity_infrastructure_cyber_attack__neither,
-        # RA_gas_infrastructure_cyber_attack__neither,
-        # RA_fuel_supply_cyber_attack__neither,
+        RA_civil_nuclear_cyber_attack__neither,
+        RA_electricity_infrastructure_cyber_attack__neither,
+        RA_gas_infrastructure_cyber_attack__neither,
+        RA_fuel_supply_cyber_attack__neither,
     ],
     'risk_domain': 'Cybersecurity risks'
 }
@@ -1796,6 +1795,30 @@ biohazard_risks = {
 }
 
 # Assuming you have a list of RiskAssessment objects named risk_assessments
+
+all_risk_assessments = []
+
+for risk_assessments_dict in [
+        physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        physical_risks_to_individuals__original_student_data,
+        natural_disaster_risks,
+        cybersecurity_risks,
+        terrorism_risks,
+        biohazard_risks
+    ]:
+
+    all_risk_assessments += risk_assessments_dict['risk_assessments']
+
+
+def create_risk_assessments_with_how_it_harms_replaced_with_activity(risk_assessments):
+    new_risk_assessments = []
+
+    for risk_assessment in risk_assessments:
+        risk_assessment.update_risk_assessment_so_how_it_harms_field_is_activity_field()
+
+        new_risk_assessments.append(risk_assessment)
+    
+    return new_risk_assessments
 
 def create_unique_set_of_control_measures(risk_assessments):
     unique_control_measures = set()

@@ -1,5 +1,5 @@
 from TestModelAccuracy import TestModelAccuracy
-from LLMCaller import OpenAILLM, ClaudeSonnetLLM
+from LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
 from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from PromptInputs import WhoItHarmsInContext
 from example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
@@ -159,7 +159,7 @@ def test_who_it_harms_in_context(examples, LLM, is_first_test: bool = False):
     test_accuracy.run_test()
 
 if __name__ == "__main__":
-    LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
+    LLM = ClaudeSonnetLLM(system_message='', temperature=0.1)
 
     test_who_it_harms_in_context(examples=examples, 
                                  LLM=LLM, 

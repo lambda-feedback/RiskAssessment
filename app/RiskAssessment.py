@@ -98,6 +98,12 @@ class RiskAssessment:
                 'prevention',
                 'mitigation']
     
+    def get_word_fields_which_cannot_be_empty(self):
+        return ['activity',
+                'hazard',
+                'how_it_harms',
+                'who_it_harms']
+    
     def get_integer_fields(self):
         return ['uncontrolled_likelihood',
                 'uncontrolled_severity',
@@ -110,7 +116,7 @@ class RiskAssessment:
     def get_empty_fields(self):
         empty_fields = []
 
-        for field_name in self.get_word_fields() + self.get_integer_fields():
+        for field_name in self.get_word_fields_which_cannot_be_empty() + self.get_integer_fields():
             if getattr(self, field_name) == '':
                 formatted_field_name = field_name.replace('_', ' ').title()
                 empty_fields.append(formatted_field_name)
@@ -279,7 +285,7 @@ class RiskAssessment:
     def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller], **kwargs):
         regex_pattern_matcher = RegexPatternMatcher()
         
-        prompt_output = LLM_caller.get_model_output(prompt_input_object.generate_prompt(**kwargs))
+        prompt_output = LLM_caller.get_model_output(prompt=prompt_input_object.generate_prompt(**kwargs), max_tokens=prompt_input_object.max_tokens)
         print(prompt_output)
         
         pattern_matching_method = getattr(regex_pattern_matcher, prompt_input_object.pattern_matching_method)
@@ -307,6 +313,39 @@ class RiskAssessment:
                 return False
         
         return True
+
+    def convert_risk_assessment_to_evaluation_function_list_input(self):
+        return [self.activity, 
+                self.hazard, 
+                self.how_it_harms, 
+                self.who_it_harms, 
+                self.uncontrolled_likelihood, 
+                self.uncontrolled_severity, 
+                self.uncontrolled_risk, 
+                self.prevention, 
+                self.mitigation, 
+                self.controlled_likelihood, 
+                self.controlled_severity, 
+                self.controlled_risk]
+    
+    def update_risk_assessment_so_how_it_harms_field_is_activity_field(self):
+        self.how_it_harms = self.activity
+
+    def update_risk_assessment_so_who_it_harms_field_is_activity_field(self):
+        self.who_it_harms = self.activity
+    
+    def update_risk_assessment_so_how_it_harms_field_is_hazard_field(self):
+        self.how_it_harms = self.hazard
+    
+    def update_risk_assessment_so_who_it_harms_field_is_hazard_field(self):
+        self.who_it_harms = self.hazard
+    
+    def update_risk_assessment_so_how_it_harms_field_is_who_it_harms_field(self):
+        self.how_it_harms = self.who_it_harms
+    
+    def update_risk_assessment_so_who_it_harms_field_is_how_it_harms_field(self):
+        self.who_it_harms = self.how_it_harms
+
 
 class RiskAssessmentWithoutNumberInputs(RiskAssessment):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,

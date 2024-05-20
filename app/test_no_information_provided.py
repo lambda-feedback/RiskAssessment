@@ -9,7 +9,7 @@ except:
     from LLMCaller import *
     from PromptInputs import NoInformationProvided
     from TestModelAccuracy import TestModelAccuracy
-    from example_risk_assessments import cybersecurity_risks, create_unique_set_of_control_measures
+    from example_risk_assessments import cybersecurity_risks, physical_risks_to_individuals__data_gathered_from_version_1_deployment, physical_risks_to_individuals__original_student_data, create_unique_set_of_control_measures
 
 no_information_provided_examples = [
     "Leave blank",
@@ -34,16 +34,15 @@ information_provided_examples = [
     "Wearing a helmet while biking",
 ]
 
-examples = []
 
-for example in no_information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='no information provided'))
+def test_no_information_provided_prompt(risk_assessments, LLM, is_first_test: bool = False):
+    examples = []
 
-for example in information_provided_examples:
-    examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='control measure'))
+    for example in no_information_provided_examples:
+        examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='no information provided'))
 
-def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is_first_test: bool = False):
-    risk_assessments = risk_assessments_dict['risk_assessments']
+    for example in information_provided_examples:
+        examples.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=NoInformationProvided(input=example), expected_output='control measure'))
 
     unique_control_measures_in_risk_domain = create_unique_set_of_control_measures(risk_assessments)
     
@@ -53,7 +52,7 @@ def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is
     test_accuracy = TestModelAccuracy(
                         LLM=LLM,
                         is_first_test=is_first_test,
-                        domain=risk_assessments_dict['risk_domain'],       
+                        domain='Laboratory risks',       
                         list_of_input_and_expected_outputs=examples,
                         examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
                         sheet_name='No Information Provided')
@@ -61,9 +60,23 @@ def test_no_information_provided_prompt(risk_assessments_dict, examples, LLM, is
     test_accuracy.run_test()
 
 if __name__ == "__main__":
-    test_no_information_provided_prompt(risk_assessments_dict=cybersecurity_risks
-                                    , examples=examples
-                                    , LLM=MistralLLM(model='open-mixtral-8x7b', temperature=0.1, max_tokens=300)
-                                    , is_first_test=True)
+    laboratory_risk_assessments = physical_risks_to_individuals__data_gathered_from_version_1_deployment['risk_assessments'] + physical_risks_to_individuals__original_student_data['risk_assessments']
+
+    temperature = 0.1
+    # test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+    #                                 , LLM=GPT_3_point_5_turbo(temperature=temperature)
+    #                                 , is_first_test=True)
+    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+                                    , LLM=MistralLarge(temperature=temperature)
+                                    , is_first_test=False)
+    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+                                    , LLM=Mixtral8x22B(temperature=temperature)
+                                    , is_first_test=False)
+    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+                                    , LLM=Mixtral8x7B(temperature=temperature)
+                                    , is_first_test=False)
+    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+                                    , LLM=ClaudeSonnetLLM(system_message="", temperature=temperature)
+                                    , is_first_test=False)
 
     

@@ -36,6 +36,7 @@ class NoInformationProvided(PromptInput):
         self.pattern_matching_method = 'check_string_for_no_information_provided'
         self.candidate_labels = ['control measure', 'no information provided']
         self.input = input
+        self.max_tokens = 200
     
     def generate_prompt(self):
         return f'''
@@ -99,47 +100,13 @@ class NoInformationProvided(PromptInput):
 
         Input: "{self.input}"'''
 
-class Activity(PromptInput):
-    def __init__(self, activity: str):
-        super().__init__()
-        self.activity = activity
-
-    def get_field_checked(self):
-        return 'Activity'
-    
-        # If "Golf" is an example of an activity, answer True, else answer False.
-
-        # Use the following output format:
-        # Overall Answer: <your answer>
-    
-    def generate_prompt(self):
-        return f'''
-        If the input is an example of an activity, answer True, else answer False.
-
-        If "{self.activity}" is an example of an activity, answer True, else answer False.
-
-        Use the following output format:
-        Overall Answer: <your answer>'''
-    
-    def get_shortform_feedback(self, feedback_type):
-        if feedback_type == 'positive':
-            return f"Correct! '{self.activity}' is an activity."
-        if feedback_type == 'negative':
-            return f"Incorrect. '{self.activity}' is not an activity."
-    
-    def get_longform_feedback(self, prompt_output=''):
-        regex_pattern_matcher = RegexPatternMatcher()
-        return ''
-
-    def get_recommendation(self):
-        return f'Enter an activity that aligns with the definition: {self.activity_definition}'
-
 class HowItHarmsInContext(PromptInput):
     def __init__(self, how_it_harms, activity, hazard):
         super().__init__()
         self.how_it_harms = how_it_harms
         self.activity = activity
         self.hazard = hazard
+        self.max_tokens = 200
 
     def get_field_checked(self):
         return 'Hazard & How It Harms'
@@ -213,6 +180,7 @@ class WhoItHarmsInContext(PromptInput):
         self.activity = activity
         self.hazard = hazard
         self.how_it_harms = how_it_harms
+        self.max_tokens = 200
 
     def get_field_checked(self):
         return 'Who It Harms'
@@ -278,6 +246,8 @@ class HarmCausedAndHazardEvent(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
+        self.max_tokens = 300
+
         self.pattern_matching_method = 'extract_harm_caused_and_hazard_event'
 
     def generate_prompt_without_few_shot_examples(self):
@@ -482,6 +452,7 @@ class ControlMeasureClassification(PromptInput):
         self.hazard = hazard
         self.how_it_harms = how_it_harms
         self.who_it_harms = who_it_harms
+        self.max_tokens = 400
 
         self.pattern_matching_method = 'check_string_for_prevention_mitigation_or_neither'
         self.candidate_labels = ['prevention', 'mitigation', 'neither', 'both']
@@ -738,6 +709,7 @@ class SummarizeControlMeasureFeedback(PromptInput):
 
         self.candidate_labels = [True, False]
         self.pattern_matching_method = 'always_return_true'
+        self.max_tokens = 300
 
     def get_context_style_tone_audience(self):
         return """<CONTEXT>

@@ -1,13 +1,13 @@
 try:    
     from .TestModelAccuracy import TestModelAccuracy
-    from .LLMCaller import OpenAILLM
+    from .LLMCaller import GPT_3_point_5_turbo
     from .ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
     from .PromptInputs import HowItHarmsInContext
     from .example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
     from .LLMCaller import LLMCaller
 except:
     from TestModelAccuracy import TestModelAccuracy
-    from LLMCaller import OpenAILLM
+    from LLMCaller import GPT_3_point_5_turbo
     from ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
     from PromptInputs import HowItHarmsInContext
     from example_risk_assessments import physical_risks_to_individuals__original_student_data, natural_disaster_risks, cybersecurity_risks, terrorism_risks, biohazard_risks
@@ -60,7 +60,7 @@ def test_how_it_harms_in_context(correct_examples_list, LLM, is_first_test: bool
     test_accuracy.run_test()
 
 if __name__ == "__main__":
-    LLM = OpenAILLM(temperature=0.1, max_tokens=400)
+    LLM = GPT_3_point_5_turbo(temperature=0.1)
 
     test_how_it_harms_in_context(correct_examples_list=correct_examples_list, 
                                  LLM=LLM, 
