@@ -135,7 +135,6 @@ RA_ink_spill_in_eye__neither = RiskAssessmentWithoutNumberInputs(
 #     mitigation_prompt_expected_class='mitigation',
 # )
 
-
 RA_ink_spill_in_eye_with_incorrect_how_it_harms = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
     hazard="Ink spillage",
@@ -259,7 +258,7 @@ RA_climbing_gear_on_feet = RiskAssessmentWithoutNumberInputs(
     activity='TPS presentation',
     hazard='Climbing Protection Gear (Cams and Hexs)',
     who_it_harms="Students and other individuals who would like to see how they work.",
-    how_it_harms="""Some equipment is heavy so could hurt if dropped on feet.""",
+    how_it_harms="Some equipment is heavy so could hurt if dropped on feet.",
     prevention='Inform those who wish to hold the equipment of the risk and demonstrate how they are used correctly.',
     mitigation='First aid if necessary',
     prevention_prompt_expected_class='prevention',
@@ -473,7 +472,7 @@ RA_slitter_machine = RiskAssessmentWithoutNumberInputs(
 RA_campfire = RiskAssessmentWithoutNumberInputs(
     activity="Building a campfire",
     hazard="Flame",
-    who_it_harms="People or property ",
+    who_it_harms="People or property",
     how_it_harms="Burns or damage",
     prevention="Safe distance from fire to be adhered to",
     mitigation="Flameproof clothing/insulation",
@@ -520,7 +519,7 @@ RA_bouldering__neither = RiskAssessmentWithoutNumberInputs(
 
 RA_hob_burn = RiskAssessmentWithoutNumberInputs(
     activity="Cooking",
-    hazard="Fire/ heat",
+    hazard="Fire/heat",
     who_it_harms="Chef",
     how_it_harms="Burns",
     prevention="Use induction stove",
@@ -570,7 +569,7 @@ RA_ladder = RiskAssessmentWithoutNumberInputs(
     activity="Climbing a tall ladder",
     hazard="Falling, slipping",
     who_it_harms="the person on the ladder, people below the ladder",
-    how_it_harms="The impact of hitting the ground ",
+    how_it_harms="The impact of hitting the ground",
     prevention="Have someone hold the ladder. Make sure the ladder is locked and the ground in even. ",
     mitigation="Wear helment and padded clothes.",
     prevention_prompt_expected_class="prevention",
@@ -579,16 +578,16 @@ RA_ladder = RiskAssessmentWithoutNumberInputs(
 )
 
 RA_stable_ladder = RiskAssessmentWithoutNumberInputs(
-            activity="Going up a ladder",
-            hazard="Dangerous height",
-            who_it_harms="Person climbing",
-            how_it_harms="Falling",
-            prevention="Someone hold ladder",
-            mitigation="Buy stable ladder",
-            prevention_prompt_expected_class="prevention",
-            mitigation_prompt_expected_class="mitigation",
-            risk_domain="physical risk to individuals"
-        )
+    activity="Going up a ladder",
+    hazard="Dangerous height",
+    who_it_harms="Person climbing",
+    how_it_harms="Falling",
+    prevention="Someone hold ladder",
+    mitigation="Buy stable ladder",
+    prevention_prompt_expected_class="prevention",
+    mitigation_prompt_expected_class="mitigation",
+    risk_domain="physical risk to individuals"
+)
 
 RA_cooking_gas_hob = RiskAssessmentWithoutNumberInputs(
             activity="cooking on gas hob",
@@ -1268,7 +1267,7 @@ RA_explosive_devices_sniffer_dogs = RiskAssessmentWithoutNumberInputs(
     activity="Public gatherings or events",
     hazard="Explosive terrorist attack",
     who_it_harms="Event attendees",
-    how_it_harms="Leads to loss of life",
+    how_it_harms="Explosion leads to loss of life",
     prevention="Enhancing explosive detection capabilities", # e.g. with sniffer dogs
     mitigation="Providing victim support structures",
     prevention_prompt_expected_class="prevention",
@@ -1305,7 +1304,7 @@ RA_terrorism_aviation_background_checks = RiskAssessmentWithoutNumberInputs(
     activity="Air travel operations",
     hazard="Terrorist attack targeting aircraft",
     who_it_harms="Passengers",
-    how_it_harms="Significant loss of life",
+    how_it_harms="Loss of life of all onboard plane",
     prevention="Conducting thorough background checks on airport staff.",
     mitigation="Providing psychological support for affected individuals",
     prevention_prompt_expected_class="prevention",
@@ -1341,7 +1340,7 @@ RA_hostage_negotiation_teams = RiskAssessmentWithoutNumberInputs(
     activity="Public gatherings",
     hazard="Hostage taking",
     who_it_harms="Hostages",
-    how_it_harms="Risk of fatalities and casualties",
+    how_it_harms="Risk of losing money to ransom",
     prevention="Implementing security measures",
     mitigation="Utilizing hostage negotiation teams",
     prevention_prompt_expected_class="prevention",
@@ -1365,7 +1364,7 @@ RA_high_profile_assassination_protection = RiskAssessmentWithoutNumberInputs(
     activity="Public appearances or events involving high-profile figures",
     hazard="Assassination of a high-profile public figure",
     who_it_harms="High-profile public figures",
-    how_it_harms="Loss of life",
+    how_it_harms="Loss of life of high profile figure",
     prevention="Providing close protection for high-profile figures",
     mitigation="Apprehending perpetrators to prevent further attacks",
     prevention_prompt_expected_class="prevention",
@@ -1389,7 +1388,7 @@ RA_high_profile_assassination_security_measures = RiskAssessmentWithoutNumberInp
     activity="Public engagements or events featuring prominent figures",
     hazard="Assassination targeting a prominent public figure",
     who_it_harms="Prominent public figures",
-    how_it_harms="Fatality",
+    how_it_harms="Fatality of high profile figure",
     prevention="Implementing robust security measures for public appearances",
     mitigation="Managing public communications to prevent escalation of tensions",
     prevention_prompt_expected_class="prevention",
@@ -1634,6 +1633,37 @@ physical_risks_to_individuals__original_student_data = {
     'risk_domain': 'Physical risks to individuals (original student data)'
 }
 
+physical_risks_to_individuals_with_unique_hazard_description_fields = {
+    'risk_assessments': [
+        RA_sharp_drone_propeller_blade,
+        RA_battery_causes_fire,
+        RA_zip_tie_hits_audience,
+        RA_pencil_lead_projectile,
+        RA_ladder,
+        RA_heavy_weight_falls_on_demonstrator,
+        RA_syringe_needle,
+        RA_syringe_with_cover,
+        RA_cycling,
+        RA_swimming_riptides
+    ],
+    'risk_domain': 'Physical risks'
+}
+
+physical_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
+    'risk_assessments': [
+        RA_golf_swing,
+        RA_ladder,
+        RA_sharp_drone_propeller_blade,
+        RA_battery_causes_fire,
+        RA_heavy_weight_falls_on_demonstrator,
+        RA_crossing_road,
+        RA_mucking_out_horse,
+        RA_bouldering,
+
+    ],
+    'risk_domain': 'Physical risks'
+}
+
 physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
     'risk_assessments': [
         RA_fire_alarm,
@@ -1720,6 +1750,29 @@ natural_disaster_risks = {
     'risk_domain': 'Natural disaster risks'
 }
 
+natural_disaster_risks_with_unique_hazard_description_fields = {
+    'risk_assessments': [
+        RA_wildfire_fire_resistant_infrastructure,
+        RA_wildfire_community_preparedness,
+        RA_earthquake_building_retrofit,
+        RA_earthquake_public_education,
+        RA_volcano_early_warning_systems,
+        RA_volcano_causing_ash_cloud,
+        RA_volcano_post_disaster_recovery,
+    ],
+    'risk_domain': 'Natural disaster risks'
+}
+
+natural_disaster_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
+    'risk_assessments': [
+        RA_wildfire_community_preparedness,
+        RA_wildfire_fire_resistant_infrastructure__neither,
+        RA_volcano_causing_ash_cloud,
+        RA_volcano_post_disaster_recovery
+    ],
+    'risk_domain': 'Natural disaster risks'
+}
+
 cybersecurity_risks = {
     'risk_assessments': [
         RA_ransomware_NHS_isolation,
@@ -1744,6 +1797,30 @@ cybersecurity_risks = {
     'risk_domain': 'Cybersecurity risks'
 }
 
+cybersecurity_risks_with_unique_hazard_description_fields = {
+    'risk_assessments': [
+        RA_ransomware_NHS_isolation,
+        RA_ransomware_NHS_MFA,
+        RA_ransomware_NHS_data_backup,
+        RA_bank_cybersecurity_attack,
+        RA_transport_cyber_attack_specific,
+        RA_telecoms_cyber_attack,
+        RA_civil_nuclear_cyber_attack,
+        RA_electricity_infrastructure_cyber_attack,
+        RA_gas_infrastructure_cyber_attack,
+        RA_fuel_supply_cyber_attack
+    ],
+    'risk_domain': 'Cybersecurity risks'
+}
+
+cybersecurity_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
+    'risk_assessments': [
+        RA_telecoms_cyber_attack,
+        RA_civil_nuclear_cyber_attack
+    ],
+    'risk_domain': 'Cybersecurity risks'
+}
+
 terrorism_risks = {
     'risk_assessments': [
         RA_explosive_devices_sniffer_dogs,
@@ -1764,7 +1841,28 @@ terrorism_risks = {
         RA_CBRN_attack_enhance_detection__neither,
         
     ],
-    'risk_domain': 'Terrorism_risks'
+    'risk_domain': 'Terrorism risks'
+}
+
+terrorism_risks_with_unique_hazard_description_fields = {
+    'risk_assessments': [
+        RA_explosive_devices_sniffer_dogs,
+        RA_terrorism_aviation_background_checks,
+        RA_terrorism_aviation_improving_standards,
+        RA_hostage_negotiation_teams,
+        RA_hostage_psychological_support,
+        RA_high_profile_assassination_protection,
+        RA_high_profile_assassination_security_measures,
+        RA_CBRN_attack_securing_borders
+    ],
+    'risk_domain': 'Terrorism risks'
+}
+
+terrorism_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
+    'risk_assessments': [
+        RA_hostage_negotiation_teams
+    ],
+    'risk_domain': 'Terrorism risks'
 }
 
 biohazard_risks = {
@@ -1791,34 +1889,51 @@ biohazard_risks = {
     
     ],
 
-    'risk_domain': 'biohazard_risks'
+    'risk_domain': 'biohazard risks'
 }
 
-# Assuming you have a list of RiskAssessment objects named risk_assessments
+biohazard_risks_with_unique_hazard_description_fields = {
+    'risk_assessments': [
+        RA_pandemic_surge_capacity,
+        RA_pandemic_quarantine,
+        RA_pandemic_vaccines,
+        RA_foot_and_mouth_disease_rapid_response
+    ],
+    'risk_domain': 'Biohazard risks'
+}
 
-all_risk_assessments = []
+biohazard_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
+    'risk_assessments': [
+        RA_pandemic_surge_capacity,
+        RA_foot_and_mouth_disease_rapid_response,
+        RA_pandemic_quarantine
 
-for risk_assessments_dict in [
-        physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        physical_risks_to_individuals__original_student_data,
-        natural_disaster_risks,
-        cybersecurity_risks,
-        terrorism_risks,
-        biohazard_risks
-    ]:
+    ],
+    'risk_domain': 'Biohazard risks'
+}
 
-    all_risk_assessments += risk_assessments_dict['risk_assessments']
+# all_risk_assessments = []
 
+# for risk_assessments_dict in [
+#         physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+#         physical_risks_to_individuals__original_student_data,
+#         natural_disaster_risks,
+#         cybersecurity_risks,
+#         terrorism_risks,
+#         biohazard_risks
+#     ]:
 
-def create_risk_assessments_with_how_it_harms_replaced_with_activity(risk_assessments):
-    new_risk_assessments = []
+#     all_risk_assessments += risk_assessments_dict['risk_assessments']
 
-    for risk_assessment in risk_assessments:
-        risk_assessment.update_risk_assessment_so_how_it_harms_field_is_activity_field()
+# def create_risk_assessments_with_how_it_harms_replaced_with_activity(risk_assessments):
+#     new_risk_assessments = []
 
-        new_risk_assessments.append(risk_assessment)
+#     for risk_assessment in risk_assessments:
+#         risk_assessment.update_risk_assessment_so_how_it_harms_field_is_activity_field()
+
+#         new_risk_assessments.append(risk_assessment)
     
-    return new_risk_assessments
+#     return new_risk_assessments
 
 def create_unique_set_of_control_measures(risk_assessments):
     unique_control_measures = set()

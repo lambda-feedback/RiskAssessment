@@ -327,24 +327,6 @@ class RiskAssessment:
                 self.controlled_likelihood, 
                 self.controlled_severity, 
                 self.controlled_risk]
-    
-    def update_risk_assessment_so_how_it_harms_field_is_activity_field(self):
-        self.how_it_harms = self.activity
-
-    def update_risk_assessment_so_who_it_harms_field_is_activity_field(self):
-        self.who_it_harms = self.activity
-    
-    def update_risk_assessment_so_how_it_harms_field_is_hazard_field(self):
-        self.how_it_harms = self.hazard
-    
-    def update_risk_assessment_so_who_it_harms_field_is_hazard_field(self):
-        self.who_it_harms = self.hazard
-    
-    def update_risk_assessment_so_how_it_harms_field_is_who_it_harms_field(self):
-        self.how_it_harms = self.who_it_harms
-    
-    def update_risk_assessment_so_who_it_harms_field_is_how_it_harms_field(self):
-        self.who_it_harms = self.how_it_harms
 
 
 class RiskAssessmentWithoutNumberInputs(RiskAssessment):

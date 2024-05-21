@@ -89,7 +89,7 @@ class TestModelAccuracy(BaseTestClass):
     
     def update_confusion_matrix(self, confusion_matrix, classes, pattern_matched, expected_output):
 
-        if 'No pattern found' in pattern_matched:
+        if isinstance(pattern_matched, str) and 'No pattern found' in pattern_matched:
             return confusion_matrix # Don't change confusion matrix if no pattern found
         
         pattern_matched_index_in_class_list = classes.index(pattern_matched)

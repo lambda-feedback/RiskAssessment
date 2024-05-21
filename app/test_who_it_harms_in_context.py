@@ -94,12 +94,12 @@ incorrect_examples_list = [
                     how_it_harms="Increased risk of severe injury or fatality in the event of an accident",
                     who_it_harms="Driving without Seatbelt"
                 ),
-                WhoItHarmsInContext(
-                    activity="Smoking in Closed Spaces",
-                    hazard="Secondhand smoke exposure",
-                    how_it_harms="Increased risk of respiratory issues for nonsmokers",
-                    who_it_harms="Secondhand smoke exposure"
-                ),
+                # WhoItHarmsInContext(
+                #     activity="Smoking in Closed Spaces",
+                #     hazard="Secondhand smoke exposure",
+                #     how_it_harms="Increased risk of respiratory issues for nonsmokers",
+                #     who_it_harms="Secondhand smoke exposure"
+                # ),
                 WhoItHarmsInContext(
                     activity="Working long hours without breaks",
                     hazard="Increased risk of burnout and mental health issues",

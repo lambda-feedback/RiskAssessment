@@ -57,17 +57,59 @@ def test_both_prevention_and_mitigation_inputs(risk_assessments_dict, LLM, is_fi
     test_accuracy.run_test()
 
 if __name__ == '__main__':
-    ### Mixtral8x7B TESTS ###
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-    #     LLM=Mixtral8x7B(temperature=0.1),
-    #     is_first_test=True
-    # )
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-    #     LLM=Mixtral8x7B(temperature=0.1),
+   # ### CLAUDE SONNET TESTS
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+        is_first_test=False
+    )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+        is_first_test=False
+    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
     #     is_first_test=False
     # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+    #     is_first_test=False
+    # )
+    # test_both_prevention_and_mitigation_inputs(
+    #     risk_assessments_dict=cybersecurity_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+    #     is_first_test=False
+    # )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=ClaudeSonnetLLM(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=ClaudeSonnetLLM(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # test_both_prevention_and_mitigation_inputs(
+    #     risk_assessments_dict=terrorism_risks,
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+    #     is_first_test=False
+    # )
+    
+    ### Mixtral8x7B TESTS ###
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+        LLM=Mixtral8x7B(temperature=0.1),
+        is_first_test=True
+    )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=Mixtral8x7B(temperature=0.1),
+        is_first_test=False
+    )
     # test_prevention_combined_prompts(
     #     risk_assessments_dict=natural_disaster_risks,
     #     LLM=Mixtral8x7B(temperature=0.1),
@@ -100,16 +142,16 @@ if __name__ == '__main__':
     # )
 
     # ### Mixtral8x22B TESTS ###
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-    #     LLM=Mixtral8x22B(temperature=0.1),
-    #     is_first_test=False
-    # )
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-    #     LLM=Mixtral8x22B(temperature=0.1),
-    #     is_first_test=False
-    # )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+        LLM=Mixtral8x22B(temperature=0.1),
+        is_first_test=False
+    )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=Mixtral8x22B(temperature=0.1),
+        is_first_test=False
+    )
     # test_prevention_combined_prompts(
     #     risk_assessments_dict=natural_disaster_risks,
     #     LLM=Mixtral8x22B(temperature=0.1),
@@ -142,16 +184,16 @@ if __name__ == '__main__':
     # )
 
     # ### Mistral Large TESTS
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-    #     LLM=MistralLarge(temperature=0.1),
-    #     is_first_test=False
-    # )
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-    #     LLM=MistralLarge(temperature=0.1),
-    #     is_first_test=True
-    # )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+        LLM=MistralLarge(temperature=0.1),
+        is_first_test=False
+    )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=MistralLarge(temperature=0.1),
+        is_first_test=True
+    )
     # test_prevention_combined_prompts(
     #     risk_assessments_dict=natural_disaster_risks,
     #     LLM=MistralLarge(temperature=0.1),
@@ -184,16 +226,16 @@ if __name__ == '__main__':
     # )
 
     # # ### GPT-3.5 TESTS ###
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-    #     LLM=GPT_3_point_5_turbo(temperature=0.1),
-    #     is_first_test=False
-    # )
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-    #     LLM=GPT_3_point_5_turbo(temperature=0.1),
-    #     is_first_test=False
-    # )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
+        LLM=GPT_3_point_5_turbo(temperature=0.1),
+        is_first_test=False
+    )
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals__original_student_data,
+        LLM=GPT_3_point_5_turbo(temperature=0.1),
+        is_first_test=False
+    )
     # test_prevention_combined_prompts(
     #     risk_assessments_dict=natural_disaster_risks,
     #     LLM=GPT_3_point_5_turbo(temperature=0.1),
@@ -225,44 +267,4 @@ if __name__ == '__main__':
     #     is_first_test=False
     # )
 
-    # ### CLAUDE SONNET TESTS
-    # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals__original_student_data,
-    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-    #     is_first_test=False
-    # )
-    test_both_prevention_and_mitigation_inputs(
-        risk_assessments_dict=physical_risks_to_individuals__data_gathered_from_version_1_deployment,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-        is_first_test=False
-    )
-    # test_prevention_combined_prompts(
-    #     risk_assessments_dict=natural_disaster_risks,
-    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-    #     is_first_test=False
-    # )
-    # test_mitigation_combined_prompts(
-    #     risk_assessments_dict=natural_disaster_risks,
-    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-    #     is_first_test=False
-    # )
-    test_both_prevention_and_mitigation_inputs(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-        is_first_test=False
-    )
-    # test_prevention_combined_prompts(
-    #     risk_assessments_dict=biohazard_risks,
-    #     LLM=ClaudeSonnetLLM(temperature=0.1),
-    #     is_first_test=False
-    # )
-    # test_mitigation_combined_prompts(
-    #     risk_assessments_dict=biohazard_risks,
-    #     LLM=ClaudeSonnetLLM(temperature=0.1),
-    #     is_first_test=False
-    # )
-    test_both_prevention_and_mitigation_inputs(
-        risk_assessments_dict=terrorism_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-        is_first_test=False
-    )
+ 
