@@ -49,9 +49,6 @@ class RiskAssessment:
     
     def get_no_information_provided_for_mitigation_input(self):
         return NoInformationProvided(input=self.mitigation)
-    
-    def get_activity_input(self):
-        return Activity(activity=self.activity)
 
     def get_how_it_harms_in_context_input(self):
         return HowItHarmsInContext(how_it_harms=self.how_it_harms,
@@ -81,6 +78,54 @@ class RiskAssessment:
     
     def get_control_measure_prompt_with_mitigation_input(self):
         return MitigationPrompt(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
+    
+    def get_zero_shot_chain_of_thought_control_measure_prompt_with_prevention_input(self):
+        return ControlMeasureClassification__ZeroShot_ChainOfThought(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
+    
+    def get_zero_shot_chain_of_thought_control_measure_prompt_with_mitigation_input(self):
+        return ControlMeasureClassification__ZeroShot_ChainOfThought(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
+    
+    def get_few_shot_no_chain_of_thought_control_measure_prompt_with_prevention_input(self):
+        return ControlMeasureClassification__FewShot_NoChainOfThought(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
+    
+    def get_few_shot_no_chain_of_thought_control_measure_prompt_with_mitigation_input(self):
+        return ControlMeasureClassification__FewShot_NoChainOfThought(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.mitigation)
+    
+    def get_zero_shot_no_chain_of_thought_control_measure_prompt_with_prevention_input(self):
+        return ControlMeasureClassification__ZeroShot_NoChainOfThought(
+            activity=self.activity,
+            who_it_harms=self.who_it_harms,
+            how_it_harms=self.how_it_harms,
+            hazard=self.hazard,
+            control_measure=self.prevention)
+    
+    def get_zero_shot_no_chain_of_thought_control_measure_prompt_with_mitigation_input(self):
+        return ControlMeasureClassification__ZeroShot_NoChainOfThought(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,

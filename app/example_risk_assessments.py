@@ -786,7 +786,7 @@ running_pump_water_spillage = RiskAssessmentWithoutNumberInputs(
     hazard = "Water spilage",
     who_it_harms = "Users",
     how_it_harms = "Water coming into contact with electronics",
-    prevention = "Cheeck for leakage before running the pump",
+    prevention = "Check for leakage before running the pump",
     mitigation = "Wear a lab coat and PPE",
     prevention_prompt_expected_class = "prevention",
     mitigation_prompt_expected_class = "mitigation",
@@ -1636,15 +1636,13 @@ physical_risks_to_individuals__original_student_data = {
 physical_risks_to_individuals_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_sharp_drone_propeller_blade,
-        RA_battery_causes_fire,
         RA_zip_tie_hits_audience,
         RA_pencil_lead_projectile,
-        RA_ladder,
         RA_heavy_weight_falls_on_demonstrator,
         RA_syringe_needle,
-        RA_syringe_with_cover,
         RA_cycling,
-        RA_swimming_riptides
+        RA_swimming_riptides,
+        fluids_lab_water_spill_slippery
     ],
     'risk_domain': 'Physical risks'
 }
@@ -1712,6 +1710,11 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
     'risk_domain': 'Physical risks to individuals (data gathered from version 1 deployment)'
 }
 
+physical_risks_to_individuals = {
+    'risk_assessments': physical_risks_to_individuals__original_student_data['risk_assessments'] + physical_risks_to_individuals__data_gathered_from_version_1_deployment['risk_assessments'],
+    'risk_domain': 'Physical risks to individuals'
+}
+
 finance_risks = {
     'risk_assessments': [
         RA_credit_risk,
@@ -1759,6 +1762,7 @@ natural_disaster_risks_with_unique_hazard_description_fields = {
         RA_volcano_early_warning_systems,
         RA_volcano_causing_ash_cloud,
         RA_volcano_post_disaster_recovery,
+        heat_engine_lab_burning_yourself_dont_run,
     ],
     'risk_domain': 'Natural disaster risks'
 }
@@ -1807,8 +1811,6 @@ cybersecurity_risks_with_unique_hazard_description_fields = {
         RA_telecoms_cyber_attack,
         RA_civil_nuclear_cyber_attack,
         RA_electricity_infrastructure_cyber_attack,
-        RA_gas_infrastructure_cyber_attack,
-        RA_fuel_supply_cyber_attack
     ],
     'risk_domain': 'Cybersecurity risks'
 }

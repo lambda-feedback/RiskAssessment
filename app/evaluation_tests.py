@@ -12,7 +12,7 @@ try:
     from .TestModelAccuracy import *
     from .PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
     from .test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from .test_how_it_harms_in_context import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
+    from .risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
     from .RiskAssessment import RiskAssessmentWithoutNumberInputs
 except:
     from .LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
@@ -22,7 +22,7 @@ except:
     from TestModelAccuracy import *
     from PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
     from test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from test_how_it_harms_in_context import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
+    from risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
     from RiskAssessment import RiskAssessmentWithoutNumberInputs
 
 class TestEvaluationFunction(unittest.TestCase):

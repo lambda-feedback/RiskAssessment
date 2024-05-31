@@ -101,13 +101,29 @@ def perform_risk_domain_test_for_who_it_harms_in_context_prompt(LLM,
                         domain='All risk domains',       
                         list_of_input_and_expected_outputs=who_it_harms_examples,
                         examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
-                        sheet_name='Who It Harms In Context')
+                        sheet_name='Risk Domain Test for Who It Harms')
     
     test_accuracy.run_test()
 
     ### WHO IT HARMS
 if __name__ == "__main__":
     perform_risk_domain_test_for_who_it_harms_in_context_prompt(
-        LLM=GPT_3_point_5_turbo(temperature=0.1),
-        is_first_test=True
+        LLM=Mixtral8x7B(temperature=0.1),
+        is_first_test=False
     )
+    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+        LLM=Mixtral8x22B(temperature=0.1),
+        is_first_test=False
+    )
+    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+        LLM=MistralLarge(temperature=0.1),
+        is_first_test=False
+    )
+    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+        is_first_test=False
+    )
+    # perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+    #     LLM=GPT_3_point_5_turbo(temperature=0.1),
+    #     is_first_test=True
+    # )

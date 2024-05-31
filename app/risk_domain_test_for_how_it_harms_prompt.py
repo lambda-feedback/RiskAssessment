@@ -23,7 +23,7 @@ class HowItHarmsInContextExamplesGeneratorForInputFieldTest(ExamplesGeneratorFro
         return HowItHarmsInContext(
             activity=self.correct_examples_list[correct_index].activity, 
             hazard=self.correct_examples_list[correct_index].hazard, 
-            how_it_harms=self.correct_examples_list[incorrect_index].activity)
+            how_it_harms=self.correct_examples_list[correct_index].activity)
 
 def generate_correct_examples_list_for_risk_domain_test_of_how_it_harms_prompt(risk_assessment_dict_from_first_risk_domain,
                                                         risk_assessment_dict_from_second_risk_domain):
@@ -137,31 +137,30 @@ def perform_risk_domain_test_for_how_it_harms_in_context_prompt(LLM,
                         domain='All risk domains',       
                         list_of_input_and_expected_outputs=how_it_harms_examples,
                         examples_gathered_or_generated_message='Risk assessments gathered and not AI-generated',
-                        sheet_name='How It Harms In Context')
+                        sheet_name='Risk Domain Test for How It Harms')
     
     test_accuracy.run_test()
 
 
 if __name__ == "__main__":
     # WHO IT HARMS
-
-    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-    #     is_first_test=True
-    # )
     perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-        LLM=GPT_3_point_5_turbo(temperature=0.1),
-        is_first_test=True
+        LLM=Mixtral8x7B(temperature=0.1),
+        is_first_test=False
+    )
+    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+        LLM=Mixtral8x22B(temperature=0.1),
+        is_first_test=False
+    )
+    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+        LLM=MistralLarge(temperature=0.1),
+        is_first_test=False
+    )
+    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+        is_first_test=False
     )
     # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-    #     LLM=MistralLarge(temperature=0.1),
-    #     is_first_test=True
-    # )
-    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-    #     LLM=Mixtral8x7B(temperature=0.1),
-    #     is_first_test=True
-    # )
-    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-    #     LLM=Mixtral8x22B(temperature=0.1),
-    #     is_first_test=True
+    #     LLM=GPT_3_point_5_turbo(temperature=0.1),
+    #     is_first_test=False
     # )

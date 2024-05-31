@@ -1,0 +1,4 @@
+Test,Claude Sonnet,GPT-3.5,Mistral Large,Mistral 8x22B,Mistral 8x7B
+No Information Provided Prompt Test,100,100,98.3,97.5,91.7
+How It Harms Prompt Risk Domain Test,97.8,93.5,96.7,96.7,100
+Who It Harms Prompt Risk Domain Test,100,97.1,100,100,97.1

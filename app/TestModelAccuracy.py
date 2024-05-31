@@ -171,10 +171,6 @@ class TestModelAccuracy(BaseTestClass):
 
         n_examples = self.get_number_of_examples()
 
-        datetime_now = datetime.now().strftime("%d-%m_%H-%M")
-
-        start_time = time.time()
-
         for example_index in range(n_examples):
 
             expected_output, input_object = self.get_expected_output_and_input_object(example_index=example_index)
@@ -198,16 +194,11 @@ class TestModelAccuracy(BaseTestClass):
             
             print(count_correct)
 
-        end_time = time.time()
-
-        elapsed_time = end_time - start_time
-
-        average_latency = round(elapsed_time / n_examples, 1)
 
         accuracy = round(count_correct / n_examples * 100, 2)
         faithfulness_accuracy = round(number_of_examples_where_pattern_in_prompt_output / n_examples * 100, 2)
 
-        return purpose_of_test, average_latency, accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
+        return purpose_of_test, accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched
     
     def get_first_prompt_input(self):
         first_input = self.list_of_input_and_expected_outputs[0].prompt_input_object
@@ -217,7 +208,6 @@ class TestModelAccuracy(BaseTestClass):
     
     def save_test_results(self, 
                           purpose_of_test,
-                          average_latency,
                           accuracy,
                           faithfulness_accuracy,
                           confusion_matrix,
@@ -247,21 +237,20 @@ class TestModelAccuracy(BaseTestClass):
                         first_prompt_input,
                         prompt_outputs_for_correct_responses[:45000],
                         prompt_outputs_for_incorrect_responses[:45000],
-                        prompt_outputs_where_pattern_was_not_matched[:45000],
-                        average_latency]
+                        prompt_outputs_where_pattern_was_not_matched[:45000]
+                        ]
         
         sheets_writer = GoogleSheetsWriter(sheet_name=self.sheet_name)
         sheets_writer.write_to_sheets(new_line_data)
 
     # TODO: Refactoring: As below, remove positional arguments and only use keyword arguments
     def run_test(self):
-        purpose_of_test, average_latency, accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_accuracy_and_model_outputs()
+        purpose_of_test, accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_accuracy_and_model_outputs()
 
         confusion_matrix_string = self.generate_confusion_matrix_string(confusion_matrix, self.get_classes())
         
         first_prompt_input = self.get_first_prompt_input()
         self.save_test_results(purpose_of_test=purpose_of_test,
-                                average_latency=average_latency,
                                accuracy=accuracy,
                                faithfulness_accuracy=faithfulness_accuracy,
                                confusion_matrix=confusion_matrix_string,
@@ -409,16 +398,26 @@ class TestPreventionPromptInput(TestControlMeasureClassificationPrompt):
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
+                    risk_assessment_control_measure_prompt_with_prevention_input_method_name: str,
                     domain: str = None,
                     is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
-    
+        self.LLM = LLM
+        self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
+        self.sheet_name = sheet_name
+        self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
+        self.candidate_labels = candidate_labels
+        self.domain = domain
+        self.is_first_test = is_first_test
+        self.risk_assessment_control_measure_prompt_with_prevention_input_method_name = risk_assessment_control_measure_prompt_with_prevention_input_method_name
+        self.domain = domain
+        self.is_first_test = is_first_test
+
     def get_first_prompt_input(self):
-        return self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
+        return self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_prevention_input_method_name)
     
     def get_pattern_matched_and_prompt_output(self, input_object):
-        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
+        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_prevention_input_method_name)
     
 class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
@@ -427,16 +426,26 @@ class TestMitigationPromptInput(TestControlMeasureClassificationPrompt):
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
+                    risk_assessment_control_measure_prompt_with_mitigation_input_method_name:str,
                     domain: str = None,
                     is_first_test: bool = False):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
-    
+        self.LLM = LLM
+        self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
+        self.sheet_name = sheet_name
+        self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
+        self.candidate_labels = candidate_labels
+        self.domain = domain
+        self.is_first_test = is_first_test
+        self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name = risk_assessment_control_measure_prompt_with_mitigation_input_method_name
+        self.domain = domain
+        self.is_first_test = is_first_test
+
     def get_first_prompt_input(self):
-        return self.get_first_prompt_input_with_risk_assessment_method('get_control_measure_prompt_with_mitigation_input')
+        return self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name)
     
     def get_pattern_matched_and_prompt_output(self, input_object):
-        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object, 'get_control_measure_prompt_with_mitigation_input')
+        return self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name)
 
 class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPrompt):
     def __init__(self, 
@@ -445,15 +454,29 @@ class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPromp
                     sheet_name: str,
                     examples_gathered_or_generated_message: str,
                     candidate_labels: list,
+                    risk_assessment_control_measure_prompt_with_prevention_input_method_name: str,
+                    risk_assessment_control_measure_prompt_with_mitigation_input_method_name: str,
                     domain: str = None,
-                    is_first_test: bool = False):
+                    is_first_test: bool = False,
+                    ):
         
-        super().__init__(LLM, list_of_risk_assessment_and_expected_outputs, sheet_name, examples_gathered_or_generated_message, candidate_labels, domain=domain, is_first_test=is_first_test)
+        self.LLM = LLM
+        self.list_of_risk_assessment_and_expected_outputs = list_of_risk_assessment_and_expected_outputs
+        self.sheet_name = sheet_name
+        self.examples_gathered_or_generated_message = examples_gathered_or_generated_message
+        self.candidate_labels = candidate_labels
+        self.domain = domain
+        self.is_first_test = is_first_test
+        self.risk_assessment_control_measure_prompt_with_prevention_input_method_name = risk_assessment_control_measure_prompt_with_prevention_input_method_name
+        self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name = risk_assessment_control_measure_prompt_with_mitigation_input_method_name
+        self.domain = domain
+        self.is_first_test = is_first_test
     
     def get_first_prompt_input(self):
 
-        prevention_prompt = self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
-        mitigation_prompt = self.get_first_prompt_input_with_risk_assessment_method('get_control_measure_prompt_with_mitigation_input')
+        prevention_prompt = self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_prevention_input_method_name)
+        mitigation_prompt = self.get_first_prompt_input_with_risk_assessment_method(risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name)
+        
         return f'{prevention_prompt}\n\n{mitigation_prompt}'
     
     def get_pattern_matched_and_prompt_output(self, input_object):
@@ -463,12 +486,12 @@ class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPromp
         if prevention_input == '': # Indicating that there is no prevention input in the RA example
             prevention_pattern = ''
         else:
-            prevention_pattern, prevention_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_prevention_input')
+            prevention_pattern, prevention_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_prevention_input_method_name)
         
         if mitigation_input == '':
             mitigation_pattern = ''
         else:
-            mitigation_pattern, mitigation_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name='get_control_measure_prompt_with_mitigation_input')
+            mitigation_pattern, mitigation_prompt_output = self.get_pattern_matched_and_prompt_output_with_risk_assessment_method(input_object=input_object, risk_assessment_method_name=self.risk_assessment_control_measure_prompt_with_mitigation_input_method_name)
         prevention_and_mitigation_pattern = f'{prevention_pattern}, {mitigation_pattern}'
         prevention_and_mitigation_prompt_output = f'{prevention_prompt_output}\n\n{mitigation_prompt_output}'
         return prevention_and_mitigation_pattern, prevention_and_mitigation_prompt_output
@@ -500,14 +523,14 @@ class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPromp
         return condensed_confusion_matrix
     
     def run_test(self):
-        purpose_of_test, Accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_accuracy_and_model_outputs()
+        purpose_of_test, accuracy, faithfulness_accuracy, confusion_matrix, output_string, prompt_outputs_for_correct_responses, prompt_outputs_for_incorrect_responses, prompt_outputs_where_pattern_was_not_matched = self.get_model_accuracy_and_model_outputs()
 
         condensed_confusion_matrix = self.create_condensed_confusion_matrix(confusion_matrix)
         confusion_matrix_string = self.generate_confusion_matrix_string(condensed_confusion_matrix, classes=['prevention', 'mitigation', 'both', 'neither'])
         
         first_prompt_input = self.get_first_prompt_input()
         self.save_test_results(purpose_of_test=purpose_of_test,
-                               Accuracy=Accuracy,
+                               accuracy=accuracy,
                                faithfulness_accuracy=faithfulness_accuracy,
                                confusion_matrix=confusion_matrix_string,
                                output_string=output_string, 

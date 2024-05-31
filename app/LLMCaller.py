@@ -226,7 +226,7 @@ temperature = 0.1
 
 LLM_dictionary = {
     # "Claude Opus": ClaudeOpusLLM(system_message="", temperature=temperature),
-    "Claude Sonnet": ClaudeSonnetLLM(system_message="", temperature=temperature),
+    # "Claude Sonnet": ClaudeSonnetLLM(system_message="", temperature=temperature),
     # "Claude Haiku": ClaudeHaikuLLM(system_message="", temperature=temperature),
     # "GPT-4 Turbo": GPT_4_turbo(temperature=temperature),
     "GPT-3.5 Turbo 1106": GPT_3_point_5_turbo(temperature=temperature),
