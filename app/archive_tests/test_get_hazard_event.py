@@ -1,6 +1,6 @@
 
 # from TestModelAccuracy import TestHazardEventPrompt
-# from LLMCaller import OpenAILLM
+# from LLMCaller import GPT_3_point_5_turbo
 # from example_risk_assessments_exemplar import example_risk_assessments
 
 # from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
@@ -17,7 +17,7 @@
 #                                       Testing with examples from student Fluids Lab and TPS presentation Risk Assessment examples.
 #                                         Testing finance examples.
 #                                           """,
-#                                       LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+#                                       LLM=GPT_3_point_5_turbo(temperature=0.1, max_tokens=400),
 #                                                 LLM_name='gpt-3.5-turbo',
 #                                                 list_of_risk_assessment_and_expected_outputs=examples,
 #                                                 sheet_name='Get Hazard Event')

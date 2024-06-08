@@ -5,24 +5,24 @@
 import unittest
 
 try:
-    from .LLMCaller import OpenAILLM, ClaudeSonnetLLM
+    from .LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
     from .evaluation import Params, evaluation_function
     from .example_risk_assessments import *
     from .RegexPatternMatcher import RegexPatternMatcher
     from .TestModelAccuracy import *
     from .PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
     from .test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from .test_how_it_harms_in_context import HowItHarmsInContextExamplesGenerator
+    from .risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
     from .RiskAssessment import RiskAssessmentWithoutNumberInputs
 except:
-    from .LLMCaller import OpenAILLM, ClaudeSonnetLLM
+    from .LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
     from evaluation import Params, evaluation_function
     from example_risk_assessments import *
     from RegexPatternMatcher import RegexPatternMatcher
     from TestModelAccuracy import *
     from PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
     from test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from test_how_it_harms_in_context import HowItHarmsInContextExamplesGenerator
+    from risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
     from RiskAssessment import RiskAssessmentWithoutNumberInputs
 
 class TestEvaluationFunction(unittest.TestCase):
@@ -46,7 +46,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
     ### UNIT TESTS ON PROMPTS ###
     # def test_no_information_provided_prompt(self):
-    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
+    #     LLM = GPT_3_point_5_turbo(temperature=0.1)
         
     #     tests = []
 
@@ -67,7 +67,7 @@ class TestEvaluationFunction(unittest.TestCase):
 
     # def test_how_it_harms_in_context_prompt__input_field(self):
     #     # TODO: Should use same LLM for all of them
-    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
+    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1)
 
     #     tests = []
     #     # How it harms input is actually an activity
@@ -83,7 +83,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
     
     # def test_how_it_harms_in_context_prompt__risk_domain(self):
-    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
+    #     LLM = GPT_3_point_5_turbo(temperature=0.1)
 
     #     tests = []
 
@@ -123,7 +123,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
     
     # def test_who_it_harms_in_context_prompt__input_field(self):
-    #     LLM = OpenAILLM(temperature=0.1, max_tokens=400)
+    #     LLM = GPT_3_point_5_turbo(temperature=0.1)
     #     tests = []
 
     #     # Who it harms input is actually an activity
@@ -136,7 +136,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_who_it_harms_in_context_prompt__people_who_cannot_be_harmed(self):
-    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=200)
+    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1)
 
     #     tests = []
 
@@ -164,8 +164,8 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_an_input_that_is_neither_prevention_nor_mitigation(self):
-    #     # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
-    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+    #     # LLM = GPT_3_point_5_turbo(temperature=0.1)
+    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1)
 
     #     tests = []
         
@@ -198,8 +198,8 @@ class TestEvaluationFunction(unittest.TestCase):
     #         self.assertTrue(test.is_pattern_matched_equal_to_expected_output())
 
     # def test_prevention_and_mitigation_are_switched(self):
-    #     # LLM = OpenAILLM(temperature=0.1, max_tokens=400)
-    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300)
+    #     # LLM = GPT_3_point_5_turbo(temperature=0.1)
+    #     LLM = ClaudeSonnetLLM(system_message='', temperature=0.1)
 
     #     tests = []
 
@@ -312,7 +312,7 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"]]
         
         answer = None
-        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True}
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True, "LLM": "GPT-3.5 Turbo 1106"}
 
         result = evaluation_function(response, answer, params)
 

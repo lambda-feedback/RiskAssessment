@@ -5,6 +5,7 @@ import numpy as np
 prevention_domains = ['Physical', 'Terrorism', 'Cybersecurity', 'Biohazard']
 mitigation_domains = ['Physical', 'Terrorism', 'Cybersecurity', 'Biohazard', 'Natural Disaster']
 
+
 prevention_accuracy_scores_as_decimal = np.array([25/27, 10/10, 10/10, 5/6])
 mitigation_accuracy_scores_as_decimal = np.array([15/22, 8/10 , 9/10, 2/10, 9/10])
 

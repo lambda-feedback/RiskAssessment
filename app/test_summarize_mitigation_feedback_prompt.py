@@ -32,7 +32,7 @@ def test_summarize_mitigation_feedback_prompt(risk_assessments_dict, LLM, is_fir
 
 if __name__ == "__main__":
     test_summarize_mitigation_feedback_prompt(risk_assessments_dict=cybersecurity_risks
-                                    , LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=400)
+                                    , LLM=ClaudeSonnetLLM(system_message='', temperature=0.1)
                                     , is_first_test=True)
 
     

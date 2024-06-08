@@ -451,3 +451,38 @@
 
 #         <OUTPUT>
 #         Hazard description: '''
+
+# class Activity(PromptInput):
+#     def __init__(self, activity: str):
+#         super().__init__()
+#         self.activity = activity
+
+#     def get_field_checked(self):
+#         return 'Activity'
+    
+#         # If "Golf" is an example of an activity, answer True, else answer False.
+
+#         # Use the following output format:
+#         # Overall Answer: <your answer>
+    
+#     def generate_prompt(self):
+#         return f'''
+#         If the input is an example of an activity, answer True, else answer False.
+
+#         If "{self.activity}" is an example of an activity, answer True, else answer False.
+
+#         Use the following output format:
+#         Overall Answer: <your answer>'''
+    
+#     def get_shortform_feedback(self, feedback_type):
+#         if feedback_type == 'positive':
+#             return f"Correct! '{self.activity}' is an activity."
+#         if feedback_type == 'negative':
+#             return f"Incorrect. '{self.activity}' is not an activity."
+    
+#     def get_longform_feedback(self, prompt_output=''):
+#         regex_pattern_matcher = RegexPatternMatcher()
+#         return ''
+
+#     def get_recommendation(self):
+#         return f'Enter an activity that aligns with the definition: {self.activity_definition}'

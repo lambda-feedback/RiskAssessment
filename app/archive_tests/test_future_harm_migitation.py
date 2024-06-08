@@ -1,5 +1,5 @@
 from TestModelAccuracy import TestIsFutureHarmReducedPromptInputWithMitigation
-from LLMCaller import OpenAILLM, AnthropicLLM, MistralLLM, ClaudeSonnetLLM
+from LLMCaller import GPT_3_point_5_turbo, AnthropicLLM, MistralLLM, ClaudeSonnetLLM
 from example_risk_assessments import biohazard_risks
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
@@ -25,6 +25,6 @@ def test_prevention_combined_prompts(risk_assessments_dict, LLM, is_first_test: 
 if __name__ == '__main__':
     test_prevention_combined_prompts(
         risk_assessments_dict=biohazard_risks,
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1, max_tokens=300),
+        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
         is_first_test=True
     )

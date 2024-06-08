@@ -1,5 +1,5 @@
 from TestModelAccuracy import TestIsFutureHarmReducedPromptInputWithPrevention
-from LLMCaller import OpenAILLM, AnthropicLLM, MistralLLM, ClaudeSonnetLLM
+from LLMCaller import GPT_3_point_5_turbo, AnthropicLLM, MistralLLM, ClaudeSonnetLLM
 from example_risk_assessments import cybersecurity_risks
 
 from ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts

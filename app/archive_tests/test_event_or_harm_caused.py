@@ -1,5 +1,5 @@
 from PromptInputs import *
-from LLMCaller import OpenAILLM, AnthropicLLM
+from LLMCaller import GPT_3_point_5_turbo, AnthropicLLM
 from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
 from TestModelAccuracy import TestModelAccuracy
 
@@ -55,7 +55,7 @@ def test_event_or_harm_caused_prompt(risk_assessments_dict, examples, LLM, is_fi
 
 if __name__ == '__main__':
     test_event_or_harm_caused_prompt(
-        LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+        LLM=GPT_3_point_5_turbo(temperature=0.1),
         risk_assessments_dict={},
         examples=examples,
         is_first_test=True)

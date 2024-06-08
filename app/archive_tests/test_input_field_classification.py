@@ -1,7 +1,7 @@
 # from PromptInputs import InputFieldClassification
 # from InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
 # from TestModelAccuracy import TestModelAccuracy
-# from LLMCaller import OpenAILLM
+# from LLMCaller import GPT_3_point_5_turbo
 
 # from example_risk_assessments import unique_activities, unique_hazards, unique_how_it_harms, unique_who_it_harms, unique_control_measures
 
@@ -104,7 +104,7 @@
 # if __name__ == "__main__":
     
 #     test_accuracy = TestModelAccuracy(
-#         LLM=OpenAILLM(temperature=0.1, max_tokens=400),
+#         LLM=GPT_3_point_5_turbo(temperature=0.1, max_tokens=400),
 #         LLM_name='gpt-3.5-turbo',
 #         list_of_input_and_expected_outputs=examples_with_expected_outputs,
 #         sheet_name='Input Field Classification',
