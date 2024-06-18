@@ -244,7 +244,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
         LLM_name = params["LLM"]
         LLM = LLM_dictionary[LLM_name]
-        # TODO: Do we need a risk domain?
+
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
                             uncontrolled_risk=uncontrolled_risk, prevention=prevention, mitigation=mitigation,

@@ -202,11 +202,11 @@ RA_syringe_needle = RiskAssessmentWithoutNumberInputs(
     who_it_harms="Students",
     how_it_harms="Sharp needles can pierce the skin and cause bleeding",
     prevention="Point needle away from yourself and others",
-    mitigation="Apply first aid to the affected area", # This is both prevention and mitigation
+    mitigation="Apply first aid to the affected area",
     prevention_prompt_expected_class='prevention',
     mitigation_prompt_expected_class='mitigation',
     risk_domain="physical risk to individuals"
-)
+)   
 
 RA_syringe_needle__neither = RiskAssessmentWithoutNumberInputs(
     activity="Fluids laboratory",
@@ -373,6 +373,18 @@ RA_mop_up_spill = RiskAssessmentWithoutNumberInputs(
     risk_domain="physical risk to individuals"
 )
 
+RA_mop_up_spill_correct_hazard_event_and_harm_caused = RiskAssessmentWithoutNumberInputs(
+    activity = "Fluid lab",
+    hazard = "Student slipping after water spilled",
+    how_it_harms = "Injury caused by student slipping",
+    who_it_harms = "Users",
+    prevention = "Be careful",
+    mitigation = "Mop up",
+    prevention_prompt_expected_class = "neither", # Not specific enough
+    mitigation_prompt_expected_class = "prevention",
+    risk_domain="physical risk to individuals"
+)
+
 RA_syringe_with_cover = RiskAssessmentWithoutNumberInputs(
     activity = "Using syringe for injecting fuel",
     hazard = "Stabbing yourself",
@@ -398,12 +410,12 @@ RA_hot_water_in_cups = RiskAssessmentWithoutNumberInputs(
 )
 
 RA_bigger_beaker = RiskAssessmentWithoutNumberInputs(
-    activity = "Filling a beaker with hot water",
+    activity = "Fluids Laboratory",
     hazard = "Spilling hot water on your hands",
     how_it_harms = "Leaves you with painful burn scars",
-    who_it_harms = "Yourself",
-    prevention = "Use a bigger beaker",
-    mitigation = "Be attentive when filling beaker",
+    who_it_harms = "Students",
+    prevention = "Place the beaker in the middle of the table when not using it",
+    mitigation = "Seal the beaker when not using it",
     prevention_prompt_expected_class = "prevention",
     mitigation_prompt_expected_class = "prevention",
     risk_domain="physical risk to individuals"
@@ -585,7 +597,7 @@ RA_stable_ladder = RiskAssessmentWithoutNumberInputs(
     prevention="Someone hold ladder",
     mitigation="Buy stable ladder",
     prevention_prompt_expected_class="prevention",
-    mitigation_prompt_expected_class="mitigation",
+    mitigation_prompt_expected_class="prevention",
     risk_domain="physical risk to individuals"
 )
 
@@ -1666,6 +1678,7 @@ physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
     'risk_assessments': [
         RA_fire_alarm,
         RA_mop_up_spill,
+        RA_mop_up_spill_correct_hazard_event_and_harm_caused,
         RA_syringe_with_cover,
         RA_hot_water_in_cups,
         RA_bigger_beaker,

@@ -144,61 +144,61 @@ def run_control_measure_tests_for_one_LLM_with_certain_prompt_techniques(
         LLM: LLMCaller,
         prompt_techniques: str):
     
+    test_both_prevention_and_mitigation_inputs(
+        risk_assessments_dict=physical_risks_to_individuals,
+        LLM=LLM,
+        is_first_test=False,
+        control_meausure_tests_dict_key=f'Both Prevention and Mitigation Input {prompt_techniques}'
+    )
+
     # test_both_prevention_and_mitigation_inputs(
-    #     risk_assessments_dict=physical_risks_to_individuals,
+    #     risk_assessments_dict=cybersecurity_risks,
     #     LLM=LLM,
     #     is_first_test=False,
     #     control_meausure_tests_dict_key=f'Both Prevention and Mitigation Input {prompt_techniques}'
     # )
 
-    test_both_prevention_and_mitigation_inputs(
-        risk_assessments_dict=cybersecurity_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Both Prevention and Mitigation Input {prompt_techniques}'
-    )
-
-    test_both_prevention_and_mitigation_inputs(
-        risk_assessments_dict=terrorism_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Both Prevention and Mitigation Input {prompt_techniques}'
-    )
+    # test_both_prevention_and_mitigation_inputs(
+    #     risk_assessments_dict=terrorism_risks,
+    #     LLM=LLM,
+    #     is_first_test=False,
+    #     control_meausure_tests_dict_key=f'Both Prevention and Mitigation Input {prompt_techniques}'
+    # )
     
-    test_prevention_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Prevention Input {prompt_techniques}'
-    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=LLM,
+    #     is_first_test=False,
+    #     control_meausure_tests_dict_key=f'Prevention Input {prompt_techniques}'
+    # )
 
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=biohazard_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Mitigation Input {prompt_techniques}'
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=biohazard_risks,
+    #     LLM=LLM,
+    #     is_first_test=False,
+    #     control_meausure_tests_dict_key=f'Mitigation Input {prompt_techniques}'
+    # )
 
-    test_prevention_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Prevention Input {prompt_techniques}'
-    )
+    # test_prevention_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=LLM,
+    #     is_first_test=False,
+    #     control_meausure_tests_dict_key=f'Prevention Input {prompt_techniques}'
+    # )
 
-    test_mitigation_combined_prompts(
-        risk_assessments_dict=natural_disaster_risks,
-        LLM=LLM,
-        is_first_test=False,
-        control_meausure_tests_dict_key=f'Mitigation Input {prompt_techniques}'
-    )
+    # test_mitigation_combined_prompts(
+    #     risk_assessments_dict=natural_disaster_risks,
+    #     LLM=LLM,
+    #     is_first_test=False,
+    #     control_meausure_tests_dict_key=f'Mitigation Input {prompt_techniques}'
+    # )
 
 def run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM: LLMCaller):
     for prompt_techniques in [
-        # 'Few Shot COT', 
+        'Few Shot COT', 
         # 'Few Shot No Cot', 
-        'Zero Shot No COT', 
-        'Zero Shot COT'
+        # 'Zero Shot No COT', 
+        # 'Zero Shot COT'
         ]:
 
         run_control_measure_tests_for_one_LLM_with_certain_prompt_techniques(
@@ -207,8 +207,8 @@ def run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(
         )
 
 if __name__ == '__main__':
-    run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=Mixtral8x7B(temperature=0.1))
-    run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=Mixtral8x22B(temperature=0.1))
-    run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=MistralLarge(temperature=0.1))
+    # run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=Mixtral8x7B(temperature=0.1))
+    # run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=Mixtral8x22B(temperature=0.1))
+    # run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=MistralLarge(temperature=0.1))
     run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=GPT_3_point_5_turbo(temperature=0.1))
-    run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=ClaudeSonnetLLM(system_message='', temperature=0.1))
+    # run_control_measure_tests_for_one_LLM_for_all_prompt_technique_combinations(LLM=ClaudeSonnetLLM(system_message='', temperature=0.1))

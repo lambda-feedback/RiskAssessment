@@ -78,5 +78,3 @@ if __name__ == "__main__":
     test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
                                     , LLM=ClaudeSonnetLLM(system_message="", temperature=temperature)
                                     , is_first_test=False)
-
-    

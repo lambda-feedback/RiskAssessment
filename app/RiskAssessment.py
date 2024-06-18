@@ -36,6 +36,9 @@ class RiskAssessment:
         self.always_true = True
         self.always_false = False
 
+        self.set_prevention_classification_prompt_ground_truth()
+        self.set_mitigation_classification_prompt_ground_truth()
+
     def to_string(self):
         class_name = self.__class__.__name__
         if hasattr(self, '__dict__'):
@@ -43,6 +46,18 @@ class RiskAssessment:
             return f"{class_name}({attributes})"
         else:
             return f"{class_name}()"
+
+    def set_prevention_classification_prompt_ground_truth(self):
+        if self.prevention_prompt_expected_class == 'prevention':
+            self.prevention_classification_prompt_ground_truth = True
+        if self.prevention_prompt_expected_class in ['mitigation', 'both', 'neither']:
+            self.prevention_classification_prompt_ground_truth = False
+
+    def set_mitigation_classification_prompt_ground_truth(self):
+        if self.mitigation_prompt_expected_class == 'mitigation':
+            self.mitigation_classification_prompt_ground_truth = True
+        if self.mitigation_prompt_expected_class in ['prevention', 'both', 'neither']:
+            self.mitigation_classification_prompt_ground_truth = False
     
     def get_no_information_provided_for_prevention_input(self):
         return NoInformationProvided(input=self.prevention)
@@ -134,6 +149,14 @@ class RiskAssessment:
     
     def get_feedback_summary_input(self):
         return SummarizeControlMeasureFeedback()
+    
+    def get_prevention_classification_prompt_input(self):
+        return PreventionClassification(
+            prevention=self.prevention)
+    
+    def get_mitigation_classification_prompt_input(self):
+        return MitigationClassification(
+            mitigation=self.mitigation)
     
     def get_word_fields(self):
         return ['activity',
@@ -372,7 +395,6 @@ class RiskAssessment:
                 self.controlled_likelihood, 
                 self.controlled_severity, 
                 self.controlled_risk]
-
 
 class RiskAssessmentWithoutNumberInputs(RiskAssessment):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
