@@ -36,7 +36,9 @@ class RiskAssessment:
         self.always_true = True
         self.always_false = False
 
-        self.set_prevention_classification_prompt_ground_truth()
+        self.prevention_classification_prompt_ground_truth = self.set_prevention_classification_prompt_ground_truth()
+        self.mitigation_classification_prompt_ground_truth = self.set_mitigation_classification_prompt_ground_truth()
+        
         self.set_mitigation_classification_prompt_ground_truth()
 
     def to_string(self):
@@ -49,15 +51,15 @@ class RiskAssessment:
 
     def set_prevention_classification_prompt_ground_truth(self):
         if self.prevention_prompt_expected_class == 'prevention':
-            self.prevention_classification_prompt_ground_truth = True
+            return True
         if self.prevention_prompt_expected_class in ['mitigation', 'both', 'neither']:
-            self.prevention_classification_prompt_ground_truth = False
+            return False
 
     def set_mitigation_classification_prompt_ground_truth(self):
         if self.mitigation_prompt_expected_class == 'mitigation':
-            self.mitigation_classification_prompt_ground_truth = True
+            return True
         if self.mitigation_prompt_expected_class in ['prevention', 'both', 'neither']:
-            self.mitigation_classification_prompt_ground_truth = False
+            return False
     
     def get_no_information_provided_for_prevention_input(self):
         return NoInformationProvided(input=self.prevention)

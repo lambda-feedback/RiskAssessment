@@ -1253,7 +1253,17 @@ class MitigationClassification(PromptInput):
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        1. Mitigation Explanation: Assuming that an event involving a head injury has occurred, wearing a helmet significantly reduces the severity of harm caused.
+        1. Mitigation Explanation: Assuming that an event involving a head injury has occurred, "wearing a helmet" is a preparatory measure that reduces the severity of harm caused.
+        2. Answer: True
+        </EXAMPLE OUTPUT>
+
+        <EXAMPLE INSTRUCTIONS>
+        1. Assuming an event has led to harm, explain whether "Apply first aid" reduces the harm caused by this event.
+        2. Answer True if it does and False if it does not.
+        </EXAMPLE INSTRUCTIONS>
+
+        <EXAMPLE OUTPUT>
+        1. Mitigation Explanation: Assuming an event like a burn has occurred, "apply first aid" is a measure in response to the event that reduces the harm caused by the event.
         2. Answer: True
         </EXAMPLE OUTPUT>
 
@@ -1263,7 +1273,7 @@ class MitigationClassification(PromptInput):
         </EXAMPLE INSTRUCTIONS>
 
         <EXAMPLE OUTPUT>
-        1. Mitigation Explanation: Assuming that an event like a needle-stick injury has occurred, "Point needle away from yourself and others" would not reduce the harm caused; this is a preventative measure to reduce the likelihood of harm.
+        1. Mitigation Explanation: Assuming that an event like a needle-stick injury has occurred, "Point needle away from yourself and others" would not reduce the harm caused; this is a preventative measure to reduce the likelihood of the event.
         2. Answer: False
         </EXAMPLE OUTPUT>
         

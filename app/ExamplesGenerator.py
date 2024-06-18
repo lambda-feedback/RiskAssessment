@@ -35,7 +35,7 @@ class RiskAssessmentExamplesGeneratorForSinglePrompt:
             prompt_input_object = getattr(risk_assessment, self.method_to_get_prompt_input)()
             expected_output = getattr(risk_assessment, self.ground_truth_parameter)
 
-            if expected_output == '':
+            if not expected_output: # If its an empty string
                 continue
             else:
                 input_and_expected_output_list.append(InputAndExpectedOutputForSinglePrompt(prompt_input_object=prompt_input_object, expected_output=expected_output))
@@ -52,7 +52,7 @@ class RiskAssessmentExamplesGeneratorForMultiplePrompts:
         
         for risk_assessment in self.risk_assessments:
             expected_output = getattr(risk_assessment, self.ground_truth_parameter)
-            if expected_output == '':
+            if not expected_output: # If its an empty string
                 continue
             else:
                 risk_assessment_and_expected_output_list.append(
