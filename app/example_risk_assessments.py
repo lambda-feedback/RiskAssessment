@@ -1743,24 +1743,24 @@ natural_disaster_risks = {
     'risk_assessments': [
         # MITIGATION ONLY
         RA_wildfire_fire_resistant_infrastructure,
-        RA_wildfire_community_preparedness,
-        RA_earthquake_building_retrofit,
-        RA_earthquake_public_education,
-        RA_earthquake_early_warning_systems,
-        RA_volcano_early_warning_systems,
-        RA_volcano_causing_ash_cloud,
-        RA_volcano_zoning,
-        RA_volcano_emergency_response,
-        RA_volcano_post_disaster_recovery,
+        # RA_wildfire_community_preparedness,
+        # RA_earthquake_building_retrofit,
+        # RA_earthquake_public_education,
+        # RA_earthquake_early_warning_systems,
+        # RA_volcano_early_warning_systems,
+        # RA_volcano_causing_ash_cloud,
+        # RA_volcano_zoning,
+        # RA_volcano_emergency_response,
+        # RA_volcano_post_disaster_recovery,
 
-        # PREVENTION AND MITIGATION
-        RA_wildfire_early_detection,
+        # # PREVENTION AND MITIGATION
+        # RA_wildfire_early_detection,
 
-        # NEITHER EXAMPLES
-        RA_wildfire_early_detection__neither,
-        RA_wildfire_fire_resistant_infrastructure__neither,
-        RA_volcano_causing_ash_cloud__neither,
-        RA_volcano_zoning__neither,
+        # # NEITHER EXAMPLES
+        # RA_wildfire_early_detection__neither,
+        # RA_wildfire_fire_resistant_infrastructure__neither,
+        # RA_volcano_causing_ash_cloud__neither,
+        # RA_volcano_zoning__neither,
 
     ],
     'risk_domain': 'Natural disaster risks'

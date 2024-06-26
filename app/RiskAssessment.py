@@ -1,13 +1,13 @@
 from typing import Type
 
 try:
-    from .PromptInputs import *
-    from .LLMCaller import *
-    from .RegexPatternMatcher import RegexPatternMatcher
+    from .prompts.PromptInput import *
+    from .utils.LLMCaller import *
+    from .utils.RegexPatternMatcher import RegexPatternMatcher
 except ImportError:
-    from PromptInputs import *
-    from LLMCaller import *
-    from RegexPatternMatcher import RegexPatternMatcher
+    from prompts.PromptInput import *
+    from utils.LLMCaller import *
+    from utils.RegexPatternMatcher import RegexPatternMatcher
 
 class RiskAssessment:
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
