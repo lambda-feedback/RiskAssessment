@@ -302,7 +302,7 @@ class TestEvaluationFunction(unittest.TestCase):
                     ["1"]]
         
         answer = None
-        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True, "LLM": "GPT-3.5 Turbo 1106"}
+        params: Params = {"is_feedback_text": False, "is_risk_matrix": False, "is_risk_assessment": True, "LLM": "Mistral Large"}
 
         result = evaluation_function(response, answer, params)
 
