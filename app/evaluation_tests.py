@@ -7,7 +7,7 @@ import unittest
 from .utils.LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
 from .evaluation import Params, evaluation_function
 from .example_risk_assessments import *
-from .utils.RegexPatternMatcher import RegexPatternMatcher
+from .RegexPatternMatcher import RegexPatternMatcher
 from .prompts.NoInformationProvided import NoInformationProvided
 from .prompts.HowItHarmsInContext import HowItHarmsInContext
 from .prompts.WhoItHarmsInContext import WhoItHarmsInContext
