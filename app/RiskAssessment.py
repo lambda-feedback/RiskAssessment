@@ -1,6 +1,6 @@
 from typing import Type
 
-from .utils.LLMCaller import *
+from .LLMCaller import *
 from .RegexPatternMatcher import RegexPatternMatcher
 
 from .prompts.NoInformationProvided import NoInformationProvided

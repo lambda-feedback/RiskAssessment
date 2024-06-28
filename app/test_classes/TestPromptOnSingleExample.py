@@ -1,5 +1,5 @@
 from BaseTestClass import BaseTestClass
-from ..utils.LLMCaller import LLMCaller
+from ..LLMCaller import LLMCaller
 
 class TestPromptOnSingleExample(BaseTestClass):
     def __init__(self,

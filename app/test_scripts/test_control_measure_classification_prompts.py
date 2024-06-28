@@ -4,7 +4,7 @@ from ..test_classes.TestBothPreventionAndMitigationInput import TestBothPreventi
 from ..test_classes.TestPreventionInput__ControlMeasureClassifiationPrompt import TestPreventionInput__ControlMeasureClassifiationPrompt
 from ..test_classes.TestMitigationInput__ControlMeasureClassifiationPrompt import TestMitigationInput__ControlMeasureClassifiationPrompt
 
-from ..utils.LLMCaller import *
+from ..LLMCaller import *
 from ..example_risk_assessments import *
 
 from ..test_utils.ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts

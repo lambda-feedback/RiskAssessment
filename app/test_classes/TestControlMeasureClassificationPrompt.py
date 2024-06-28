@@ -1,5 +1,5 @@
 from ..test_classes.TestModelAccuracyForCombinationOfPrompts import TestModelAccuracyForCombinationOfPrompts
-from ..utils.LLMCaller import LLMCaller
+from ..LLMCaller import LLMCaller
 
 class TestControlMeasureClassificationPrompt(TestModelAccuracyForCombinationOfPrompts):
     def __init__(self, 

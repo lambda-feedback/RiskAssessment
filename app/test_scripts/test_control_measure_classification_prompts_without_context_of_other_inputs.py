@@ -1,7 +1,7 @@
 # python -m app.test_scripts.test_control_measure_classification_prompts_without_context_of_other_inputs
 
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
-from ..utils.LLMCaller import *
+from ..LLMCaller import *
 from ..test_utils.ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
 from ..example_risk_assessments import *
 
