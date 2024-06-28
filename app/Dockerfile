@@ -32,7 +32,7 @@ COPY PreventionClassificationWithoutContextOfOtherInputs.py ./app/prompts/
 COPY MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
 COPY NoInformationProvided.py ./app/prompts/
 COPY SummarizeControlMeasureFeedback.py ./app/prompts/
-COPY RiskAssessment.py ./app/prompts/
+COPY RiskAssessment.py ./app/
 COPY LLMCaller.py ./app/utils/
 COPY RegexPatternMatcher.py ./app/utils/
 
