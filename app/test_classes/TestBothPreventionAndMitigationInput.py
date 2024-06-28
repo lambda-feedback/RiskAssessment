@@ -1,5 +1,5 @@
 from ..test_classes.TestControlMeasureClassificationPrompt import TestControlMeasureClassificationPrompt
-from ..LLMCaller import LLMCaller
+from ..utils.LLMCaller import LLMCaller
 import numpy as np
 
 class TestBothPreventionAndMitigationInput(TestControlMeasureClassificationPrompt):

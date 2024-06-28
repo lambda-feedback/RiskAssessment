@@ -14,7 +14,7 @@ from typing import Type, Any, TypedDict
 
 from .prompts.BasePromptInput import *
 from .RiskAssessment import RiskAssessment
-from .LLMCaller import *
+from .utils.LLMCaller import *
 
 # TODO: Functions can make this code shorter.
 
