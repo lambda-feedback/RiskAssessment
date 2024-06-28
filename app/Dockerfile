@@ -3,8 +3,6 @@
 FROM rabidsheep55/python-base-eval-layer
 
 WORKDIR /app
-WORKDIR /app/prompts
-WORKDIR /app/utils
 
 # Copy and install any packages/modules needed for your evaluation script.
 COPY requirements.txt .
@@ -20,23 +18,23 @@ COPY preview_tests.py ./app/
 
 # Copy additional files not included in the template repository
 # that are used in evaluation.py
-COPY BasePromptInput.py ./app/prompts/
-COPY ControlMeasureClassification.py ./app/prompts/
-COPY ControlMeasureClassification__FewShot_NoChainOfThought.py ./app/prompts/
-COPY ControlMeasureClassification__ZeroShot_ChainOfThought.py ./app/prompts/
-COPY ControlMeasureClassification__ZeroShot_NoChainOfThought.py ./app/prompts/
-COPY HarmCausedAndHazardEvent.py ./app/prompts/
-COPY HowItHarmsInContext.py ./app/prompts/
-COPY WhoItHarmsInContext.py ./app/prompts/
-COPY MitigationInput__ControlMeasureClassification.py ./app/prompts/
-COPY PreventionInput__ControlMeasureClassification.py ./app/prompts/
-COPY PreventionClassificationWithoutContextOfOtherInputs.py ./app/prompts/
-COPY MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
-COPY NoInformationProvided.py ./app/prompts/
-COPY SummarizeControlMeasureFeedback.py ./app/prompts/
+COPY prompts/BasePromptInput.py ./app/prompts/
+COPY prompts/ControlMeasureClassification.py ./app/prompts/
+COPY prompts/ControlMeasureClassification__FewShot_NoChainOfThought.py ./app/prompts/
+COPY prompts/ControlMeasureClassification__ZeroShot_ChainOfThought.py ./app/prompts/
+COPY prompts/ControlMeasureClassification__ZeroShot_NoChainOfThought.py ./app/prompts/
+COPY prompts/HarmCausedAndHazardEvent.py ./app/prompts/
+COPY prompts/HowItHarmsInContext.py ./app/prompts/
+COPY prompts/WhoItHarmsInContext.py ./app/prompts/
+COPY prompts/MitigationInput__ControlMeasureClassification.py ./app/prompts/
+COPY prompts/PreventionInput__ControlMeasureClassification.py ./app/prompts/
+COPY prompts/PreventionClassificationWithoutContextOfOtherInputs.py ./app/prompts/
+COPY prompts/MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
+COPY prompts/NoInformationProvided.py ./app/prompts/
+COPY prompts/SummarizeControlMeasureFeedback.py ./app/prompts/
 COPY RiskAssessment.py ./app/
-COPY LLMCaller.py ./app/utils/
-COPY RegexPatternMatcher.py ./app/utils/
+COPY utils/LLMCaller.py ./app/utils/
+COPY utils/RegexPatternMatcher.py ./app/utils/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md
