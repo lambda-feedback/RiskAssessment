@@ -1,5 +1,3 @@
-
-
 # Low hanging fruit:
 # TODO: Improve few shot prompting examples so they don't parrot back input prompt
 # TODO: Try using chain of thought prompt engineering for the mitigation prompt
@@ -14,14 +12,9 @@
 import numpy as np
 from typing import Type, Any, TypedDict
 
-try:
-    from .prompts.PromptInput import *
-    from .RiskAssessment import RiskAssessment
-    from .utils.LLMCaller import *
-except ImportError:
-    from prompts.PromptInput import *
-    from RiskAssessment import RiskAssessment
-    from utils.LLMCaller import *
+from .prompts.BasePromptInput import *
+from .RiskAssessment import RiskAssessment
+from .utils.LLMCaller import *
 
 # TODO: Functions can make this code shorter.
 
@@ -138,7 +131,7 @@ def provide_feedback_on_risk_matrix(response):
         return Result(is_correct=is_correct, feedback=feedback)
 
 def provide_feedback_on_control_measure_input(control_measure_input_field: str,
-                                              control_measure_prompt_input: Type[PromptInput],
+                                              control_measure_prompt_input: Type[BasePromptInput],
                                               control_measure_prompt_output: str,
                                               control_measure_prompt_pattern: str,
                                               feedback_for_correct_answers: str,

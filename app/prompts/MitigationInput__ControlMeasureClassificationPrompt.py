@@ -1,7 +1,7 @@
-from ControlMeasureClassification import ControlMeasureClassification
+from ..prompts.ControlMeasureClassification import ControlMeasureClassification
 from ..utils.RegexPatternMatcher import RegexPatternMatcher
 
-class MitigationPrompt(ControlMeasureClassification):
+class MitigationInput__ControlMeasureClassificationPrompt(ControlMeasureClassification):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):
         super().__init__(control_measure, activity, hazard, how_it_harms, who_it_harms)
 

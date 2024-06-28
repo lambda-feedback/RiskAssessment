@@ -1,12 +1,12 @@
 try:
-    from ..prompts.PromptInput import PromptInput
+    from ..prompts.BasePromptInput import BasePromptInput
     from ..RiskAssessment import RiskAssessment
 except:
-    from prompts.PromptInput import PromptInput
-    from RiskAssessment import RiskAssessment
+    from ..prompts.BasePromptInput import BasePromptInput
+    from ..RiskAssessment import RiskAssessment
 
 class InputAndExpectedOutputForSinglePrompt:
-    def __init__(self, prompt_input_object: PromptInput, expected_output):
+    def __init__(self, prompt_input_object: BasePromptInput, expected_output):
         self.prompt_input_object = prompt_input_object
         self.expected_output = expected_output
 

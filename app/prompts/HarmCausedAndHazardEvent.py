@@ -1,6 +1,6 @@
-from .PromptInput import PromptInput
+from .BasePromptInput import BasePromptInput
 
-class HarmCausedAndHazardEvent(PromptInput):
+class HarmCausedAndHazardEvent(BasePromptInput):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms):
         super().__init__()
         self.activity = activity

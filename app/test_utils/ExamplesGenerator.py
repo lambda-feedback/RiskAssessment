@@ -1,4 +1,3 @@
-from ..prompts.PromptInput import PromptInput, HowItHarmsInContext, WhoItHarmsInContext
 from .InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt, InputAndExpectedOutputForCombinedPrompts
 
 class ExamplesGenerator:

@@ -1,15 +1,10 @@
-try:    
-    from ..test_modules.TestModelAccuracy import TestModelAccuracy
-    from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
-    from ..prompts.PromptInput import HowItHarmsInContext, WhoItHarmsInContext
-    from ..example_risk_assessments import *
-    from ..utils.LLMCaller import *
-except:
-    from test_modules.TestModelAccuracy import TestModelAccuracy
-    from test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
-    from prompts.PromptInput import HowItHarmsInContext, WhoItHarmsInContext
-    from example_risk_assessments import *
-    from utils.LLMCaller import *
+# python -m app.test_scripts.risk_domain_test_for_how_it_harms_prompt
+
+from ..test_classes.TestModelAccuracy import TestModelAccuracy
+from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
+from ..prompts.HowItHarmsInContext import HowItHarmsInContext
+from ..example_risk_assessments import *
+from ..utils.LLMCaller import *
 
 class HowItHarmsInContextExamplesGeneratorForRiskDomainTest(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
@@ -17,13 +12,6 @@ class HowItHarmsInContextExamplesGeneratorForRiskDomainTest(ExamplesGeneratorFro
                 activity=self.correct_examples_list[correct_index].activity, 
                 hazard=self.correct_examples_list[correct_index].hazard, 
                 how_it_harms=self.correct_examples_list[incorrect_index].how_it_harms)
-
-class HowItHarmsInContextExamplesGeneratorForInputFieldTest(ExamplesGeneratorFromCorrectExamples):
-    def generate_incorrect_example(self, correct_index, incorrect_index):
-        return HowItHarmsInContext(
-            activity=self.correct_examples_list[correct_index].activity, 
-            hazard=self.correct_examples_list[correct_index].hazard, 
-            how_it_harms=self.correct_examples_list[correct_index].activity)
 
 def generate_correct_examples_list_for_risk_domain_test_of_how_it_harms_prompt(risk_assessment_dict_from_first_risk_domain,
                                                         risk_assessment_dict_from_second_risk_domain):
@@ -52,36 +40,6 @@ def generate_correct_examples_list_for_risk_domain_test_of_how_it_harms_prompt(r
 
     for risk_assessment in risk_assessments_list:
         correct_examples_list.append(risk_assessment.get_how_it_harms_in_context_input())
-
-    return correct_examples_list
-
-def generate_correct_examples_list_for_risk_domain_test_of_who_it_harms_prompt(risk_assessment_dict_from_first_risk_domain,
-                                                        risk_assessment_dict_from_second_risk_domain):
-    risk_assessments_list = []
-
-    # Number of examples is limited by the second type of risk domain
-    # as the first risk domain type is always physical risks and there are many examples
-    # of risk assessments in this domain
-    number_of_examples_taken_from_each_domain = len(risk_assessment_dict_from_second_risk_domain['risk_assessments'])
-    
-    for i in range(number_of_examples_taken_from_each_domain):
-    # TODO: Some of the correct volcano/earthquake examples are duplicates 
-    # because the activity, hazard and how it harms are all the same.
-     
-    # NOTE: For the incorrect examples, even numbers have "how it harms" belonging to first_risk_assessment_example
-    # and "hazard" and "activity" corresponding to second_risk_assessment_example
-    
-    # Also for incorrect examples, odd numbers have "how it harms" belonging to second_risk_assessment_example
-    # and "hazard" and "activity" corresponding to first_risk_assessment_example
-        first_risk_assessment_example = risk_assessment_dict_from_first_risk_domain['risk_assessments'][i]
-        second_risk_assessment_example = risk_assessment_dict_from_second_risk_domain['risk_assessments'][i]
-        risk_assessments_list.append(first_risk_assessment_example)
-        risk_assessments_list.append(second_risk_assessment_example)
-
-    correct_examples_list = []
-
-    for risk_assessment in risk_assessments_list:
-        correct_examples_list.append(risk_assessment.get_who_it_harms_in_context_input())
 
     return correct_examples_list
 
@@ -141,25 +99,24 @@ def perform_risk_domain_test_for_how_it_harms_in_context_prompt(LLM,
     
     test_accuracy.run_test()
 
-
 if __name__ == "__main__":
     # WHO IT HARMS
     perform_risk_domain_test_for_how_it_harms_in_context_prompt(
         LLM=Mixtral8x7B(temperature=0.1),
         is_first_test=False
     )
-    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-        LLM=Mixtral8x22B(temperature=0.1),
-        is_first_test=False
-    )
-    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-        LLM=MistralLarge(temperature=0.1),
-        is_first_test=False
-    )
-    perform_risk_domain_test_for_how_it_harms_in_context_prompt(
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-        is_first_test=False
-    )
+    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+    #     LLM=Mixtral8x22B(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+    #     LLM=MistralLarge(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+    #     is_first_test=False
+    # )
     # perform_risk_domain_test_for_how_it_harms_in_context_prompt(
     #     LLM=GPT_3_point_5_turbo(temperature=0.1),
     #     is_first_test=False

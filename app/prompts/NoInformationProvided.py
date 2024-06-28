@@ -1,6 +1,6 @@
-from .PromptInput import PromptInput
+from .BasePromptInput import BasePromptInput
 
-class NoInformationProvided(PromptInput):
+class NoInformationProvided(BasePromptInput):
     def __init__(self, input: str):
         super().__init__()
         self.pattern_matching_method = 'check_string_for_no_information_provided'

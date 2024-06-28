@@ -1,7 +1,7 @@
-from PromptInput import PromptInput
+from ..prompts.BasePromptInput import BasePromptInput
 from ..utils.RegexPatternMatcher import RegexPatternMatcher
 
-class WhoItHarmsInContext(PromptInput):
+class WhoItHarmsInContext(BasePromptInput):
     def __init__(self, who_it_harms, activity, hazard, how_it_harms):
         super().__init__()
         self.who_it_harms = who_it_harms

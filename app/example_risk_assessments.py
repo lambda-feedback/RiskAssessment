@@ -7,7 +7,7 @@ import numpy as np
 try:
     from .RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
 except ImportError:
-    from RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
+    from ..RiskAssessment import RiskAssessmentWithoutNumberInputs, RiskAssessment
 
 RA_empty_input = RiskAssessmentWithoutNumberInputs(
     activity="",
@@ -1619,28 +1619,28 @@ physical_risks_to_individuals__original_student_data = {
     'risk_assessments': [
         # 10 examples to be used for how it harms test with natural disasters
         RA_syringe_needle, 
-        RA_trombone_impact, 
-        RA_hearing_damage, 
-        RA_ink_spill_in_eye, 
-        RA_wet_hands_electric_shock, 
-        RA_water_tank,
-        RA_sharp_drone_propeller_blade, 
-        RA_incorrect_prevention_and_mitigation,
-        RA_heavy_weight_falls_on_demonstrator, 
-        RA_zip_tie_hits_audience,
-        RA_battery_causes_fire, 
+        # RA_trombone_impact, 
+        # RA_hearing_damage, 
+        # RA_ink_spill_in_eye, 
+        # RA_wet_hands_electric_shock, 
+        # RA_water_tank,
+        # RA_sharp_drone_propeller_blade, 
+        # RA_incorrect_prevention_and_mitigation,
+        # RA_heavy_weight_falls_on_demonstrator, 
+        # RA_zip_tie_hits_audience,
+        # RA_battery_causes_fire, 
 
-        # Neither examples
-        RA_syringe_needle__neither,
-        RA_ink_spill_in_eye__neither,
-        RA_wet_hands_electric_shock__neither,
-        RA_water_tank__neither,
-        RA_mucking_out_horse__neither,
-        RA_battery_causes_fire__neither,
+        # # Neither examples
+        # RA_syringe_needle__neither,
+        # RA_ink_spill_in_eye__neither,
+        # RA_wet_hands_electric_shock__neither,
+        # RA_water_tank__neither,
+        # RA_mucking_out_horse__neither,
+        # RA_battery_causes_fire__neither,
         
-        RA_paper_plane_impact, 
-        RA_pencil_lead_projectile,
-        RA_climbing_gear_on_feet, 
+        # RA_paper_plane_impact, 
+        # RA_pencil_lead_projectile,
+        # RA_climbing_gear_on_feet, 
         ],
     'risk_domain': 'Physical risks to individuals (original student data)'
 }
@@ -1648,13 +1648,13 @@ physical_risks_to_individuals__original_student_data = {
 physical_risks_to_individuals_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_sharp_drone_propeller_blade,
-        RA_zip_tie_hits_audience,
-        RA_pencil_lead_projectile,
-        RA_heavy_weight_falls_on_demonstrator,
-        RA_syringe_needle,
-        RA_cycling,
-        RA_swimming_riptides,
-        fluids_lab_water_spill_slippery
+        # RA_zip_tie_hits_audience,
+        # RA_pencil_lead_projectile,
+        # RA_heavy_weight_falls_on_demonstrator,
+        # RA_syringe_needle,
+        # RA_cycling,
+        # RA_swimming_riptides,
+        # fluids_lab_water_spill_slippery
     ],
     'risk_domain': 'Physical risks'
 }
@@ -1662,13 +1662,13 @@ physical_risks_to_individuals_with_unique_hazard_description_fields = {
 physical_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
     'risk_assessments': [
         RA_golf_swing,
-        RA_ladder,
-        RA_sharp_drone_propeller_blade,
-        RA_battery_causes_fire,
-        RA_heavy_weight_falls_on_demonstrator,
-        RA_crossing_road,
-        RA_mucking_out_horse,
-        RA_bouldering,
+        # RA_ladder,
+        # RA_sharp_drone_propeller_blade,
+        # RA_battery_causes_fire,
+        # RA_heavy_weight_falls_on_demonstrator,
+        # RA_crossing_road,
+        # RA_mucking_out_horse,
+        # RA_bouldering,
 
     ],
     'risk_domain': 'Physical risks'
@@ -1677,48 +1677,48 @@ physical_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain
 physical_risks_to_individuals__data_gathered_from_version_1_deployment = {
     'risk_assessments': [
         RA_fire_alarm,
-        RA_mop_up_spill,
-        RA_mop_up_spill_correct_hazard_event_and_harm_caused,
-        RA_syringe_with_cover,
-        RA_hot_water_in_cups,
-        RA_bigger_beaker,
-        RA_cycling_high_viz,
-        RA_mucking_out_horse,
-        RA_slitter_machine,
-        RA_campfire,
-        RA_bouldering,
-        RA_hob_burn,
-        RA_crossing_road,
-        RA_cycling,
-        RA_ladder,
-        RA_stable_ladder,
-        RA_cooking_gas_hob,
-        RA_zebra_crossing,
-        RA_swimming_riptides,
-        RA_careless_drivers,
-        RA_cycling_safer_routes,
-        RA_golf_swing,
+        # RA_mop_up_spill,
+        # RA_mop_up_spill_correct_hazard_event_and_harm_caused,
+        # RA_syringe_with_cover,
+        # RA_hot_water_in_cups,
+        # RA_bigger_beaker,
+        # RA_cycling_high_viz,
+        # RA_mucking_out_horse,
+        # RA_slitter_machine,
+        # RA_campfire,
+        # RA_bouldering,
+        # RA_hob_burn,
+        # RA_crossing_road,
+        # RA_cycling,
+        # RA_ladder,
+        # RA_stable_ladder,
+        # RA_cooking_gas_hob,
+        # RA_zebra_crossing,
+        # RA_swimming_riptides,
+        # RA_careless_drivers,
+        # RA_cycling_safer_routes,
+        # RA_golf_swing,
         
-        thermo_lab_hot_equipment,
-        crossing_road_getting_hit_green_lights,
-        crossing_road_getting_hit_call_ambulance,
-        lab_experiment_spilled_chemicals_lab_techs,
-        lab_experiment_spilled_chemicals_no_dangerous_chemicals,
-        heat_engine_lab_burning_yourself_dont_run,
-        heat_engine_lab_burning_yourself_cold_water,
-        fluids_lab_water_spill_slippery,
-        heat_transfer_lab_boiling_water,
-        running_pump_water_spillage,
-        fluids_lab_water_spilt_slipping,
-        syringe_injecting_fuel_place_syringe_in_middle_of_table,
-        dunking_in_3v3_basketball_stop_dunking,
+        # thermo_lab_hot_equipment,
+        # crossing_road_getting_hit_green_lights,
+        # crossing_road_getting_hit_call_ambulance,
+        # lab_experiment_spilled_chemicals_lab_techs,
+        # lab_experiment_spilled_chemicals_no_dangerous_chemicals,
+        # heat_engine_lab_burning_yourself_dont_run,
+        # heat_engine_lab_burning_yourself_cold_water,
+        # fluids_lab_water_spill_slippery,
+        # heat_transfer_lab_boiling_water,
+        # running_pump_water_spillage,
+        # fluids_lab_water_spilt_slipping,
+        # syringe_injecting_fuel_place_syringe_in_middle_of_table,
+        # dunking_in_3v3_basketball_stop_dunking,
         
-        # # Neither examples
-        RA_campfire__neither,
-        RA_bouldering__neither,
-        RA_hob_burn__neither,
-        RA_cycling_high_viz__neither,
-        RA_cycling_safer_routes__neither,
+        # # # Neither examples
+        # RA_campfire__neither,
+        # RA_bouldering__neither,
+        # RA_hob_burn__neither,
+        # RA_cycling_high_viz__neither,
+        # RA_cycling_safer_routes__neither,
     ],
     'risk_domain': 'Physical risks to individuals (data gathered from version 1 deployment)'
 }
@@ -1769,13 +1769,13 @@ natural_disaster_risks = {
 natural_disaster_risks_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_wildfire_fire_resistant_infrastructure,
-        RA_wildfire_community_preparedness,
-        RA_earthquake_building_retrofit,
-        RA_earthquake_public_education,
-        RA_volcano_early_warning_systems,
-        RA_volcano_causing_ash_cloud,
-        RA_volcano_post_disaster_recovery,
-        heat_engine_lab_burning_yourself_dont_run,
+        # RA_wildfire_community_preparedness,
+        # RA_earthquake_building_retrofit,
+        # RA_earthquake_public_education,
+        # RA_volcano_early_warning_systems,
+        # RA_volcano_causing_ash_cloud,
+        # RA_volcano_post_disaster_recovery,
+        # heat_engine_lab_burning_yourself_dont_run,
     ],
     'risk_domain': 'Natural disaster risks'
 }
@@ -1783,9 +1783,9 @@ natural_disaster_risks_with_unique_hazard_description_fields = {
 natural_disaster_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
     'risk_assessments': [
         RA_wildfire_community_preparedness,
-        RA_wildfire_fire_resistant_infrastructure__neither,
-        RA_volcano_causing_ash_cloud,
-        RA_volcano_post_disaster_recovery
+        # RA_wildfire_fire_resistant_infrastructure__neither,
+        # RA_volcano_causing_ash_cloud,
+        # RA_volcano_post_disaster_recovery
     ],
     'risk_domain': 'Natural disaster risks'
 }
@@ -1793,23 +1793,23 @@ natural_disaster_risk_assessments_that_have_suitable_who_it_harms_fields_for_ris
 cybersecurity_risks = {
     'risk_assessments': [
         RA_ransomware_NHS_isolation,
-        RA_ransomware_NHS_MFA,
-        RA_ransomware_NHS_data_backup,
-        RA_bank_cybersecurity_attack,
-        RA_transport_cyber_attack_specific,
-        RA_telecoms_cyber_attack,
-        RA_civil_nuclear_cyber_attack,
-        RA_electricity_infrastructure_cyber_attack,
-        RA_gas_infrastructure_cyber_attack,
-        RA_fuel_supply_cyber_attack,
+        # RA_ransomware_NHS_MFA,
+        # RA_ransomware_NHS_data_backup,
+        # RA_bank_cybersecurity_attack,
+        # RA_transport_cyber_attack_specific,
+        # RA_telecoms_cyber_attack,
+        # RA_civil_nuclear_cyber_attack,
+        # RA_electricity_infrastructure_cyber_attack,
+        # RA_gas_infrastructure_cyber_attack,
+        # RA_fuel_supply_cyber_attack,
 
-        # NEITHER EXAMPLES
-        RA_ransomware_NHS_isolation__neither,
-        RA_ransomware_NHS_MFA__neither,
-        RA_civil_nuclear_cyber_attack__neither,
-        RA_electricity_infrastructure_cyber_attack__neither,
-        RA_gas_infrastructure_cyber_attack__neither,
-        RA_fuel_supply_cyber_attack__neither,
+        # # NEITHER EXAMPLES
+        # RA_ransomware_NHS_isolation__neither,
+        # RA_ransomware_NHS_MFA__neither,
+        # RA_civil_nuclear_cyber_attack__neither,
+        # RA_electricity_infrastructure_cyber_attack__neither,
+        # RA_gas_infrastructure_cyber_attack__neither,
+        # RA_fuel_supply_cyber_attack__neither,
     ],
     'risk_domain': 'Cybersecurity risks'
 }
@@ -1817,13 +1817,13 @@ cybersecurity_risks = {
 cybersecurity_risks_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_ransomware_NHS_isolation,
-        RA_ransomware_NHS_MFA,
-        RA_ransomware_NHS_data_backup,
-        RA_bank_cybersecurity_attack,
-        RA_transport_cyber_attack_specific,
-        RA_telecoms_cyber_attack,
-        RA_civil_nuclear_cyber_attack,
-        RA_electricity_infrastructure_cyber_attack,
+        # RA_ransomware_NHS_MFA,
+        # RA_ransomware_NHS_data_backup,
+        # RA_bank_cybersecurity_attack,
+        # RA_transport_cyber_attack_specific,
+        # RA_telecoms_cyber_attack,
+        # RA_civil_nuclear_cyber_attack,
+        # RA_electricity_infrastructure_cyber_attack,
     ],
     'risk_domain': 'Cybersecurity risks'
 }
@@ -1831,7 +1831,7 @@ cybersecurity_risks_with_unique_hazard_description_fields = {
 cybersecurity_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
     'risk_assessments': [
         RA_telecoms_cyber_attack,
-        RA_civil_nuclear_cyber_attack
+        # RA_civil_nuclear_cyber_attack
     ],
     'risk_domain': 'Cybersecurity risks'
 }
@@ -1839,21 +1839,21 @@ cybersecurity_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_d
 terrorism_risks = {
     'risk_assessments': [
         RA_explosive_devices_sniffer_dogs,
-        RA_explosive_devices_security,
-        RA_terrorism_aviation_background_checks,
-        RA_terrorism_aviation_improving_standards,
-        RA_hostage_negotiation_teams,
-        RA_hostage_psychological_support,
-        RA_high_profile_assassination_protection,
-        RA_high_profile_assassination_security_measures,
-        RA_CBRN_attack_enhance_detection,
-        RA_CBRN_attack_securing_borders,
+        # RA_explosive_devices_security,
+        # RA_terrorism_aviation_background_checks,
+        # RA_terrorism_aviation_improving_standards,
+        # RA_hostage_negotiation_teams,
+        # RA_hostage_psychological_support,
+        # RA_high_profile_assassination_protection,
+        # RA_high_profile_assassination_security_measures,
+        # RA_CBRN_attack_enhance_detection,
+        # RA_CBRN_attack_securing_borders,
 
-        # NEITHER EXAMPLES
-        RA_explosive_devices_security__neither,
-        RA_terrorism_aviation_background_checks__neither,
-        RA_high_profile_assassination_protection__neither,
-        RA_CBRN_attack_enhance_detection__neither,
+        # # NEITHER EXAMPLES
+        # RA_explosive_devices_security__neither,
+        # RA_terrorism_aviation_background_checks__neither,
+        # RA_high_profile_assassination_protection__neither,
+        # RA_CBRN_attack_enhance_detection__neither,
         
     ],
     'risk_domain': 'Terrorism risks'
@@ -1862,13 +1862,13 @@ terrorism_risks = {
 terrorism_risks_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_explosive_devices_sniffer_dogs,
-        RA_terrorism_aviation_background_checks,
-        RA_terrorism_aviation_improving_standards,
-        RA_hostage_negotiation_teams,
-        RA_hostage_psychological_support,
-        RA_high_profile_assassination_protection,
-        RA_high_profile_assassination_security_measures,
-        RA_CBRN_attack_securing_borders
+        # RA_terrorism_aviation_background_checks,
+        # RA_terrorism_aviation_improving_standards,
+        # RA_hostage_negotiation_teams,
+        # RA_hostage_psychological_support,
+        # RA_high_profile_assassination_protection,
+        # RA_high_profile_assassination_security_measures,
+        # RA_CBRN_attack_securing_borders
     ],
     'risk_domain': 'Terrorism risks'
 }
@@ -1884,24 +1884,23 @@ biohazard_risks = {
     'risk_assessments': [
     # MITIGATION ONLY
     RA_pandemic_resource_allocation,
-    RA_pandemic_surge_capacity,
-    RA_pandemic_quarantine,
-    RA_pandemic_vaccines,
+    # RA_pandemic_surge_capacity,
+    # RA_pandemic_quarantine,
+    # RA_pandemic_vaccines,
 
-    # PREVENTION AND MITIGATION
-    RA_pandemic_isolate_cases,
-    RA_pandemic_scalable_treatment,
-    RA_foot_and_mouth_disease_culling,
-    RA_foot_and_mouth_disease_rapid_response,
-    RA_healthcare_biohazard,
+    # # PREVENTION AND MITIGATION
+    # RA_pandemic_isolate_cases,
+    # RA_pandemic_scalable_treatment,
+    # RA_foot_and_mouth_disease_culling,
+    # RA_foot_and_mouth_disease_rapid_response,
+    # RA_healthcare_biohazard,
 
-    # NEITHER EXAMPLES
-    RA_pandemic_resource_allocation__neither,
-    RA_pandemic_vaccines__neither,
-    RA_foot_and_mouth_disease_culling__neither,
-    RA_foot_and_mouth_disease_rapid_response__neither,
-    RA_healthcare_biohazard__neither
-    
+    # # NEITHER EXAMPLES
+    # RA_pandemic_resource_allocation__neither,
+    # RA_pandemic_vaccines__neither,
+    # RA_foot_and_mouth_disease_culling__neither,
+    # RA_foot_and_mouth_disease_rapid_response__neither,
+    # RA_healthcare_biohazard__neither
     ],
 
     'risk_domain': 'biohazard risks'
@@ -1910,9 +1909,9 @@ biohazard_risks = {
 biohazard_risks_with_unique_hazard_description_fields = {
     'risk_assessments': [
         RA_pandemic_surge_capacity,
-        RA_pandemic_quarantine,
-        RA_pandemic_vaccines,
-        RA_foot_and_mouth_disease_rapid_response
+        # RA_pandemic_quarantine,
+        # RA_pandemic_vaccines,
+        # RA_foot_and_mouth_disease_rapid_response
     ],
     'risk_domain': 'Biohazard risks'
 }
@@ -1920,9 +1919,8 @@ biohazard_risks_with_unique_hazard_description_fields = {
 biohazard_risk_assessments_that_have_suitable_who_it_harms_fields_for_risk_domain_test = {
     'risk_assessments': [
         RA_pandemic_surge_capacity,
-        RA_foot_and_mouth_disease_rapid_response,
-        RA_pandemic_quarantine
-
+        # RA_foot_and_mouth_disease_rapid_response,
+        # RA_pandemic_quarantine
     ],
     'risk_domain': 'Biohazard risks'
 }

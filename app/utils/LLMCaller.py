@@ -10,10 +10,7 @@ from typing import Type
 import os
 from dotenv import load_dotenv
 
-try:
-    from ..prompts.PromptInput import *
-except ImportError:
-    from prompts.PromptInput import *
+from ..prompts.BasePromptInput import *
 
 class LLMCaller:
     def __init__(self, name:str):
@@ -22,7 +19,7 @@ class LLMCaller:
     def update_api_key_from_env_file(self):
         pass
     
-    def get_JSON_output_from_API_call(self, prompt_input: Type[PromptInput]):
+    def get_JSON_output_from_API_call(self, prompt_input: Type[BasePromptInput]):
         pass
 
     def get_model_output(self):
@@ -211,7 +208,7 @@ class HuggingfaceLLMWithGeneratedText(HuggingfaceLLMCaller):
                              headers=headers, 
                              json=payload).json()
     
-    def get_model_output(self, prompt_input: Type[PromptInput]):
+    def get_model_output(self, prompt_input: Type[BasePromptInput]):
         LLM_output = self.get_JSON_output_from_API_call(prompt_input)
         return LLM_output[0]['generated_text']
     

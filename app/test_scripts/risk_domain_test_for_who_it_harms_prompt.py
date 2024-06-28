@@ -1,15 +1,10 @@
-try:    
-    from ..test_modules.TestModelAccuracy import TestModelAccuracy
-    from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
-    from ..prompts.PromptInput import HowItHarmsInContext, WhoItHarmsInContext
-    from ..example_risk_assessments import *
-    from ..utils.LLMCaller import *
-except:
-    from test_modules.TestModelAccuracy import TestModelAccuracy
-    from test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
-    from prompts.PromptInput import HowItHarmsInContext, WhoItHarmsInContext
-    from example_risk_assessments import *
-    from utils.LLMCaller import *
+# python -m app.test_scripts.risk_domain_test_for_who_it_harms_prompt
+
+from ..test_classes.TestModelAccuracy import TestModelAccuracy
+from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
+from ..prompts.WhoItHarmsInContext import WhoItHarmsInContext
+from ..example_risk_assessments import *
+from ..utils.LLMCaller import *
 
 class WhoItHarmsInContextExamplesGeneratorForRiskDomainTest(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):
@@ -111,18 +106,18 @@ if __name__ == "__main__":
         LLM=Mixtral8x7B(temperature=0.1),
         is_first_test=False
     )
-    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
-        LLM=Mixtral8x22B(temperature=0.1),
-        is_first_test=False
-    )
-    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
-        LLM=MistralLarge(temperature=0.1),
-        is_first_test=False
-    )
-    perform_risk_domain_test_for_who_it_harms_in_context_prompt(
-        LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
-        is_first_test=False
-    )
+    # perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+    #     LLM=Mixtral8x22B(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+    #     LLM=MistralLarge(temperature=0.1),
+    #     is_first_test=False
+    # )
+    # perform_risk_domain_test_for_who_it_harms_in_context_prompt(
+    #     LLM=ClaudeSonnetLLM(system_message='', temperature=0.1),
+    #     is_first_test=False
+    # )
     # perform_risk_domain_test_for_who_it_harms_in_context_prompt(
     #     LLM=GPT_3_point_5_turbo(temperature=0.1),
     #     is_first_test=True

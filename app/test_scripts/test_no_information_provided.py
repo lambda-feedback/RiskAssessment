@@ -1,9 +1,9 @@
-# python -m app.tests.test_no_information_provided
+# python -m app.test_scripts.test_no_information_provided
 
 from ..test_utils.InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
 from ..utils.LLMCaller import *
 from ..prompts.NoInformationProvided import NoInformationProvided
-from ..test_modules.TestModelAccuracy import TestModelAccuracy
+from ..test_classes.TestModelAccuracy import TestModelAccuracy
 from ..example_risk_assessments import *
 
 no_information_provided_examples = [
@@ -64,12 +64,12 @@ if __name__ == "__main__":
     test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
                                     , LLM=MistralLarge(temperature=temperature)
                                     , is_first_test=False)
-    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
-                                    , LLM=Mixtral8x22B(temperature=temperature)
-                                    , is_first_test=False)
-    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
-                                    , LLM=Mixtral8x7B(temperature=temperature)
-                                    , is_first_test=False)
-    test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
-                                    , LLM=ClaudeSonnetLLM(system_message="", temperature=temperature)
-                                    , is_first_test=False)
+    # test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+    #                                 , LLM=Mixtral8x22B(temperature=temperature)
+    #                                 , is_first_test=False)
+    # test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+    #                                 , LLM=Mixtral8x7B(temperature=temperature)
+    #                                 , is_first_test=False)
+    # test_no_information_provided_prompt(risk_assessments=laboratory_risk_assessments
+    #                                 , LLM=ClaudeSonnetLLM(system_message="", temperature=temperature)
+    #                                 , is_first_test=False)

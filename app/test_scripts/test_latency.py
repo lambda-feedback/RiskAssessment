@@ -1,10 +1,12 @@
-from utils.LLMCaller import *
-from evaluation import evaluation_function, Params
-from utils.GoogleSheetsWriter import GoogleSheetsWriter
+# python -m app.test_scripts.test_latency
+
+from ..utils.LLMCaller import *
+from ..evaluation import evaluation_function, Params
+from ..utils.GoogleSheetsWriter import GoogleSheetsWriter
 from datetime import datetime
 import numpy as np
 
-from example_risk_assessments import physical_risks_to_individuals__original_student_data
+from ..example_risk_assessments import physical_risks_to_individuals__original_student_data
 
 def test_latency_of_evaluation_function(LLM_name: str, risk_assessments_dict, number_of_risk_assessments_to_test):
 
