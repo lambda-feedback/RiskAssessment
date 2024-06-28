@@ -1,6 +1,6 @@
 # python -m app.test_scripts.test_latency
 
-from ..LLMCaller import *
+from ..utils.LLMCaller import *
 from ..evaluation import evaluation_function, Params
 from ..utils.GoogleSheetsWriter import GoogleSheetsWriter
 from datetime import datetime

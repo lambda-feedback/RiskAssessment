@@ -3,6 +3,8 @@
 FROM rabidsheep55/python-base-eval-layer
 
 WORKDIR /app
+WORKDIR /app/prompts
+WORKDIR /app/utils
 
 # Copy and install any packages/modules needed for your evaluation script.
 COPY requirements.txt .
@@ -33,8 +35,8 @@ COPY MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
 COPY NoInformationProvided.py ./app/prompts/
 COPY SummarizeControlMeasureFeedback.py ./app/prompts/
 COPY RiskAssessment.py ./app/
-COPY LLMCaller.py ./app/
-COPY RegexPatternMatcher.py ./app/
+COPY LLMCaller.py ./app/utils/
+COPY RegexPatternMatcher.py ./app/utils/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md

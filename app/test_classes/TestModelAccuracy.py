@@ -1,5 +1,5 @@
 from ..test_classes.BaseTestClass import BaseTestClass
-from ..LLMCaller import LLMCaller
+from ..utils.LLMCaller import LLMCaller
 import pandas as pd
 import numpy as np
 from tabulate import tabulate

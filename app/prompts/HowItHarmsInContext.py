@@ -1,5 +1,5 @@
 from ..prompts.BasePromptInput import BasePromptInput
-from ..RegexPatternMatcher import RegexPatternMatcher
+from ..utils.RegexPatternMatcher import RegexPatternMatcher
 
 class HowItHarmsInContext(BasePromptInput):
     def __init__(self, how_it_harms, activity, hazard):

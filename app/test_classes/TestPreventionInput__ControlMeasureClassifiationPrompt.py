@@ -1,5 +1,5 @@
 from ..test_classes.TestControlMeasureClassificationPrompt import TestControlMeasureClassificationPrompt
-from ..LLMCaller import LLMCaller
+from ..utils.LLMCaller import LLMCaller
 
 class TestPreventionInput__ControlMeasureClassifiationPrompt(TestControlMeasureClassificationPrompt):
     def __init__(self, 

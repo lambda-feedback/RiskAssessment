@@ -4,7 +4,7 @@ from ..test_classes.TestModelAccuracy import TestModelAccuracy
 from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from ..prompts.WhoItHarmsInContext import WhoItHarmsInContext
 from ..example_risk_assessments import *
-from ..LLMCaller import *
+from ..utils.LLMCaller import *
 
 class WhoItHarmsInContextExamplesGeneratorForRiskDomainTest(ExamplesGeneratorFromCorrectExamples):
     def generate_incorrect_example(self, correct_index, incorrect_index):

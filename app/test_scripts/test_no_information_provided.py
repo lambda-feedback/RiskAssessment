@@ -1,7 +1,7 @@
 # python -m app.test_scripts.test_no_information_provided
 
 from ..test_utils.InputAndExpectedOutput import InputAndExpectedOutputForSinglePrompt
-from ..LLMCaller import *
+from ..utils.LLMCaller import *
 from ..prompts.NoInformationProvided import NoInformationProvided
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
 from ..example_risk_assessments import *
