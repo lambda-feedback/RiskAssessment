@@ -18,10 +18,23 @@ COPY preview_tests.py ./app/
 
 # Copy additional files not included in the template repository
 # that are used in evaluation.py
-COPY PromptInputs.py ./app/
-COPY RiskAssessment.py ./app/
-COPY LLMCaller.py ./app/
-COPY RegexPatternMatcher.py ./app/
+COPY BasePromptInput.py ./app/prompts/
+COPY ControlMeasureClassification.py ./app/prompts/
+COPY ControlMeasureClassification__FewShot_NoChainOfThought.py ./app/prompts/
+COPY ControlMeasureClassification__ZeroShot_ChainOfThought.py ./app/prompts/
+COPY ControlMeasureClassification__ZeroShot_NoChainOfThought.py ./app/prompts/
+COPY HarmCausedAndHazardEvent.py ./app/prompts/
+COPY HowItHarmsInContext.py ./app/prompts/
+COPY WhoItHarmsInContext.py ./app/prompts/
+COPY MitigationInput__ControlMeasureClassification.py ./app/prompts/
+COPY PreventionInput__ControlMeasureClassification.py ./app/prompts/
+COPY PreventionClassificationWithoutContextOfOtherInputs.py ./app/prompts/
+COPY MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
+COPY NoInformationProvided.py ./app/prompts/
+COPY SummarizeControlMeasureFeedback.py ./app/prompts/
+COPY RiskAssessment.py ./app/prompts/
+COPY LLMCaller.py ./app/utils/
+COPY RegexPatternMatcher.py ./app/utils/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md
