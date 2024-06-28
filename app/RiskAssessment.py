@@ -7,7 +7,7 @@ from .prompts.NoInformationProvided import NoInformationProvided
 from .prompts.HowItHarmsInContext import HowItHarmsInContext
 from .prompts.WhoItHarmsInContext import WhoItHarmsInContext
 from .prompts.HarmCausedAndHazardEvent import HarmCausedAndHazardEvent
-from .prompts.PreventionInput__ControlMeasureClassifationPrompt import PreventionInput__ControlMeasureClassifationPrompt
+from .prompts.PreventionInput__ControlMeasureClassificationPrompt import PreventionInput__ControlMeasureClassificationPrompt
 from .prompts.MitigationInput__ControlMeasureClassificationPrompt import MitigationInput__ControlMeasureClassificationPrompt
 from .prompts.ControlMeasureClassification__ZeroShot_ChainOfThought import ControlMeasureClassification__ZeroShot_ChainOfThought
 from .prompts.ControlMeasureClassification__FewShot_NoChainOfThought import ControlMeasureClassification__FewShot_NoChainOfThought
@@ -93,7 +93,7 @@ class RiskAssessment:
                             who_it_harms=self.who_it_harms)
     
     def get_control_measure_prompt_with_prevention_input(self):
-        return PreventionInput__ControlMeasureClassifationPrompt(
+        return PreventionInput__ControlMeasureClassificationPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
