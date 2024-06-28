@@ -1,4 +1,4 @@
-from ..utils.LLMCaller import LLMCaller
+from ..LLMCaller import LLMCaller
 from ..test_classes.TestModelAccuracyForCombinationOfPrompts import TestModelAccuracyForCombinationOfPrompts
 
 class TestHarmCausedAndHazardEventPrompt(TestModelAccuracyForCombinationOfPrompts):

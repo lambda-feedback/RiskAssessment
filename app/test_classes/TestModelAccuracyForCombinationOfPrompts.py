@@ -1,5 +1,5 @@
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
-from ..utils.LLMCaller import LLMCaller
+from ..LLMCaller import LLMCaller
 
 class TestModelAccuracyForCombinationOfPrompts(TestModelAccuracy):
     def __init__(self, 

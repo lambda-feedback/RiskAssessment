@@ -1,5 +1,5 @@
 from ..test_classes.TestControlMeasureClassificationPrompt import TestControlMeasureClassificationPrompt
-from ..utils.LLMCaller import LLMCaller
+from ..LLMCaller import LLMCaller
 
 class TestSummarizeControlMeasureFeedback(TestControlMeasureClassificationPrompt):
     def __init__(self, 

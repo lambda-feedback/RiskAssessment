@@ -10,7 +10,7 @@ from typing import Type
 import os
 from dotenv import load_dotenv
 
-from ..prompts.BasePromptInput import *
+from .prompts.BasePromptInput import *
 
 class LLMCaller:
     def __init__(self, name:str):
