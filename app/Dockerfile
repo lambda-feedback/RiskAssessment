@@ -26,8 +26,8 @@ COPY prompts/ControlMeasureClassification__ZeroShot_NoChainOfThought.py ./app/pr
 COPY prompts/HarmCausedAndHazardEvent.py ./app/prompts/
 COPY prompts/HowItHarmsInContext.py ./app/prompts/
 COPY prompts/WhoItHarmsInContext.py ./app/prompts/
-COPY prompts/MitigationInput__ControlMeasureClassification.py ./app/prompts/
-COPY prompts/PreventionInput__ControlMeasureClassification.py ./app/prompts/
+COPY prompts/MitigationInput__ControlMeasureClassificationPrompt.py ./app/prompts/
+COPY prompts/PreventionInput__ControlMeasureClassificationPrompt.py ./app/prompts/
 COPY prompts/PreventionClassificationWithoutContextOfOtherInputs.py ./app/prompts/
 COPY prompts/MitigationClassificationWithoutContextOfOtherInputs.py ./app/prompts/
 COPY prompts/NoInformationProvided.py ./app/prompts/
