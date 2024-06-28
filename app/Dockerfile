@@ -34,7 +34,7 @@ COPY NoInformationProvided.py ./app/prompts/
 COPY SummarizeControlMeasureFeedback.py ./app/prompts/
 COPY RiskAssessment.py ./app/
 COPY LLMCaller.py ./app/utils/
-COPY RegexPatternMatcher.py ./app/utils/
+COPY RegexPatternMatcher.py ./app/
 
 # Copy Documentation
 COPY docs/dev.md ./app/docs/dev.md

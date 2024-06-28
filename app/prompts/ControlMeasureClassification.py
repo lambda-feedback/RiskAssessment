@@ -1,5 +1,5 @@
 from ..prompts.BasePromptInput import BasePromptInput
-from ..utils.RegexPatternMatcher import RegexPatternMatcher
+from ..RegexPatternMatcher import RegexPatternMatcher
 
 class ControlMeasureClassification(BasePromptInput):
     def __init__(self, control_measure, activity, hazard, how_it_harms, who_it_harms):

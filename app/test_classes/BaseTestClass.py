@@ -1,5 +1,5 @@
 from ..utils.LLMCaller import LLMCaller
-from ..utils.RegexPatternMatcher import RegexPatternMatcher
+from ..RegexPatternMatcher import RegexPatternMatcher
 
 class BaseTestClass:
     def __init__(self,

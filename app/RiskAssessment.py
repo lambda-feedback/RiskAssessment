@@ -1,7 +1,7 @@
 from typing import Type
 
 from .utils.LLMCaller import *
-from .utils.RegexPatternMatcher import RegexPatternMatcher
+from .RegexPatternMatcher import RegexPatternMatcher
 
 from .prompts.NoInformationProvided import NoInformationProvided
 from .prompts.HowItHarmsInContext import HowItHarmsInContext

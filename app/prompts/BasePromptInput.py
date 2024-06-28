@@ -1,7 +1,7 @@
 try:
-    from utils.RegexPatternMatcher import RegexPatternMatcher
+    from RegexPatternMatcher import RegexPatternMatcher
 except:
-    from ..utils.RegexPatternMatcher import RegexPatternMatcher
+    from ..RegexPatternMatcher import RegexPatternMatcher
 
 class BasePromptInput:
     def __init__(self):
