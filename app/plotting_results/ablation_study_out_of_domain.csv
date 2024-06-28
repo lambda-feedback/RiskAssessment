@@ -1,6 +1,0 @@
-LLM,Few-shot w/ chain-of-thought,Few-shot w/o chain-of-thought,0-shot w/ chain-of-thought,0-shot w/o chain-of-thought
-Claude Sonnet,66.8,69,56.5,55.8
-GPT-3.5,19.8,19.8,17.5,3.4
-Mistral Large,56,61.6,52.4,50.9
-Mixtral 8x22B,54.1,54.3,44,49.1
-Mixtral 8x7B,26.9,34.3,23.5,22.8
