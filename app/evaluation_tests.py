@@ -1,29 +1,19 @@
-# pytest -v -s evaluation_tests.py
+# pytest -v -s app/evaluation_tests.py
 
 # The -s option above is so you can see printouts even if the test fails
 
 import unittest
 
-try:
-    from .LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
-    from .evaluation import Params, evaluation_function
-    from .example_risk_assessments import *
-    from .RegexPatternMatcher import RegexPatternMatcher
-    from .TestModelAccuracy import *
-    from .PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
-    from .test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from .risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
-    from .RiskAssessment import RiskAssessmentWithoutNumberInputs
-except:
-    from .LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
-    from evaluation import Params, evaluation_function
-    from example_risk_assessments import *
-    from RegexPatternMatcher import RegexPatternMatcher
-    from TestModelAccuracy import *
-    from PromptInputs import NoInformationProvided, HowItHarmsInContext, WhoItHarmsInContext
-    from test_no_information_provided import no_information_provided_examples, information_provided_examples
-    from risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
-    from RiskAssessment import RiskAssessmentWithoutNumberInputs
+from .utils.LLMCaller import GPT_3_point_5_turbo, ClaudeSonnetLLM
+from .evaluation import Params, evaluation_function
+from .example_risk_assessments import *
+from .utils.RegexPatternMatcher import RegexPatternMatcher
+from .prompts.NoInformationProvided import NoInformationProvided
+from .prompts.HowItHarmsInContext import HowItHarmsInContext
+from .prompts.WhoItHarmsInContext import WhoItHarmsInContext
+from .test_scripts.test_no_information_provided import no_information_provided_examples, information_provided_examples
+from .test_scripts.risk_domain_test_for_how_it_harms_prompt import HowItHarmsInContextExamplesGeneratorForRiskDomainTest
+from .RiskAssessment import RiskAssessmentWithoutNumberInputs
 
 class TestEvaluationFunction(unittest.TestCase):
     """
@@ -189,7 +179,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         expected_output=RA_cycling_high_viz__neither.prevention_prompt_expected_class))
         
     #     # Test mitigation input
-    #     tests.append(TestMitigationPromptOnSingleExample(
+    #     tests.append(TestMitigationInput__ControlMeasureClassifiationPrompt__OnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz__neither,
     #         expected_output=RA_cycling_high_viz__neither.mitigation_prompt_expected_class))
@@ -223,7 +213,7 @@ class TestEvaluationFunction(unittest.TestCase):
     #         expected_output=RA_cycling_high_viz.prevention_prompt_expected_class))
         
     #     # Test mitigation input
-    #     tests.append(TestMitigationPromptOnSingleExample(
+    #     tests.append(TestMitigationInput__ControlMeasureClassifiationPrompt__OnSingleExample(
     #         LLM=LLM,
     #         input_object=RA_cycling_high_viz,
     #         expected_output=RA_cycling_high_viz.mitigation_prompt_expected_class))

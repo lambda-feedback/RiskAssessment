@@ -1,13 +1,20 @@
 from typing import Type
 
-try:
-    from .PromptInputs import *
-    from .LLMCaller import *
-    from .RegexPatternMatcher import RegexPatternMatcher
-except ImportError:
-    from PromptInputs import *
-    from LLMCaller import *
-    from RegexPatternMatcher import RegexPatternMatcher
+from .utils.LLMCaller import *
+from .utils.RegexPatternMatcher import RegexPatternMatcher
+
+from .prompts.NoInformationProvided import NoInformationProvided
+from .prompts.HowItHarmsInContext import HowItHarmsInContext
+from .prompts.WhoItHarmsInContext import WhoItHarmsInContext
+from .prompts.HarmCausedAndHazardEvent import HarmCausedAndHazardEvent
+from .prompts.PreventionInput__ControlMeasureClassifationPrompt import PreventionInput__ControlMeasureClassifationPrompt
+from .prompts.MitigationInput__ControlMeasureClassificationPrompt import MitigationInput__ControlMeasureClassificationPrompt
+from .prompts.ControlMeasureClassification__ZeroShot_ChainOfThought import ControlMeasureClassification__ZeroShot_ChainOfThought
+from .prompts.ControlMeasureClassification__FewShot_NoChainOfThought import ControlMeasureClassification__FewShot_NoChainOfThought
+from .prompts.ControlMeasureClassification__ZeroShot_NoChainOfThought import ControlMeasureClassification__ZeroShot_NoChainOfThought
+from .prompts.SummarizeControlMeasureFeedback import SummarizeControlMeasureFeedback
+from .prompts.PreventionClassificationWithoutContextOfOtherInputs import PreventionClassificationWithoutContextOfOtherInputs
+from .prompts.MitigationClassificationWithoutContextOfOtherInputs import MitigationClassificationWithoutContextOfOtherInputs
 
 class RiskAssessment:
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
@@ -36,6 +43,11 @@ class RiskAssessment:
         self.always_true = True
         self.always_false = False
 
+        self.prevention_classification_prompt_ground_truth = self.set_prevention_classification_prompt_ground_truth()
+        self.mitigation_classification_prompt_ground_truth = self.set_mitigation_classification_prompt_ground_truth()
+        
+        self.set_mitigation_classification_prompt_ground_truth()
+
     def to_string(self):
         class_name = self.__class__.__name__
         if hasattr(self, '__dict__'):
@@ -43,6 +55,18 @@ class RiskAssessment:
             return f"{class_name}({attributes})"
         else:
             return f"{class_name}()"
+
+    def set_prevention_classification_prompt_ground_truth(self):
+        if self.prevention_prompt_expected_class == 'prevention':
+            return True
+        if self.prevention_prompt_expected_class in ['mitigation', 'both', 'neither']:
+            return False
+
+    def set_mitigation_classification_prompt_ground_truth(self):
+        if self.mitigation_prompt_expected_class == 'mitigation':
+            return True
+        if self.mitigation_prompt_expected_class in ['prevention', 'both', 'neither']:
+            return False
     
     def get_no_information_provided_for_prevention_input(self):
         return NoInformationProvided(input=self.prevention)
@@ -69,7 +93,7 @@ class RiskAssessment:
                             who_it_harms=self.who_it_harms)
     
     def get_control_measure_prompt_with_prevention_input(self):
-        return PreventionPrompt(
+        return PreventionInput__ControlMeasureClassifationPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
@@ -77,7 +101,7 @@ class RiskAssessment:
             control_measure=self.prevention)
     
     def get_control_measure_prompt_with_mitigation_input(self):
-        return MitigationPrompt(
+        return MitigationInput__ControlMeasureClassificationPrompt(
             activity=self.activity,
             who_it_harms=self.who_it_harms,
             how_it_harms=self.how_it_harms,
@@ -134,6 +158,14 @@ class RiskAssessment:
     
     def get_feedback_summary_input(self):
         return SummarizeControlMeasureFeedback()
+    
+    def get_prevention_classification_prompt_input(self):
+        return PreventionClassificationWithoutContextOfOtherInputs(
+            prevention=self.prevention)
+    
+    def get_mitigation_classification_prompt_input(self):
+        return MitigationClassificationWithoutContextOfOtherInputs(
+            mitigation=self.mitigation)
     
     def get_word_fields(self):
         return ['activity',
@@ -200,11 +232,6 @@ class RiskAssessment:
                 integer_fields_incorrect.append(formatted_integer_field_name)
         
         return integer_fields_incorrect
-    
-    def get_risk_domain_classification_input(self):
-        return RiskDomainClassification(hazard=self.hazard,
-                                        how_it_harms=self.how_it_harms,
-                                        who_it_harms=self.who_it_harms)
     
     def check_that_likelihood_and_severity_and_risk_are_all_integers(self, likelihood, severity, risk):
         try:
@@ -327,7 +354,7 @@ class RiskAssessment:
 
     # TODO: Add ability to see prompt output percentages - might be possible for LLMs other than GPT-3
 
-    def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[PromptInput], LLM_caller: Type[LLMCaller], **kwargs):
+    def get_prompt_output_and_pattern_matched(self, prompt_input_object: Type[BasePromptInput], LLM_caller: Type[LLMCaller], **kwargs):
         regex_pattern_matcher = RegexPatternMatcher()
         
         prompt_output = LLM_caller.get_model_output(prompt=prompt_input_object.generate_prompt(**kwargs), max_tokens=prompt_input_object.max_tokens)
@@ -339,7 +366,7 @@ class RiskAssessment:
 
         return prompt_output, pattern_matched
     
-    def get_shortform_feedback_from_regex_match(self, prompt_input_object: Type[PromptInput], pattern_matched):
+    def get_shortform_feedback_from_regex_match(self, prompt_input_object: Type[BasePromptInput], pattern_matched):
         
         if pattern_matched in prompt_input_object.labels_indicating_correct_input:
             return prompt_input_object.get_shortform_feedback(feedback_type='positive')
@@ -372,7 +399,6 @@ class RiskAssessment:
                 self.controlled_likelihood, 
                 self.controlled_severity, 
                 self.controlled_risk]
-
 
 class RiskAssessmentWithoutNumberInputs(RiskAssessment):
     def __init__(self, activity, hazard, how_it_harms, who_it_harms,
