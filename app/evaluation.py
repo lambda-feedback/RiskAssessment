@@ -233,11 +233,12 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
     if params["is_risk_matrix"] == True:
         return provide_feedback_on_risk_matrix(response)
     
-    if params["is_risk_assessment"] == True and params['are_all_input_fields_entered_manually'] == True:
-        activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
-
+    if params['is_risk_assessment'] == True:
         LLM_name = params["LLM"]
         LLM = LLM_dictionary[LLM_name]
+    
+    if params['are_all_input_fields_entered_manually'] == True:
+        activity, hazard, how_it_harms, who_it_harms, uncontrolled_likelihood, uncontrolled_severity, uncontrolled_risk, prevention, mitigation, controlled_likelihood, controlled_severity, controlled_risk = np.array(response).flatten()
 
         RA = RiskAssessment(activity=activity, hazard=hazard, who_it_harms=who_it_harms, how_it_harms=how_it_harms,
                             uncontrolled_likelihood=uncontrolled_likelihood, uncontrolled_severity=uncontrolled_severity,
@@ -394,7 +395,7 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
 
         return Result(is_correct=is_everything_correct, feedback=feedback)
     
-    if params["is_risk_assessment"] == True and params['are_all_input_fields_entered_manually'] == False:
+    if params['are_all_input_fields_entered_manually'] == False:
 
         prevention, mitigation = np.array(response).flatten()
 
