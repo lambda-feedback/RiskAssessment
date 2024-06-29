@@ -435,12 +435,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
             fields_for_which_no_information_provided.append('Prevention')
         
         else:
-            # TODO: Avoid duplication of the following code:
-            harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-            harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=harm_caused_and_hazard_event_prompt_input, LLM_caller=LLM)
-
-            hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-            harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
 
             control_measure_prompt_with_prevention_input = RA.get_control_measure_prompt_with_prevention_input()
             control_measure_prompt_with_prevention_output, control_measure_prompt_with_prevention_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=control_measure_prompt_with_prevention_input, 
@@ -467,14 +461,6 @@ def evaluation_function(response: Any, answer: Any, params: Params) -> Result:
         if no_information_provided_for_mitigation_pattern == 'no information provided' or RA.mitigation == '':
             fields_for_which_no_information_provided.append('Mitigation')
         else:
-            # If harm_caused and hazard_event have not already been extracted.
-            if no_information_provided_for_prevention_pattern == 'no information provided':
-
-                harm_caused_and_hazard_event_prompt_input = RA.get_harm_caused_and_hazard_event_input()
-                harm_caused_and_hazard_event_prompt_output, harm_caused_and_hazard_event_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=harm_caused_and_hazard_event_prompt_input, LLM_caller=LLM)
-
-                hazard_event = harm_caused_and_hazard_event_pattern.hazard_event
-                harm_caused = harm_caused_and_hazard_event_pattern.harm_caused
             
             control_measure_prompt_with_mitigation_input = RA.get_control_measure_prompt_with_mitigation_input()
             control_measure_prompt_with_mitigation_output, control_measure_prompt_with_mitigation_pattern = RA.get_prompt_output_and_pattern_matched(prompt_input_object=control_measure_prompt_with_mitigation_input, 
