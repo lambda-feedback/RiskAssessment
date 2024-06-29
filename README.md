@@ -2,9 +2,9 @@
 
 ## [Risk Assessment App](https://risk---assessment.streamlit.app/)
 
+## [Read the Developer Documentation](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/dev.md)
 
-## Prompt Results
-A spreadsheet showing the results from testing different prompts can be found [here](https://docs.google.com/spreadsheets/d/1d7Tq7qEaNTrhm1E7qcGvl3Dkr8cFNdSpOul9RezjVs4/edit?usp=sharing).
+## [Read the User Documentation](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/user.md)
 
 This template repository contains the boilerplate code needed in order to create an AWS Lambda function that can be written by any tutor to grade a response area in any way they like.
 
