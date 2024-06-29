@@ -8,7 +8,7 @@
 ![column names](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/response%20area.png)
 5. Click the "Evaluate" tab and select "riskAssessment" from the Evaluation Function dropdown.
 ![Example lambda feedback evaluation function parameters](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/example%20lambda%20feedback%20parameters.png)
-6. Set is_risk_matrix = False, is_feedback_text = False, is_risk_assessment = True and LLM to one of the following options:
+6. As done in the above screenshot, in the "Evaluate" tab, set is_risk_matrix = False, set is_feedback_text = False, set is_risk_assessment = True and LLM to one of the following options:
 - "Claude Opus"
 - "Claude Sonnet"
 - "Claude Haiku"
