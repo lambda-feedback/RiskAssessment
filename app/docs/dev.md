@@ -18,8 +18,8 @@ The inner logic of the purple “control measure logic” is shown above. The co
 3. Store the API key strings in a .env file that is created in the app folder. The variable names should be the same as those from the .env.example file.
 
 ## Running tests
-To test the different prompts to LLMs in the prompt structure diagrams shown above, a series of scripts have been created in the app/test_scripts folder. To run these tests, copy and paste the commented out command from the top of the file into the terminal. (e.g. python -m app.test_scripts.risk_domain_test_for_how_it_harms_prompt for the app/test_scripts/risk_domain_test_for_how_it_harms_prompt file).
-Make sure the folder 
+- To test the different prompts to LLMs in the prompt structure diagrams shown above, a series of scripts have been created in the app/test_scripts folder. To run these tests, copy and paste the commented out command from the top of the file into the terminal. (e.g. python -m app.test_scripts.risk_domain_test_for_how_it_harms_prompt for the app/test_scripts/risk_domain_test_for_how_it_harms_prompt file).
+- Make sure the folder you are in the terminal is the one above the app folder.
 
 ## Prompt Results
 A spreadsheet showing the results from testing different prompts can be found [here](https://docs.google.com/spreadsheets/d/1d7Tq7qEaNTrhm1E7qcGvl3Dkr8cFNdSpOul9RezjVs4/edit?usp=sharing).
