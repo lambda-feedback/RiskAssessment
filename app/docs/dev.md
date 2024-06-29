@@ -24,6 +24,8 @@ The inner logic of the purple “control measure logic” is shown above. The co
 ## Prompt Results
 A spreadsheet showing the results from testing different prompts can be found [here](https://docs.google.com/spreadsheets/d/1d7Tq7qEaNTrhm1E7qcGvl3Dkr8cFNdSpOul9RezjVs4/edit?usp=sharing).
 
+To see which test script matches up to which prompt results tab, press ctrl + shift + f and then search for the name of the prompt results tab.
+
 ## Inputs
 ![Example lambda feedback evaluation function parameters](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/example%20lambda%20feedback%20parameters.png)
 
