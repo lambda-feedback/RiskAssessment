@@ -5,7 +5,7 @@ The response input for the evaluation function is 12 risk assessment inputs, 6 o
 
 The evaluation function checks that the risk matrix inputs follow convention (i.e. risk = likelihood x severity, & uncontrolled risk <= controlled risk).
 
-[Yes](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/prompt%201.png)
+![Yes](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/prompt%201.png)
 
 If the risk matrix inputs are correct, the following prompting structure 
 
