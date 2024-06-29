@@ -29,106 +29,106 @@ class Params(TypedDict):
     LLM: str
 
 def provide_feedback_on_risk_matrix(response):
-        risk_matrix = np.array(response)
+    risk_matrix = np.array(response)
 
-        risk_matrix_flattened = np.array(response).flatten()
-        for value in risk_matrix_flattened:
-            if value == '':
-                return Result(is_correct=False, feedback="Please fill in all the fields")
-            else:
-                try:
-                    int_value = int(value)
-                except ValueError:
-                    return Result(is_correct=False, feedback="Please enter an integer for all fields.")
+    risk_matrix_flattened = np.array(response).flatten()
+    for value in risk_matrix_flattened:
+        if value == '':
+            return Result(is_correct=False, feedback="Please fill in all the fields")
+        else:
+            try:
+                int_value = int(value)
+            except ValueError:
+                return Result(is_correct=False, feedback="Please enter an integer for all fields.")
 
-        risk_matrix_dict = {'uncontrolled likelihood': int(risk_matrix[0, 0]),
-                    'uncontrolled severity': int(risk_matrix[0, 1]),
-                    'controlled likelihood': int(risk_matrix[1, 0]), 
-                    'controlled severity': int(risk_matrix[1, 1])}
+    risk_matrix_dict = {'uncontrolled likelihood': int(risk_matrix[0, 0]),
+                'uncontrolled severity': int(risk_matrix[0, 1]),
+                'controlled likelihood': int(risk_matrix[1, 0]), 
+                'controlled severity': int(risk_matrix[1, 1])}
 
-        is_correct = True
-        feedback = f''''''
+    is_correct = True
+    feedback = f''''''
 
-        for key in risk_matrix_dict.keys():
-            if risk_matrix_dict[key] > 4 or risk_matrix_dict[key] < 1:
-                is_correct = False
-                feedback += f'''\n\n\n\n\n##### The {key} is incorrect. As per the likelihood and severity conventions above, the likelihood and severity should be between 1 and 4.\n\n\n\n'''
+    for key in risk_matrix_dict.keys():
+        if risk_matrix_dict[key] > 4 or risk_matrix_dict[key] < 1:
+            is_correct = False
+            feedback += f'''\n\n\n\n\n##### The {key} is incorrect. As per the likelihood and severity conventions above, the likelihood and severity should be between 1 and 4.\n\n\n\n'''
 
-        uncontrolled_likelihood = risk_matrix_dict['uncontrolled likelihood']
-        uncontrolled_severity = risk_matrix_dict['uncontrolled severity']
-        uncontrolled_risk = int(risk_matrix[0, 2])
-        controlled_likelihood = risk_matrix_dict['controlled likelihood']
-        controlled_severity = risk_matrix_dict['controlled severity']
-        controlled_risk = int(risk_matrix[1, 2])
+    uncontrolled_likelihood = risk_matrix_dict['uncontrolled likelihood']
+    uncontrolled_severity = risk_matrix_dict['uncontrolled severity']
+    uncontrolled_risk = int(risk_matrix[0, 2])
+    controlled_likelihood = risk_matrix_dict['controlled likelihood']
+    controlled_severity = risk_matrix_dict['controlled severity']
+    controlled_risk = int(risk_matrix[1, 2])
 
-        feedback += '\n'
+    feedback += '\n'
 
-        # Comparing Uncontrolled and Controlled Rows
-                
-        # Likelihoods
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if uncontrolled_likelihood <= controlled_likelihood:
-                feedback += f'''\n\n\n\n\n##### Likelihood values are incorrect. Since an effective prevention measure has been implemented ("taking care when cross the road"), the controlled likelihood should be less than the uncontrolled likelihood.\n\n\n\n'''
-                is_correct = False
+    # Comparing Uncontrolled and Controlled Rows
+            
+    # Likelihoods
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if uncontrolled_likelihood <= controlled_likelihood:
+            feedback += f'''\n\n\n\n\n##### Likelihood values are incorrect. Since an effective prevention measure has been implemented ("taking care when cross the road"), the controlled likelihood should be less than the uncontrolled likelihood.\n\n\n\n'''
+            is_correct = False
 
-        # Severities
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if uncontrolled_severity != controlled_severity:
-                feedback += f'''\n\n\n\n\n##### Severity values are incorrect. The uncontrolled and controlled severity should be the same since no mitigation measure has been implemented.\n\n\n\n''' 
-                is_correct = False
+    # Severities
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if uncontrolled_severity != controlled_severity:
+            feedback += f'''\n\n\n\n\n##### Severity values are incorrect. The uncontrolled and controlled severity should be the same since no mitigation measure has been implemented.\n\n\n\n''' 
+            is_correct = False
 
-        # --- Checking Uncontrolled Row ---
+    # --- Checking Uncontrolled Row ---
+    
+    # Likelihoods
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if uncontrolled_likelihood != 4:
+            feedback += f'''\n\n\n\n\n##### An uncontrolled likelihood of {uncontrolled_likelihood} is incorrect. The convention is that all uncontrolled risks have a likelihood of 4. If you didn't look or listen when crossing the road, you would almost certainly be harmed.\n\n\n\n'''
+            is_correct = False
+
+    # Severities
+    if is_correct == True:
+        if uncontrolled_severity == 1:
+            feedback += f'''\n\n\n\n\n##### An uncontrolled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
+            is_correct = False
+
+    # Multiplications
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if uncontrolled_likelihood * uncontrolled_severity != uncontrolled_risk:
+            feedback += f'''\n\n\n\n\n##### Uncontrolled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
+            is_correct = False
+
+    # --- Checking Controlled Row ---
+            
+    # Likelihoods
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if controlled_likelihood == 1:
+            feedback += f'''\n\n\n\n\n##### A controlled likelihood of 1 is incorrect. A controlled likelihood of 1 indicates that the control measure is implemented passively whereas you have to activily pay attention when cross the road.\n\n\n\n'''
+            is_correct = False
+
+        if controlled_likelihood == 2:
+            feedback += f'''\n\n\n\n\n##### Correct controlled likelihood. A controlled likelihood of 2 indicates that the control measure of "taking care when crossing the road" is implemented actively.\n\n\n\n''' 
         
-        # Likelihoods
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if uncontrolled_likelihood != 4:
-                feedback += f'''\n\n\n\n\n##### An uncontrolled likelihood of {uncontrolled_likelihood} is incorrect. The convention is that all uncontrolled risks have a likelihood of 4. If you didn't look or listen when crossing the road, you would almost certainly be harmed.\n\n\n\n'''
-                is_correct = False
+        if controlled_likelihood == 3:
+            feedback += f'''\n\n\n\n\n##### A controlled likelihood of 3 is incorrect. A controlled likelihood of 3 indicates that the control measure is not effective and the likelihood is "possible".\n\n\n\n''' 
+            is_correct = False
+        
+        if controlled_likelihood == 4:
+            feedback += f'''\n\n\n\n\n##### A controlled likelihood of 4 is incorrect. A controlled likelihood of 4 indicates that the control measure is effective and the likelihood is "likely".\n\n\n\n''' 
+            is_correct = False
 
-        # Severities
-        if is_correct == True:
-            if uncontrolled_severity == 1:
-                feedback += f'''\n\n\n\n\n##### An uncontrolled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
-                is_correct = False
+    # Severities
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if controlled_severity == 1:
+            feedback += f'''\n\n\n\n\n##### A controlled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
+            is_correct = False
 
-        # Multiplications
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if uncontrolled_likelihood * uncontrolled_severity != uncontrolled_risk:
-                feedback += f'''\n\n\n\n\n##### Uncontrolled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
-                is_correct = False
+    # Multiplications
+    if is_correct == True: # Only write feedback if all previous checks have passed
+        if controlled_likelihood * controlled_severity != controlled_risk:
+            feedback += f'''\n\n\n\n\n##### Controlled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
+            is_correct = False
 
-        # --- Checking Controlled Row ---
-                
-        # Likelihoods
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if controlled_likelihood == 1:
-                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 1 is incorrect. A controlled likelihood of 1 indicates that the control measure is implemented passively whereas you have to activily pay attention when cross the road.\n\n\n\n'''
-                is_correct = False
-
-            if controlled_likelihood == 2:
-                feedback += f'''\n\n\n\n\n##### Correct controlled likelihood. A controlled likelihood of 2 indicates that the control measure of "taking care when crossing the road" is implemented actively.\n\n\n\n''' 
-            
-            if controlled_likelihood == 3:
-                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 3 is incorrect. A controlled likelihood of 3 indicates that the control measure is not effective and the likelihood is "possible".\n\n\n\n''' 
-                is_correct = False
-            
-            if controlled_likelihood == 4:
-                feedback += f'''\n\n\n\n\n##### A controlled likelihood of 4 is incorrect. A controlled likelihood of 4 indicates that the control measure is effective and the likelihood is "likely".\n\n\n\n''' 
-                is_correct = False
-
-        # Severities
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if controlled_severity == 1:
-                feedback += f'''\n\n\n\n\n##### A controlled severity of 1 is incorrect. As by the above severity convention, a severity of 1 indicates that a car crashing into a pedestrian causes "minor injury or property damage". The harm will be greater than this.\n\n\n\n''' 
-                is_correct = False
-
-        # Multiplications
-        if is_correct == True: # Only write feedback if all previous checks have passed
-            if controlled_likelihood * controlled_severity != controlled_risk:
-                feedback += f'''\n\n\n\n\n##### Controlled risk multiplication is incorrect. Make sure the risk is the likelihood multiplied by the severity.\n\n\n\n'''
-                is_correct = False
-
-        return Result(is_correct=is_correct, feedback=feedback)
+    return Result(is_correct=is_correct, feedback=feedback)
 
 def provide_feedback_on_control_measure_input(control_measure_input_field: str,
                                               control_measure_prompt_input: Type[BasePromptInput],
