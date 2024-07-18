@@ -2,7 +2,7 @@
 
 ## Lambda Feedback Setup
 1. In teacher mode, create a new response area.
-2. Within the response area, click "Configure"
+2. Within the response area, click "Configure".
 3. Click the "Input" tab and change the input type to Table and make the Table have 12 rows and 1 column.
 4. Remove the column name and add the following names to the rows:
 ![column names](https://github.com/lambda-feedback/riskAssessment/blob/main/app/docs/response%20area.png)
