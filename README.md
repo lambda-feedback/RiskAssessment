@@ -31,7 +31,7 @@ app/
     docs.md # Documentation page for this function (required)
     evaluation_tests.py # Unittests for the main evaluation_function
     preview_tests.py # Unittests for the preview_function
-    requirements.txt # list of packages needed for algorithm.py
+    requirements.txt # list of packages needed for evaluation.py
     Dockerfile # for building whole image to deploy to AWS
 
 .github/
