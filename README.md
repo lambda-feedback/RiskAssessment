@@ -22,13 +22,27 @@
 ```bash
 app/
     __init__.py
-    evaluation.py # Script containing the main evaluation_function
+    evaluation.py # Contains the evaluation_function, which is called by the Lambda Feedback platform
     preview.py # Script containing the preview_function
     docs.md # Documentation page for this function (required)
-    evaluation_tests.py # Unittests for the main evaluation_function
-    preview_tests.py # Unittests for the preview_function
+    evaluation_tests.py # Unit tests for the main evaluation_function
+    preview_tests.py # Unit tests for the preview_function
     requirements.txt # list of packages needed for evaluation.py
     Dockerfile # for building whole image to deploy to AWS
+
+    data/
+      RiskAssessment.py # Class used to create Risk Assessment examples with methods to create LLM prompts specific to the risk assessment example from LLM prompt templates 
+      example_risk_assessments.py # Risk Assessments used to test the accuracy of LLM prompts
+    prompts/
+      BasePromptInput.py # Base class that other PromptInput classes inherit from.
+      ControlMeasureClassification.py # PromptInput class used to classify a control measure as either a prevention, mitigation, both or neither.
+      HarmCausedAndHazardEventpy # PromptInput class used to infer the event that leads to harm and the harm caused from the student's risk assessment inputs.
+      HowItHarmsInContext.py # PromptInput class that checks whether the "How it harms" input matches the "activity" and "hazard" inputs.
+      WhoItHarmsInContext.py # PromptInput class that checks whether the "Who it harms" input matches the "activity", "hazard" and "how it harms" inputs.
+      NoInformationProvided.py # PromptInput class that checks whether no information is provided in the "prevention" or "mitigation" input fields.
+      SummarizeControlMeasureFeedback.py # PromptInput class that takes in the output from the ControlMeasureClassification prompt and shortens it to 3 sentences.
+    test_classes/
+
 
 .github/
     workflows/
