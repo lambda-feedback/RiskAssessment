@@ -12,13 +12,9 @@
 - [Evaluation Function Template Repository](#evaluation-function-template-repository)
   - [Table of Contents](#table-of-contents)
   - [Repository Structure](#repository-structure)
-  - [Usage](#usage)
-    - [Getting Started](#getting-started)
   - [How it works](#how-it-works)
     - [Docker & Amazon Web Services (AWS)](#docker--amazon-web-services-aws)
     - [Middleware Functions](#middleware-functions)
-    - [GitHub Actions](#github-actions)
-  - [Pre-requisites](#pre-requisites)
   - [Contact](#contact)
 
 ## Repository Structure
@@ -36,35 +32,8 @@ app/
 
 .github/
     workflows/
-        test-and-deploy.yml # Testing and deployment pipeline
-
-config.json # Specify the name of the evaluation function in this file
-.gitignore
+        test-and-deploy.yml # Testing and deployment pipeline. Testing is performed every time a commit is made to this repo, before the image is built and deployed. 
 ```
-
-## Usage
-
-### Getting Started
-
-1. Clone this repository
-2. Change the name of the evaluation function in `config.json`
-3. The name must be unique. To view existing grading functions, go to:
-
-   - [Staging API Gateway Integrations](https://eu-west-2.console.aws.amazon.com/apigateway/main/develop/integrations/attach?api=c1o0u8se7b&region=eu-west-2&routes=0xsoy4q)
-   - [Production API Gateway Integrations](https://eu-west-2.console.aws.amazon.com/apigateway/main/develop/integrations/attach?api=cttolq2oph&integration=qpbgva8&region=eu-west-2&routes=0xsoy4q)
-
-4. Merge commits into the default branch
-   - This will trigger the `test-and-deploy.yml` workflow, which will build the docker image, push it to a shared ECR repository, then call the backend `grading-function/ensure` route to build the necessary infrastructure to make the function available from the client app.
-
-5. You are now ready to start developing your function:
-   
-   - Edit the `app/evaluation.py` file, which ultimately gets called when the function is given the `eval` command
-   - Edit the `app/preview.py` file, which is called when the function is passed the `preview` command.
-   - Edit the `app/evaluation_tests.py` and `app/preview_tests.py` files to add tests which get run:
-       - Every time you commit to this repo, before the image is built and deployed 
-       - Whenever the `healthcheck` command is supplied to the deployed function
-   - Edit the `app/docs.md` file to reflect your changes. This file is baked into the function's image, and is made available using the `docs` command. This feature is used to display this function's documentation on our [Documentation](https://lambda-feedback.github.io/Documentation/) website once it's been hooked up!
-
 ---
 
 ## How it works
@@ -88,14 +57,3 @@ Whenever a commit is made to the GitHub repository, the new code will go through
 On top of that, when starting a new evaluation function, you will have to complete a set of unit test scripts, which not only make sure your code is reliable, but also helps you to build a _specification_ for how the code should function before you start programming.
 
 Once the code passes all these tests, it will then be uploaded to AWS and will be deployed and ready to go in only a few minutes.
-
-## Pre-requisites
-Although all programming can be done through the GitHub interface, it is recommended you do this locally on your machine. To do this, you must have installed:
-
-- Python 3.8 or higher.
-
-- GitHub Desktop or the `git` CLI.
-
-- A code editor such as Atom, VS Code, or Sublime.
-
-Copy this template over by clicking **Use this template** button found in the repository on GitHub. Save it to the `lambda-feedback` Organisation.
