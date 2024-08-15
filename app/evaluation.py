@@ -13,7 +13,7 @@ import numpy as np
 from typing import Type, Any, TypedDict
 
 from .prompts.BasePromptInput import *
-from .RiskAssessment import RiskAssessment
+from .data.RiskAssessment import RiskAssessment
 from .utils.LLMCaller import *
 
 # TODO: Functions can make this code shorter.

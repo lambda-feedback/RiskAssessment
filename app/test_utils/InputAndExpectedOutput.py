@@ -1,9 +1,9 @@
 try:
     from ..prompts.BasePromptInput import BasePromptInput
-    from ..RiskAssessment import RiskAssessment
+    from ..data.RiskAssessment import RiskAssessment
 except:
     from ..prompts.BasePromptInput import BasePromptInput
-    from ..RiskAssessment import RiskAssessment
+    from ..data.RiskAssessment import RiskAssessment
 
 class InputAndExpectedOutputForSinglePrompt:
     def __init__(self, prompt_input_object: BasePromptInput, expected_output):

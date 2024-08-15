@@ -2,7 +2,7 @@
 
 from ..utils.LLMCaller import *
 from ..test_classes.TestSummarizeControlMeasureFeedback import TestSummarizePreventionFeedback, TestSummarizeMitigationFeedback
-from ..example_risk_assessments import cybersecurity_risks
+from ..data.example_risk_assessments import cybersecurity_risks
 from ..test_utils.ExamplesGenerator import RiskAssessmentExamplesGeneratorForMultiplePrompts
 
 def test_summarize_prevention_feedback_prompt(risk_assessments_dict, LLM, is_first_test: bool = False):

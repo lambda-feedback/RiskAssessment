@@ -3,7 +3,7 @@
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
 from ..utils.LLMCaller import *
 from ..test_utils.ExamplesGenerator import RiskAssessmentExamplesGeneratorForSinglePrompt
-from ..example_risk_assessments import *
+from ..data.example_risk_assessments import *
 
 def test_control_measure_classification_prompt(risk_assessments_dict, 
                                                LLM, 
