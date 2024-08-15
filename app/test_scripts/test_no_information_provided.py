@@ -4,7 +4,7 @@ from ..test_utils.InputAndExpectedOutput import InputAndExpectedOutputForSingleP
 from ..utils.LLMCaller import *
 from ..prompts.NoInformationProvided import NoInformationProvided
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
-from ..example_risk_assessments import *
+from ..data.example_risk_assessments import *
 
 no_information_provided_examples = [
     "Leave blank",

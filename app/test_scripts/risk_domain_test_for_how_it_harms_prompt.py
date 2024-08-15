@@ -3,7 +3,7 @@
 from ..test_classes.TestModelAccuracy import TestModelAccuracy
 from ..test_utils.ExamplesGenerator import ExamplesGeneratorFromCorrectExamples
 from ..prompts.HowItHarmsInContext import HowItHarmsInContext
-from ..example_risk_assessments import *
+from ..data.example_risk_assessments import *
 from ..utils.LLMCaller import *
 
 class HowItHarmsInContextExamplesGeneratorForRiskDomainTest(ExamplesGeneratorFromCorrectExamples):
